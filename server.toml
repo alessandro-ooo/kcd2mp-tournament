@@ -28,7 +28,7 @@ stall_exit = 30              # seconds: a server that cannot send or receive thi
 # The game mode: one Lua script or one C# plugin (see gamemodes/README.md).
 # https://docs.kcd-mp.com/getting-started/server-config/#gamemode
 [gamemode]
-script = "gamemodes/freeroam.lua"   # "" = the built-in freeroam
+script = "gamemodes/kcd2mp-tournament/gamemode.lua"   # "" = the built-in freeroam
 watch = false                       # true = reload the script (or the plugin's DLL) when its file changes (development)
 
 # The game mode's own database, for whatever it wants to keep - accounts, factions, scores. Optional: without a
