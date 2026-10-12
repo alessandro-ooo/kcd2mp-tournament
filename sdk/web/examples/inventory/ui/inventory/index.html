@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Inventory</title>
+<link rel="stylesheet" href="inventory.css">
+</head>
+<body>
+<section id="window" aria-label="Inventory">
+  <header>
+    <h1>Inventory</h1>
+    <nav id="tabs" role="tablist"></nav>
+    <button id="close" type="button" aria-label="Close">&times;</button>
+  </header>
+  <div id="body">
+    <div id="grid" role="listbox"></div>
+    <aside id="details">
+      <img id="d-icon" alt="">
+      <h2 id="d-name"></h2>
+      <dl>
+        <dt>Kind</dt><dd id="d-category"></dd>
+        <dt>Amount</dt><dd id="d-amount"></dd>
+        <dt>Weight</dt><dd id="d-weight"></dd>
+        <dt>Value</dt><dd id="d-price"></dd>
+        <dt>Condition</dt><dd id="d-health"></dd>
+      </dl>
+      <p id="d-worn" hidden>Worn</p>
+    </aside>
+  </div>
+  <footer>
+    <span id="money"></span>
+    <span id="weight"></span>
+    <span class="hint">Home or /inv closes the window</span>
+  </footer>
+</section>
+<!-- The page SDK for opening this page in a browser (mock mode). In the game, the game's own SDK is already there and this copy steps aside. -->
+<script src="../sdk.js"></script>
+<script src="inventory.js"></script>
+</body>
+</html>

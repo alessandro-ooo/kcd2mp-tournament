@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>BasicRP</title>
+<link rel="stylesheet" href="../basicrp.css">
+<link rel="stylesheet" href="menu.css">
+</head>
+<body>
+<section class="window" aria-label="BasicRP">
+  <header>
+    <h1>BasicRP</h1>
+    <nav id="tabs" role="tablist">
+      <button type="button" role="tab" data-tab="you" aria-selected="true">You</button>
+      <button type="button" role="tab" data-tab="town" aria-selected="false">The town</button>
+      <button type="button" role="tab" data-tab="help" aria-selected="false">Commands</button>
+    </nav>
+    <button class="close" id="close" type="button" aria-label="Close">&times;</button>
+  </header>
+  <div id="body">
+    <div data-panel="you">
+      <dl id="you"></dl>
+    </div>
+    <div data-panel="town" hidden>
+      <p class="lead">The people of the town stand around the spawn. Walk up to one and press the use key.</p>
+      <ul id="town"></ul>
+    </div>
+    <div data-panel="help" hidden>
+      <div id="help"></div>
+    </div>
+  </div>
+  <footer>
+    <span id="where"></span>
+    <span class="hint">/menu or its key closes the menu</span>
+  </footer>
+</section>
+<script src="menu.js"></script>
+</body>
+</html>

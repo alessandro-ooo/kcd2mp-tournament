@@ -1,0 +1,15 @@
+# Example: a chat of your own. One frame, "chat", that draws the chat for every player.
+api = 1
+name = "Example: a chat of your own"
+version = "1"
+
+[frames.chat]
+page = "chat/index.html"
+z = 250
+focus = "input"
+
+# The chat is this frame's from the start, for everyone. A mode can still switch one player back with
+# SetPlayerInterface(pid, "chat", "native"). While the page is not ready the game's own chat draws.
+[components.chat]
+drawer = "chat"
+contract = "chat@1"

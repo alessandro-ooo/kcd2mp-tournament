@@ -1,0 +1,78 @@
+/* A notice board: parchment notes pinned on dark planks. The page is 768 x 512 pixels (ui.toml): it is drawn at that size on the
+   board in the world, so it is laid out for exactly that, with large type - a player reads it from a few metres away. */
+html, body {
+  margin: 0;
+  width: 768px;
+  height: 512px;
+  overflow: hidden;
+  background: #3a2a1c;
+  user-select: none;
+}
+
+#board {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 18px 28px;
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 2px, transparent 2px 96px),
+    linear-gradient(180deg, #4a3624, #2e2116);
+  border: 10px solid #24180f;
+  color: #2b1d0e;
+  font-family: "KcdMp Manuscript", "KcdMp Regular", Georgia, serif;
+}
+
+h1 {
+  margin: 0 0 10px;
+  text-align: center;
+  font: 40px "KcdMp Display", Georgia, serif;
+  color: #e9d9a8;
+  letter-spacing: 2px;
+}
+
+#notices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+#notices li {
+  background: #e8dcc0;
+  padding: 10px 14px;
+  min-height: 70px;
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.35);
+  transform: rotate(-0.6deg);
+}
+
+#notices li:nth-child(even) {
+  transform: rotate(0.8deg);
+}
+
+#notices li.read {
+  outline: 4px solid #b8860b;
+}
+
+#notices strong {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+#notices span {
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+#hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22px;
+  margin: 0;
+  text-align: center;
+  font: 18px "KcdMp Regular", Georgia, serif;
+  color: #cdb98a;
+}

@@ -1,0 +1,37 @@
+# Example: a theme. No frame of its own: KCD:MP's web chat and scoreboard draw, moved and restyled.
+api = 1
+name = "Example: a theme for KCD:MP's own pieces"
+version = "1"
+
+# KCD:MP's web chat, in the top-right corner with twelve lines (the options SetInterfaceOptionsForAll("chat", ...) takes)
+[components.chat]
+drawer = "default"
+anchor = "top-right"
+margin_x = 32
+margin_y = 140
+lines = 12
+
+# KCD:MP's web scoreboard: Tab opens it and closes it
+[components.scoreboard]
+drawer = "default"
+mode = "toggle"
+title = "The theme example"
+
+# The stylesheet is applied to KCD:MP's web pieces (the chat, the scoreboard, the notices ...) after their own styles.
+[theme]
+css = "theme.css"
+
+# The pieces' colours and typefaces, without a stylesheet at all
+[theme.vars]
+"--kcdmp-accent" = "#e0a85a"
+"--kcdmp-accent-dim" = "#8a5a2a"
+"--kcdmp-text" = "#f5ecd9"
+"--kcdmp-backing" = "rgba(32, 20, 12, 0.72)"
+"--kcdmp-font" = "'KcdMp Regular', Georgia, serif"
+"--kcdmp-chat-all-label" = "Everyone"
+
+# Chat templates: {0}, {1} ... are the line's params, always shown as text. <b>, <i> and <span class="..."> are the tags there are.
+[theme.chat.templates]
+default = '<b>{0}</b>: {1}'
+ooc = '<span class="ooc">(( {0}: {1} ))</span>'
+notice = '<span class="notice">{0}</span>'

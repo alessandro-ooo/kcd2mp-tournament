@@ -1,0 +1,33 @@
+# Example: web pages on surfaces in the world - a notice board and a tavern sign. No frame: the pages are drawn on boards the
+# mode places (CreateWebSurface), and every player's game near one draws its own copy of the page.
+api = 1
+name = "Example: a notice board"
+version = "1"
+
+# The notice board: a page of 768 x 512 pixels (its board keeps that shape, whatever size the mode makes it). It changes only
+# when a notice is pinned, so 2 pictures a second at most are plenty. Drawn for players within 30 m.
+# events_out: the one event the page sends the mode (which notice the player read).
+[surfaces.board]
+page = "board/index.html"
+width = 768
+height = 512
+fps = 2
+range = 30
+events_out = ["board.read"]
+
+# The sign: a small page that changes only when the mode sends its words. Seen from further away.
+[surfaces.sign]
+page = "sign/index.html"
+width = 512
+height = 256
+fps = 2
+range = 40
+
+# Letters painted on a wall: the page draws only the letters on a clear background, and the mode makes its board see-through
+# (CreateWebSurface's transparent option), so the wall shows around and between them. Still text, so 2 pictures a second.
+[surfaces.painted]
+page = "painted/index.html"
+width = 1024
+height = 256
+fps = 2
+range = 40

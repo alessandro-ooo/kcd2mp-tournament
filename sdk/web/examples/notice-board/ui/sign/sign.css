@@ -1,0 +1,31 @@
+/* A tavern sign, 512 x 256 pixels (ui.toml): dark wood, gold letters, lit by the world like the wall it hangs on. */
+html, body {
+  margin: 0;
+  width: 512px;
+  height: 256px;
+  overflow: hidden;
+  background: #1c120a;
+  user-select: none;
+}
+
+#sign {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding-top: 40px;
+  border: 8px solid #6b4a22;
+  text-align: center;
+  color: #f6e890;
+}
+
+h1 {
+  margin: 0;
+  font: 46px "KcdMp Display", Georgia, serif;
+}
+
+#line {
+  margin: 14px 0 0;
+  font: 22px "KcdMp Regular", Georgia, serif;
+  color: #e3c98f;
+}

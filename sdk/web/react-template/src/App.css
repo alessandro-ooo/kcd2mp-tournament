@@ -1,0 +1,42 @@
+/* The page is drawn over the game: keep its own background transparent, and draw only where there is something to see. */
+html, body {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  color: #f3eedf;
+  /* the game's own typeface in the game, a serif in a browser */
+  font: 17px/24px "KcdMp Regular", Georgia, "Times New Roman", serif;
+}
+
+.panel {
+  position: fixed;
+  left: 50%;
+  top: 18vh;
+  transform: translateX(-50%);
+  width: 420px;
+  padding: 14px 20px 18px;
+  background: rgba(22, 18, 13, 0.92);
+  border: 1px solid rgba(246, 232, 144, 0.4);
+  border-radius: 6px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+}
+
+header { display: flex; align-items: center; }
+h1 { margin: 0; font: 28px/32px "KcdMp Display", Georgia, serif; color: #f6e890; }
+.close { margin-left: auto; font: 26px/26px Georgia, serif; color: #b9ad92; background: none; border: none; cursor: pointer; }
+.who { color: #b9ad92; margin: 6px 0; }
+.hello { font-style: italic; }
+.items { display: flex; gap: 8px; padding: 0; list-style: none; }
+.items li { background: rgba(255, 255, 255, 0.05); border-radius: 4px; padding: 4px; }
+
+button {
+  font: inherit;
+  color: #f6e890;
+  background: rgba(246, 232, 144, 0.08);
+  border: 1px solid rgba(246, 232, 144, 0.4);
+  border-radius: 4px;
+  padding: 4px 12px;
+  cursor: pointer;
+}
+button:hover { background: rgba(246, 232, 144, 0.16); }

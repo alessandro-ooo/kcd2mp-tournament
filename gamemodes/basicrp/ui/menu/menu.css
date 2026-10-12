@@ -1,0 +1,20 @@
+#tabs { display: flex; gap: 4px; }
+#tabs button { color: var(--dim); background: none; border: none; padding: 2px 8px; }
+#tabs button[aria-selected="true"] { color: var(--gold); border-bottom: 2px solid var(--gold); }
+#tabs button:hover { color: var(--gold); }
+
+#body { padding: 12px 16px; height: 440px; overflow-y: auto; }
+[data-panel][hidden] { display: none; }
+.lead { margin: 0 0 10px; color: var(--dim); }
+
+#you { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; margin: 0; font-size: 18px; }
+#you dt { color: var(--dim); }
+#you dd { margin: 0; color: var(--gold); text-transform: none; }
+
+#town { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
+#town li { background: var(--soft); border-radius: 4px; padding: 6px 10px; }
+#town .who { color: var(--gold); }
+#town .what { display: block; color: var(--dim); font-size: 14px; }
+
+#help .line { white-space: pre-wrap; font-size: 15px; line-height: 21px; }
+#help .line.head { margin-top: 8px; }

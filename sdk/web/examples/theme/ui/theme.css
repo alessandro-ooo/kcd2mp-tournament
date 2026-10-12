@@ -1,0 +1,44 @@
+/* A theme for KCD:MP's own web chat and scoreboard. Each piece's parts have a class of the same name - .box, .line, .author,
+   .text, .input, .suggestion ... for the chat, .board, .title, .header, .row ... for the scoreboard (the full list is under
+   "Drawing a component" in the web interface SDK). These rules come after the pieces' own, so they win without !important.
+   var(--kcdmp-u) is one pixel of a screen 1080 pixels tall, at this player's size: use it for sizes that should scale.
+   Pictures and fonts may come from this folder only (url(img/x.png)); nothing from other sites. */
+
+/* ---- the chat: a dark leather card with a gilt edge ---- */
+.box {
+  border: 1px solid var(--kcdmp-accent-dim);
+  border-left: calc(4 * var(--kcdmp-u)) solid var(--kcdmp-accent);
+  border-radius: calc(6 * var(--kcdmp-u));
+  background-image: linear-gradient(180deg, rgb(255 255 255 / 0.04), transparent 40%);
+  box-shadow: 0 calc(6 * var(--kcdmp-u)) calc(24 * var(--kcdmp-u)) rgb(0 0 0 / 0.45);
+}
+.line { letter-spacing: 0.01em; }
+.author, .text b { color: var(--kcdmp-accent); font-variant: small-caps; letter-spacing: 0.04em; }
+.text .notice { font-style: italic; color: #e9d8b0; }
+.text .ooc { opacity: 0.65; font-size: 92%; }
+.channel { font-weight: 700; }
+.input {
+  border: 0;
+  border-bottom: 2px solid var(--kcdmp-accent);
+  border-radius: 0;
+  background: rgb(0 0 0 / 0.55);
+}
+.suggestion[data-first] { background: rgb(224 168 90 / 0.2); }
+
+/* ---- the scoreboard: a warm parchment card ---- */
+.board {
+  background-color: #d8c79b;
+  background-image: radial-gradient(ellipse at center, rgb(255 248 226 / 0.55), transparent 70%),
+                    linear-gradient(180deg, rgb(120 82 40 / 0.18), transparent 25%, transparent 75%, rgb(120 82 40 / 0.22));
+  border: 2px solid #5b3d1c;
+  border-radius: calc(6 * var(--kcdmp-u));
+  color: #2b1c0e;
+  text-shadow: none;
+}
+.title { color: #7a1f0a; text-shadow: none; font-family: "KcdMp Display", Georgia, serif; }
+.count, .foot, .header { color: #6b4a2a; }
+.header { border-bottom: 1px solid rgb(91 61 28 / 0.55); }
+.row:hover { background: rgb(91 61 28 / 0.12); }
+.row[data-self] { color: #7a1f0a; font-weight: 700; }
+.mark { color: #7a5a2a; }
+.mute { color: #5b3d1c; border-color: #8a5a1c; }

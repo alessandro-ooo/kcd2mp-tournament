@@ -1,0 +1,18 @@
+# Example: a scoreboard of your own. One frame, "board", that draws the scoreboard for every player.
+api = 1
+name = "Example: a scoreboard of your own"
+version = "1"
+
+# focus "open": the page may have the mouse whenever the board is open (its rows, its buttons, the wheel)
+[frames.board]
+page = "board/index.html"
+z = 260
+focus = "open"
+
+# The board is this frame's from the start, in toggle mode: Tab opens it and closes it. The other options are the ones
+# SetInterfaceOptionsForAll("scoreboard", { ... }) takes.
+[components.scoreboard]
+drawer = "board"
+contract = "scoreboard@1"
+mode = "toggle"
+title = "Example scoreboard"

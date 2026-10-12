@@ -1,0 +1,12 @@
+# The interface for the built panel: copy this file into your mode's ui/ folder and the build (dist/) into ui/panel/.
+api = 1
+name = "My interface"
+version = "1"
+
+[frames.panel]
+page = "panel/index.html"
+preload = true
+focus = "input"
+feeds = ["session"]
+events_in = ["panel.*"]
+events_out = ["panel.*"]

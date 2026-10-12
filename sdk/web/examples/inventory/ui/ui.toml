@@ -1,0 +1,14 @@
+# Example: an inventory window with the game's own item pictures. One frame, "inventory", which the mode shows and hides.
+api = 1
+name = "Example: an inventory window"
+version = "1"
+
+# preload: the page loads hidden at the join, so the window is there the moment the mode shows it.
+# focus "input": the mode may give it the mouse at once (it never asks for the keyboard).
+# events_out: the one event the page sends the mode.
+[frames.inventory]
+page = "inventory/index.html"
+preload = true
+z = 300
+focus = "input"
+events_out = ["inventory.close"]

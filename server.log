@@ -1,0 +1,44 @@
+[2026-10-12 12:31:44.436] [main] [info] KcdMp.Server 0.43.0 (protocol 96) starting: 30 Hz tick, 30 Hz snapshots, config server.toml, log C:\Users\Alessandro\Desktop\KCD2 dev server\server.log
+[2026-10-12 12:31:44.438] [main] [info] created server.toml from server.toml.example - your settings go there; an update replaces only the example
+[2026-10-12 12:31:44.499] [main] [info] combat tables: data/combat/items.json not usable (Could not find a part of the path 'C:\Users\Alessandro\Desktop\KCD2 dev server\data\combat\items.json'.); damage from the claims' own numbers (v1)
+[2026-10-12 12:31:44.500] [main] [info] item catalogue: data/combat/items.json not usable (Could not find a part of the path 'C:\Users\Alessandro\Desktop\KCD2 dev server\data\combat\items.json'.); item classes by GUID only
+[2026-10-12 12:31:44.501] [main] [info] soul catalogue: data/combat/items.json not usable (Could not find a part of the path 'C:\Users\Alessandro\Desktop\KCD2 dev server\data\combat\items.json'.); horse souls by GUID only
+[2026-10-12 12:31:44.501] [main] [info] look catalogue: data/combat/items.json not usable (Could not find a part of the path 'C:\Users\Alessandro\Desktop\KCD2 dev server\data\combat\items.json'.); the parts of a look pass unchecked
+[2026-10-12 12:31:44.502] [main] [info] buff catalogue: data/combat/items.json not usable (Could not find a part of the path 'C:\Users\Alessandro\Desktop\KCD2 dev server\data\combat\items.json'.); buffs by GUID only, nothing claimable
+[2026-10-12 12:31:44.502] [main] [info] perk catalogue: data/combat/items.json not usable (Could not find a part of the path 'C:\Users\Alessandro\Desktop\KCD2 dev server\data\combat\items.json'.); perks by GUID only
+[2026-10-12 12:31:44.503] [main] [info] consumables: data/combat/items.json not usable (Could not find a part of the path 'C:\Users\Alessandro\Desktop\KCD2 dev server\data\combat\items.json'.); a potion drunk does nothing on the server
+[2026-10-12 12:31:44.503] [main] [info] mesh catalogue: data/combat/items.json not usable (Could not find a part of the path 'C:\Users\Alessandro\Desktop\KCD2 dev server\data\combat\items.json'.); props by path only
+[2026-10-12 12:31:44.505] [main] [info] loot tables: data/combat/items.json not usable (Could not find a part of the path 'C:\Users\Alessandro\Desktop\KCD2 dev server\data\combat\items.json'.); every chest opens empty
+[2026-10-12 12:31:44.506] [main] [info] voice lines: data/combat/items.json not usable (Could not find a part of the path 'C:\Users\Alessandro\Desktop\KCD2 dev server\data\combat\items.json'.); actors say nothing
+[2026-10-12 12:31:44.507] [main] [info] smart objects: data/combat/items.json not usable (Could not find a part of the path 'C:\Users\Alessandro\Desktop\KCD2 dev server\data\combat\items.json'.); SetActorUse has no seats or work spots
+[2026-10-12 12:31:44.508] [main] [info] claimed buffs: none (the game applies its own potions, poisons and drunkenness)
+[2026-10-12 12:31:44.549] [main] [info] database: data/server.db (schema 1)
+[2026-10-12 12:31:44.591] [main] [info] heightmap: no data/heightmaps/klaster.hmap: no terrain check (tools/KcdMp.ExportHeightmap.exe of the Windows server folder makes it from the game)
+[2026-10-12 12:31:44.591] [main] [info] navmesh: no data/navmesh/klaster.knav: the actors walk straight lines, FindPath answers nil (tools/KcdMp.ExportNavmesh.exe of the Windows server folder makes it from the game)
+[2026-10-12 12:31:44.591] [main] [info] collision: no data/collision/klaster.kcol: no rays, no line of sight (tools/KcdMp.ExportCollision.exe of the Windows server folder makes it from the game)
+[2026-10-12 12:31:44.591] [main] [info] item ledger: PASSIVE - no item catalogue (no data/combat/items.json; tools/KcdMp.ExportTables.exe makes it from the game): every item a client reports is taken as the server's and nothing is removed, until the export is there
+[2026-10-12 12:31:44.592] [main] [info] progression audit: observe - levels, XP, perk points, perks, nourishment, energy and carry weight are judged and counted, a rise the server cannot explain is logged as "would set back"; nothing is sent to the player's game for it ([audit] mode = "enforce" puts back what the server cannot explain)
+[2026-10-12 12:31:44.592] [main] [info] progression audit: no perk catalogue (data/combat/items.json from tools/KcdMp.ExportTables.exe): the perk and perk point rules cannot tell a purchase from a gift and judge nothing about perks
+[2026-10-12 12:31:44.592] [main] [info] progression audit: no consumables table: a potion's XP bonus cannot be explained, so a rise up to three times the game's awards is accepted
+[2026-10-12 12:31:44.592] [main] [info] carry-weight audit: INERT - no item catalogue (data/combat/items.json), so no weight is known
+[2026-10-12 12:31:44.592] [main] [info] nourishment and energy audit: OBSERVE - hunger and exhaust are judged and logged, nothing is put back or tickled; [audit] mode = "enforce" lets the hard cap act
+[2026-10-12 12:31:44.592] [main] [info] nourishment and energy audit: the drain-below-the-floor and unexplained-rise advisories are counted, not sent (CF-11 is not calibrated)
+[2026-10-12 12:31:44.592] [main] [info] nourishment and energy audit: no consumables table - every use is credited the largest food and potion benefit (45 nourishment, 52 energy)
+[2026-10-12 12:31:44.593] [main] [info] mods: any
+[2026-10-12 12:31:44.596] [main] [info] client scripts: 1 file(s), 1.4 KB from C:\Users\Alessandro\Desktop\KCD2 dev server\gamemodes\freeroam\client (hud.lua) - at start
+[2026-10-12 12:31:44.599] [main] [info] voice: on, 25 m, 400 bytes a frame at most
+[2026-10-12 12:31:44.599] [main] [info] emotes: 9 known, the wheel wave, bow, cheer, clap, dance, come
+[2026-10-12 12:31:44.600] [main] [info] carts: no data/carts/klaster.toml: no routes yet (/cartroute makes them in the game; CreateCart and /cart make free carts)
+[2026-10-12 12:31:44.613] [main] [info] map: data/maps/klaster - nothing placed or removed yet
+[2026-10-12 12:31:44.620] [main] [info] weather: foggy_storm_no_rain, rain 0.00 (the server's rotation, for 4.8 game hours)
+[2026-10-12 12:31:44.654] [main] [info] [lua] C:\Users\Alessandro\Desktop\KCD2 dev server\gamemodes\freeroam.lua loaded (28 callbacks: OnGameModeInit, OnPlayerConnect, OnPlayerDisconnect, OnPlayerRequestSpawn, OnPlayerSpawn, OnPlayerText, OnPlayerCommandText, OnPlayerMount, OnPlayerDismount, OnPlayerPullDown, OnPlayerKnockedOut, OnPlayerWake, OnPlayerPickup, OnPlayerEnterZone, OnClientEvent, OnActorArrive, OnActorDeath, OnActorMount, OnActorDismount, OnActorInjury, OnPartyInvite, OnPartyInviteResponse, OnPlayerJoinParty, OnPlayerLeaveParty, OnPartyLeaderChange, OnPlayerWhistle, OnDiceMatchStart, OnDiceMatchEnd)
+[2026-10-12 12:31:44.656] [main] [info] [lua] freeroam on klaster: spawn 1280.0 1088.0 -1.0 yaw 0, 32 slots
+[2026-10-12 12:31:44.661] [main] [info] carry items: the players pick them up themselves (range 2.5 m)
+[2026-10-12 12:31:44.664] [main] [info] voice: levels Whisper 3 m, Normal (the default), Shout 50 m; players start at Normal
+[2026-10-12 12:31:44.666] [main] [info] [lua] accounts: no [gamemode.database] on this server, /register and /login are off
+[2026-10-12 12:31:44.666] [main] [info] game mode: freeroam, level klaster, 32 slots, area of interest 200 m (64 m cells)
+[2026-10-12 12:31:44.667] [main] [info] console: commands are read from this console's input (help lists them)
+[2026-10-12 12:31:44.668] [main] [info] threads: net=1 sim=1 workers=10 (cpu=12), server GC=True
+[2026-10-12 12:31:44.671] [main] [info] listening on udp/7777 (40 peers max, reliable messages at most 24 MB/s)
+[2026-10-12 12:31:44.696] [main] [info] status: http://<this host>:7777/ answers the server's status as JSON
+[2026-10-12 12:31:44.948] [.NET TP Worker] [info] master: announced to https://kcd-mp.com/server-list/heartbeat (0/32 players, klaster)

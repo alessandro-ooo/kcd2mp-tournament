@@ -1,0 +1,55 @@
+/* BasicRP's pages: a dark parchment window in the game's gold, the game's own fonts. */
+:root {
+  --gold: #f6e890;
+  --text: #f3eedf;
+  --dim: #b9ad92;
+  --panel: rgba(22, 18, 13, 0.94);
+  --edge: rgba(246, 232, 144, 0.35);
+  --soft: rgba(255, 255, 255, 0.05);
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  font: 16px/22px "KcdMp Regular", Georgia, "Times New Roman", serif;
+  color: var(--text);
+  user-select: none;
+}
+
+/* nothing on screen until the mode's first message: a frame made at the join never shows an empty window */
+body:not(.ready) .window { display: none; }
+
+.window {
+  position: fixed;
+  left: 50%;
+  top: 12vh;
+  transform: translateX(-50%);
+  width: 720px;
+  max-width: 92vw;
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  box-shadow: 0 16px 60px rgba(0, 0, 0, 0.65);
+  display: flex;
+  flex-direction: column;
+}
+
+.window header { display: flex; align-items: center; gap: 18px; padding: 12px 16px 8px; border-bottom: 1px solid var(--edge); }
+.window h1 { margin: 0; font: 28px/32px "KcdMp Display", Georgia, serif; color: var(--gold); }
+.window footer { display: flex; gap: 22px; padding: 8px 16px 12px; border-top: 1px solid var(--edge); color: var(--dim); font-size: 15px; }
+.window footer .hint { margin-left: auto; font-style: italic; }
+
+button { font: inherit; cursor: pointer; }
+.close { margin-left: auto; color: var(--dim); background: none; border: none; font: 26px/26px Georgia, serif; }
+.close:hover { color: var(--gold); }
+.action {
+  color: var(--gold);
+  background: rgba(246, 232, 144, 0.08);
+  border: 1px solid var(--edge);
+  border-radius: 4px;
+  padding: 2px 12px;
+}
+.action:hover:not(:disabled) { background: rgba(246, 232, 144, 0.18); }
+.action:disabled { color: var(--dim); cursor: default; opacity: 0.6; }

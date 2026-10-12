@@ -1,0 +1,80 @@
+/* A scoreboard in the middle of the screen, in the game's own typefaces. */
+:root {
+  --gold: #f6e890;
+  --text: #f3eedf;
+  --dim: #b9ad92;
+  --panel: rgba(18, 14, 10, 0.9);
+  --edge: rgba(246, 232, 144, 0.4);
+  --row: rgba(255, 255, 255, 0.04);
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  font: 17px/24px "KcdMp Regular", Georgia, "Times New Roman", serif;
+  color: var(--text);
+}
+
+#board {
+  position: fixed;
+  left: 50%;
+  top: 12vh;
+  transform: translateX(-50%);
+  min-width: 640px;
+  max-width: 90vw;
+  padding: 14px 20px 12px;
+  background: var(--panel);
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+}
+#board[hidden] { display: none; }
+
+header { display: flex; align-items: baseline; gap: 14px; margin-bottom: 10px; }
+h1 { margin: 0; font: 26px/32px "KcdMp Display", Georgia, serif; color: var(--gold); letter-spacing: 0.02em; }
+#count { color: var(--dim); }
+#close {
+  margin-left: auto;
+  font: 24px/24px Georgia, serif;
+  color: var(--dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+#close:hover { color: var(--gold); }
+#close[hidden] { display: none; }
+
+table { width: 100%; border-collapse: collapse; }
+th {
+  padding: 2px 10px;
+  text-align: left;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--edge);
+}
+td { padding: 3px 10px; white-space: nowrap; }
+tbody tr:nth-child(even) { background: var(--row); }
+tr.self td { color: var(--gold); }
+.center { text-align: center; }
+.right { text-align: right; }
+.marks { margin-left: 8px; font-size: 14px; color: var(--dim); }
+.ping-good { color: #9fd49a; }
+.ping-bad { color: #e08a72; }
+
+td button {
+  font: 13px/18px "KcdMp Regular", Georgia, serif;
+  color: var(--dim);
+  background: transparent;
+  border: 1px solid var(--edge);
+  border-radius: 3px;
+  padding: 0 6px;
+  cursor: pointer;
+}
+td button:hover { color: var(--gold); border-color: var(--gold); }
+
+footer { margin-top: 8px; text-align: right; font-size: 14px; color: var(--dim); }

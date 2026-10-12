@@ -1,0 +1,355 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0/win-x64",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {},
+    ".NETCoreApp,Version=v10.0/win-x64": {
+      "KcdMp.Server/0.43.0": {
+        "dependencies": {
+          "DotRecast.Detour": "2026.3.1",
+          "DotRecast.Recast": "2026.3.1",
+          "ENet-CSharp": "2.4.8",
+          "KcdMp.Api": "0.43.0",
+          "KcdMp.Protocol": "0.43.0",
+          "KeraLua": "1.4.10",
+          "Microsoft.Data.Sqlite": "10.0.12",
+          "MySqlConnector": "2.6.2",
+          "NLua": "1.7.9",
+          "Npgsql": "10.0.3",
+          "Tomlyn": "2.10.1"
+        },
+        "runtime": {
+          "KcdMp.Server.dll": {}
+        }
+      },
+      "DotRecast.Core/2026.3.1": {
+        "runtime": {
+          "lib/net10.0/DotRecast.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "DotRecast.Detour/2026.3.1": {
+        "dependencies": {
+          "DotRecast.Core": "2026.3.1"
+        },
+        "runtime": {
+          "lib/net10.0/DotRecast.Detour.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "DotRecast.Recast/2026.3.1": {
+        "dependencies": {
+          "DotRecast.Core": "2026.3.1"
+        },
+        "runtime": {
+          "lib/net10.0/DotRecast.Recast.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "ENet-CSharp/2.4.8": {
+        "runtime": {
+          "lib/net6.0/ENet-CSharp.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        },
+        "native": {
+          "runtimes/win/native/enet.dll": {
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "KeraLua/1.4.10": {
+        "runtime": {
+          "lib/net8.0/KeraLua.dll": {
+            "assemblyVersion": "1.4.10.0",
+            "fileVersion": "1.4.10.0"
+          }
+        },
+        "native": {
+          "runtimes/win-x64/native/lua54.dll": {
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Microsoft.Data.Sqlite/10.0.12": {
+        "dependencies": {
+          "Microsoft.Data.Sqlite.Core": "10.0.12",
+          "SQLitePCLRaw.bundle_e_sqlite3": "2.1.12",
+          "SQLitePCLRaw.core": "2.1.12"
+        }
+      },
+      "Microsoft.Data.Sqlite.Core/10.0.12": {
+        "dependencies": {
+          "SQLitePCLRaw.core": "2.1.12"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Data.Sqlite.dll": {
+            "assemblyVersion": "10.0.12.0",
+            "fileVersion": "10.0.1226.42308"
+          }
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.0": {
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/10.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.25.52411"
+          }
+        }
+      },
+      "MySqlConnector/2.6.2": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/MySqlConnector.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.6.2.0"
+          }
+        }
+      },
+      "NLua/1.7.9": {
+        "dependencies": {
+          "KeraLua": "1.4.10"
+        },
+        "runtime": {
+          "lib/net8.0/NLua.dll": {
+            "assemblyVersion": "1.7.9.0",
+            "fileVersion": "1.7.9.0"
+          }
+        }
+      },
+      "Npgsql/10.0.3": {
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.0"
+        },
+        "runtime": {
+          "lib/net10.0/Npgsql.dll": {
+            "assemblyVersion": "10.0.3.0",
+            "fileVersion": "10.0.3.0"
+          }
+        }
+      },
+      "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+        "dependencies": {
+          "SQLitePCLRaw.lib.e_sqlite3": "2.1.12",
+          "SQLitePCLRaw.provider.e_sqlite3": "2.1.12"
+        },
+        "runtime": {
+          "lib/netstandard2.0/SQLitePCLRaw.batteries_v2.dll": {
+            "assemblyVersion": "2.1.12.3116",
+            "fileVersion": "2.1.12.3116"
+          }
+        }
+      },
+      "SQLitePCLRaw.core/2.1.12": {
+        "runtime": {
+          "lib/netstandard2.0/SQLitePCLRaw.core.dll": {
+            "assemblyVersion": "2.1.12.3116",
+            "fileVersion": "2.1.12.3116"
+          }
+        }
+      },
+      "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+        "native": {
+          "runtimes/win-x64/native/e_sqlite3.dll": {
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+        "dependencies": {
+          "SQLitePCLRaw.core": "2.1.12"
+        },
+        "runtime": {
+          "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {
+            "assemblyVersion": "2.1.12.3116",
+            "fileVersion": "2.1.12.3116"
+          }
+        }
+      },
+      "Tomlyn/2.10.1": {
+        "runtime": {
+          "lib/net10.0/Tomlyn.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.10.1.0"
+          }
+        }
+      },
+      "KcdMp.Api/0.43.0": {
+        "runtime": {
+          "KcdMp.Api.dll": {
+            "assemblyVersion": "0.43.0.0",
+            "fileVersion": "0.43.0.0"
+          }
+        }
+      },
+      "KcdMp.Protocol/0.43.0": {
+        "runtime": {
+          "KcdMp.Protocol.dll": {
+            "assemblyVersion": "0.43.0.0",
+            "fileVersion": "0.43.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "KcdMp.Server/0.43.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DotRecast.Core/2026.3.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-26TjlLSHnTY3qBu0AzuItDqV8Q57TNdSsi1GCnrmCZlwQmUaLScz/FlZUwSJcv9P0PPKiAClfgwCVk8p+Z2ccw==",
+      "path": "dotrecast.core/2026.3.1",
+      "hashPath": "dotrecast.core.2026.3.1.nupkg.sha512"
+    },
+    "DotRecast.Detour/2026.3.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VGgJunTQepk9mpqAIIIWlxkr7Xf8kqUHu10ks+faXpFumc2nevoNmJ3NIlvFAPh/cPEPWOIMFmH/OFjDJ/LEZQ==",
+      "path": "dotrecast.detour/2026.3.1",
+      "hashPath": "dotrecast.detour.2026.3.1.nupkg.sha512"
+    },
+    "DotRecast.Recast/2026.3.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DHSfwiKJ4T+e/YjGUMVbTabegcyjk/cEhI2edEn9uSAnRmB6mI78LNtP0cvHYiyShx1Csb26bTrmefUVt5kygA==",
+      "path": "dotrecast.recast/2026.3.1",
+      "hashPath": "dotrecast.recast.2026.3.1.nupkg.sha512"
+    },
+    "ENet-CSharp/2.4.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qaV3YuYMQaVuCmw9Hl4S66FW7jkgY8wzzxGDwCdzBYwMePBKfcHyjt8cnIaP9A3XqpCK3sO4ME8v6kzRpNwJww==",
+      "path": "enet-csharp/2.4.8",
+      "hashPath": "enet-csharp.2.4.8.nupkg.sha512"
+    },
+    "KeraLua/1.4.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YS85X5ayUrJe2Xci56J95DFK50pzlKlq8iWocz8JRxhZQdrPmHhCc+8q+BKct6XC1DgyL35pnGGymlc711/LEA==",
+      "path": "keralua/1.4.10",
+      "hashPath": "keralua.1.4.10.nupkg.sha512"
+    },
+    "Microsoft.Data.Sqlite/10.0.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xUq9xUc653ue7ac2rMfCaf8UQN+U3zS8poWYlugycpvJllplMM0Mk7v/+MM0CTlu9zGvbGML4BPH8YWhrUOfGw==",
+      "path": "microsoft.data.sqlite/10.0.12",
+      "hashPath": "microsoft.data.sqlite.10.0.12.nupkg.sha512"
+    },
+    "Microsoft.Data.Sqlite.Core/10.0.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2aL9eL5HQr0V4b8V909SD+jQAx6qnTTl7sT/v3D8dIvmr2UGdpZIQxqm1pj2Js3e4EYTvpw0oMH7DjapJJuPPw==",
+      "path": "microsoft.data.sqlite.core/10.0.12",
+      "hashPath": "microsoft.data.sqlite.core.10.0.12.nupkg.sha512"
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-L3AdmZ1WOK4XXT5YFPEwyt0ep6l8lGIPs7F5OOBZc77Zqeo01Of7XXICy47628sdVl0v/owxYJTe86DTgFwKCA==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/10.0.0",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.10.0.0.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Logging.Abstractions/10.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-FU/IfjDfwaMuKr414SSQNTIti/69bHEMb+QKrskRb26oVqpx3lNFXMjs/RC9ZUuhBhcwDM2BwOgoMw+PZ+beqQ==",
+      "path": "microsoft.extensions.logging.abstractions/10.0.0",
+      "hashPath": "microsoft.extensions.logging.abstractions.10.0.0.nupkg.sha512"
+    },
+    "MySqlConnector/2.6.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dlTc/tsBa42szdvpj4nrHvQVUb0gsMwR9HT6J0Zz2OSqfP0CdYlGw+qQPqCpbnO97idfvclSjKYtM6y5QaBQaQ==",
+      "path": "mysqlconnector/2.6.2",
+      "hashPath": "mysqlconnector.2.6.2.nupkg.sha512"
+    },
+    "NLua/1.7.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fRTEILixMFY6dfidmYacS4qEgUDKJyi8dyYHfiLZAoBxItA9PvBLyIqMwPzqtJY4kHNRbmeoDJNGzeD90US4lg==",
+      "path": "nlua/1.7.9",
+      "hashPath": "nlua.1.7.9.nupkg.sha512"
+    },
+    "Npgsql/10.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-7nb5YzXuvWWJxB0J8DiyL3we+X4FOctZrt0fIBnucOIaIevFEEwGQVZKtiu9olXdlNAK1eNgqSral6r/jlhI4w==",
+      "path": "npgsql/10.0.3",
+      "hashPath": "npgsql.10.0.3.nupkg.sha512"
+    },
+    "SQLitePCLRaw.bundle_e_sqlite3/2.1.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-mAgscpQMLw5/nfA1Q5oJVAT29yROUo1ifZGbbTpx/lwZpSxMUGoYbKfmvdm8oXER+RzxqBmmQzeBEVKfeHv2nw==",
+      "path": "sqlitepclraw.bundle_e_sqlite3/2.1.12",
+      "hashPath": "sqlitepclraw.bundle_e_sqlite3.2.1.12.nupkg.sha512"
+    },
+    "SQLitePCLRaw.core/2.1.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ETpNw9DY3ckWLgRRAeCHj+GKOuPi61aeczkXhgHexUvqoZBAYg8RYESE2J7O1M7+o6QbdSEZwrw9bfqztUVWXg==",
+      "path": "sqlitepclraw.core/2.1.12",
+      "hashPath": "sqlitepclraw.core.2.1.12.nupkg.sha512"
+    },
+    "SQLitePCLRaw.lib.e_sqlite3/2.1.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fWi8Dbknuhgg72fWinIdjXVaqO1hHL4YBBwVLnr7e1c9TAZwJ0QE38j9syW1hwx6HaqEVTwI+O07WPdZn8Rp0w==",
+      "path": "sqlitepclraw.lib.e_sqlite3/2.1.12",
+      "hashPath": "sqlitepclraw.lib.e_sqlite3.2.1.12.nupkg.sha512"
+    },
+    "SQLitePCLRaw.provider.e_sqlite3/2.1.12": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-W3oH4XIfCzFrgUSDKHhN6N+dgzA5YHOR2VxX8GB6Qy7CyrJJgxPEG8NirgYWlPQC5P2jz2knSsexWu4tDUL33g==",
+      "path": "sqlitepclraw.provider.e_sqlite3/2.1.12",
+      "hashPath": "sqlitepclraw.provider.e_sqlite3.2.1.12.nupkg.sha512"
+    },
+    "Tomlyn/2.10.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ykjOY3IpYmC4SpPcAZRTl/w2jTmhPMDydHq8xcV7tTBAQ22nKBsOkPqauIrZlMjHm03cmKfV23UOPscKp+J4Og==",
+      "path": "tomlyn/2.10.1",
+      "hashPath": "tomlyn.2.10.1.nupkg.sha512"
+    },
+    "KcdMp.Api/0.43.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "KcdMp.Protocol/0.43.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

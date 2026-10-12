@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Notices</title>
+<link rel="stylesheet" href="../basicrp.css">
+<style>
+  #stack { position: fixed; right: 3vw; top: 14vh; width: 380px; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+  .notice {
+    background: var(--panel);
+    border: 1px solid var(--edge);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+    padding: 8px 14px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .notice.gone { opacity: 0; transform: translateX(30px); }
+</style>
+</head>
+<body>
+<div id="stack" aria-live="polite"></div>
+<script src="notices.js"></script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+/* A chat in the game's own typeface, bottom left, on a soft dark backing. The page is transparent: the game shows around it. */
+:root {
+  --gold: #f6e890;
+  --text: #f3eedf;
+  --dim: #b9ad92;
+  --backing: rgba(18, 14, 10, 0.55);
+  --backing-open: rgba(18, 14, 10, 0.82);
+  --edge: rgba(246, 232, 144, 0.35);
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  font: 17px/23px "KcdMp Regular", Georgia, "Times New Roman", serif;   /* the game's typeface, a serif in a browser */
+  color: var(--text);
+}
+
+#chat {
+  position: fixed;
+  left: 24px;
+  bottom: 140px;
+  width: min(560px, 42vw);
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: var(--backing);
+  transition: background 0.2s;
+}
+#chat[hidden] { display: none; }
+#chat.open { background: var(--backing-open); box-shadow: 0 0 0 1px var(--edge); }
+#chat.idle { background: transparent; transition: background 1.2s; }   /* every line has faded: nothing left to show */
+
+/* ten rows; the newest at the bottom */
+#lines {
+  height: calc(23px * 10);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+#lines > :first-child { margin-top: auto; }
+.line { flex: none; transition: opacity 1.2s; }
+.line.faded { opacity: 0; }
+#chat.open .line.faded { opacity: 1; }
+.author { font-weight: 700; color: var(--gold); }
+.channel { font-weight: 700; margin-right: 0.3em; }
+.server { color: #ffd070; }
+
+#newer { color: var(--dim); font-style: italic; font-size: 15px; }
+
+#entry { margin-top: 6px; position: relative; }
+#channels { display: flex; gap: 6px; margin-bottom: 4px; }
+#channels[hidden] { display: none; }
+#channels button {
+  font: inherit;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--dim);
+  background: transparent;
+  border: 1px solid var(--edge);
+  border-radius: 3px;
+  padding: 0 8px;
+  cursor: pointer;
+}
+#channels button[aria-selected="true"] { color: #1b150f; background: var(--gold); border-color: var(--gold); }
+
+#input {
+  box-sizing: border-box;
+  width: 100%;
+  font: inherit;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--edge);
+  border-radius: 3px;
+  padding: 3px 8px;
+  outline: none;
+}
+#input:focus { border-color: var(--gold); }
+#input[data-secret] { -webkit-text-security: disc; }   /* a command the server keeps secret (a password): its words are dots */
+
+/* the commands the server offers, under the box as the player types "/" */
+#suggestions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin: 4px 0 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--backing-open);
+  border: 1px solid var(--edge);
+  border-radius: 3px;
+  font-size: 15px;
+}
+#suggestions[hidden] { display: none; }
+#suggestions li { padding: 1px 10px; color: var(--dim); }
+#suggestions li b { color: var(--gold); font-weight: 700; }
+#suggestions li.picked { background: rgba(246, 232, 144, 0.12); }

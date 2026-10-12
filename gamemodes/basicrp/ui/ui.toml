@@ -1,0 +1,66 @@
+# BasicRP's web pages: the realm's welcome at the join, the notices in the corner, the stable master's offer and the server's
+# menu. A player whose game draws no web pages gets the same through the game's own dialogue and the chat (basicrp.lua, "the
+# town", "the welcome").
+api = 1
+name = "BasicRP"
+version = "1"
+
+# the realm's welcome: at the join the rules and a short test - the player types the word the page asks for - with the keyboard
+# and the mouse at once ("open"), in front of the password box, as role-play servers greet a player. The mode sends
+# {name, rules = {...}, answer}; the page sends welcome.accept. It draws its window at once: a page that holds the keys is on screen.
+[frames.welcome]
+page = "welcome/index.html"
+preload = true
+z = 400
+focus = "open"
+events_out = ["welcome.*"]
+
+# a short line in the corner for a moment: a purchase, the stable's trade (the mode sends {text})
+[frames.notices]
+page = "notices/index.html"
+preload = true
+z = 200
+
+# the stable master's horses: the mode sends {coats, current, price, money, hasHorse}; the page sends stable.buy {coat}, stable.close
+[frames.stable]
+page = "stable/index.html"
+preload = true
+z = 300
+focus = "input"
+events_out = ["stable.*"]
+
+# the menu (/menu or its key): the mode sends {help = {{color, text}...}, town = {{name, shop, talk}...}, money, horse, name, level};
+# the page sends menu.close
+[frames.menu]
+page = "menu/index.html"
+preload = true
+z = 310
+focus = "input"
+events_out = ["menu.*"]
+
+# The admin's boards (/board, /sign, /paint): pages drawn on boards in the world, each player's game drawing its own copy near one.
+# The notice board: its notices from the mode ({notices = {{title, text}...}}); the use key shows the next one, the page sends
+# board.read <its number>.
+[surfaces.board]
+page = "board/index.html"
+width = 768
+height = 512
+fps = 2
+range = 30
+events_out = ["board.read"]
+
+# A sign: its words from the mode ({name, line}).
+[surfaces.sign]
+page = "sign/index.html"
+width = 512
+height = 256
+fps = 2
+range = 40
+
+# Words painted on a wall: the letters alone on a clear page - the mode makes the board see-through, the wall shows between them.
+[surfaces.painted]
+page = "painted/index.html"
+width = 1024
+height = 256
+fps = 2
+range = 40
