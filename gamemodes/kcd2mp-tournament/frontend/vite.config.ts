@@ -1,10 +1,11 @@
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
   base: "./",
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   build: {
     outDir: "../bin/test", // kcd2mp's ui folder
     emptyOutDir: true,
