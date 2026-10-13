@@ -1,4 +1,5 @@
 local duel = require("utils.duel")
+local pendingDuelSettingsRoute = {}
 
 function OnPlayerCommandText(pid, cmd, args)
   cmd = cmd:lower()
@@ -30,9 +31,29 @@ function OnPlayerCommandText(pid, cmd, args)
     if duelData and duelData.status == "pending" then
       duel.changeStatus(duelData, "accepted")
       SendClientMessage(duelData.playerOne, COLOR_SERVER, GetPlayerName(pid) .. " has accepted your duel request.")
-      SendClientMessage(duelData.playerTwo, COLOR_SERVER, "You have accepted the duel request from " .. GetPlayerName(duelData.playerOne) .. ".")
-    else
-      SendClientMessage(pid, COLOR_RED, "You have no pending duel requests.")
+      SendClientMessage(duelData.playerTwo, COLOR_SERVER, "You have accepted the duel request from " .. GetPlayerName(duelData.playerOne) .. ". Waiting for player one to start the duel.")
+
+      local shown, showReason = ShowPlayerWebFrame(duelData.playerOne, "duelsettings")
+
+      if not shown then
+        SendClientMessage(duelData.playerOne, COLOR_RED, "Could not show interface: " .. tostring(showReason))
+        return true
+      end
+
+      local focused, focusReason = SetPlayerWebFocus(duelData.playerOne, "duelsettings", true, true, true)
+      if not focused then
+        SendClientMessage(duelData.playerOne, COLOR_RED, "Interface opened, but mouse focus failed: " .. tostring(focusReason))
+      end
+
+      if IsPlayerWebFrameReady(duelData.playerOne, "duelsettings") then
+        pendingDuelSettingsRoute[duelData.playerOne] = nil
+        local sent, sendReason = SendClientEvent(duelData.playerOne, "panel.duelsettings", { "main" })
+        if not sent then
+          SendClientMessage(duelData.playerOne, COLOR_RED, "Could not open duel settings page: " .. tostring(sendReason))
+        end
+      else
+        pendingDuelSettingsRoute[duelData.playerOne] = true
+      end
     end
   end
 
@@ -67,13 +88,13 @@ function OnPlayerCommandText(pid, cmd, args)
   end
 
   if cmd == "test" then
-    local shown, showReason = ShowPlayerWebFrame(pid, "test")
+    local shown, showReason = ShowPlayerWebFrame(pid, "duelsettings")
     if not shown then
       SendClientMessage(pid, COLOR_RED, "Could not show interface: " .. tostring(showReason))
       return true
     end
 
-    local focused, focusReason = SetPlayerWebFocus(pid, "test", false, true)
+    local focused, focusReason = SetPlayerWebFocus(pid, "duelsettings", true, true, true)
     if not focused then
       SendClientMessage(pid, COLOR_RED, "Interface opened, but mouse focus failed: " .. tostring(focusReason))
     end
@@ -81,4 +102,18 @@ function OnPlayerCommandText(pid, cmd, args)
   end
 
   return true
+end
+
+function OnPlayerWebReady(pid, frame)
+  if frame == "duelsettings" and pendingDuelSettingsRoute[pid] then
+    pendingDuelSettingsRoute[pid] = nil
+    local sent, sendReason = SendClientEvent(pid, "panel.duelsettings", { "main" })
+    if not sent then
+      SendClientMessage(pid, COLOR_RED, "Could not open duel settings page: " .. tostring(sendReason))
+    end
+  end
+end
+
+function OnPlayerDisconnect(pid)
+  pendingDuelSettingsRoute[pid] = nil
 end

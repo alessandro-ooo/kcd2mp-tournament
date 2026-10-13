@@ -2,9 +2,9 @@ api = 1
 name = "My server's interface"
 version = "1"
 
-[frames.test]
+[frames.duelsettings]
 page = "bin/index.html"
-focus = "input"
+focus = "open"
 events_in = ["panel.*"]
 events_out = ["panel.*"]
 feeds = ["session"]
