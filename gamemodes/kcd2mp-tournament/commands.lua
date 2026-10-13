@@ -66,5 +66,19 @@ function OnPlayerCommandText(pid, cmd, args)
     ReloadGameMode();
   end
 
+  if cmd == "test" then
+    local shown, showReason = ShowPlayerWebFrame(pid, "test")
+    if not shown then
+      SendClientMessage(pid, COLOR_RED, "Could not show interface: " .. tostring(showReason))
+      return true
+    end
+
+    local focused, focusReason = SetPlayerWebFocus(pid, "test", false, true)
+    if not focused then
+      SendClientMessage(pid, COLOR_RED, "Interface opened, but mouse focus failed: " .. tostring(focusReason))
+    end
+    return true
+  end
+
   return true
 end

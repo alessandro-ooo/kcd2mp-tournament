@@ -54,7 +54,7 @@ slow_query_ms = 500                 # a query taking longer gets a log line
 [client]
 scripts = ""                        # a folder of .lua files; "" = the client/ folder next to the game mode's script or plugin
 console = false                     # true = players may open the F9 console window on this server
-ui = ""                             # a folder (or .zip) of web interface files; "" = the ui/ folder next to the game mode's client/ folder
+ui = "gamemodes/kcd2mp-tournament/ui" # a folder (or .zip) of web interface files; "" = the ui/ folder next to the game mode's client/ folder
 ui_cdn = ""                         # https://... - big media files come from here (upload what --pack-ui writes); "" = none
 ui_max_mb = 8                       # the most the web interface may send over the game connection (MB, up to 64)
 ui_report_errors = false            # true = the players' games tell the game mode about script errors in its pages (OnPlayerWebError; a few a minute each)
