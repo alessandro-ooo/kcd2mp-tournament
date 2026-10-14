@@ -30,7 +30,9 @@ function OnClientEvent(pid, name, payload, source)
   if type(settings.time) ~= "number" or settings.time % 1 ~= 0 or settings.time < 1 or settings.time > 3600
     or type(settings.numberOfRounds) ~= "number" or settings.numberOfRounds % 1 ~= 0
     or settings.numberOfRounds < 1 or settings.numberOfRounds > 3
-    or type(settings.useOwnWeapons) ~= "boolean" or type(settings.isRanked) ~= "boolean" then
+    or type(settings.useOwnWeapons) ~= "boolean" or type(settings.isRanked) ~= "boolean"
+    or (settings.weaponId ~= nil and (type(settings.weaponId) ~= "number" or settings.weaponId % 1 ~= 0 or settings.weaponId < 1))
+    or (settings.shieldId ~= nil and (type(settings.shieldId) ~= "number" or settings.shieldId % 1 ~= 0 or settings.shieldId < 1)) then
     SendClientMessage(pid, COLOR_RED, "Duel settings are invalid.")
     return
   end
@@ -44,6 +46,8 @@ function OnClientEvent(pid, name, payload, source)
   duelInfo.settings = {
     time = settings.time,
     useOwnWeapons = settings.useOwnWeapons,
+    weaponId = settings.weaponId,
+    shieldId = settings.shieldId,
     isRanked = settings.isRanked,
     numberOfRounds = settings.numberOfRounds,
   }

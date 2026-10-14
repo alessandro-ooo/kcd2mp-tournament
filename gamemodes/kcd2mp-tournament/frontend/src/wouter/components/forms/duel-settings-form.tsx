@@ -5,6 +5,9 @@ import DialogBody from "../dialog/dialogbody";
 import Button from "./inputs/button";
 import DialogElo from "../dialog/dialogelo";
 import DialogPlayers from "../dialog/dialogplayers";
+import weapons from "../../../utils/melee.json";
+import shields from "../../../utils/shields.json";
+import Select from "./inputs/select";
 
 type DuelSettingsForm = {
   currentElo: number;
@@ -21,6 +24,8 @@ const DuelSettingsForm = ({ nearbyPlayers, currentElo }: DuelSettingsForm) => {
     isRanked: boolean;
     currentElo?: number;
     numberOfRounds: number;
+    weaponId?: number;
+    shieldId?: number;
     nearbyPlayers: {
       name: string;
       elo: number;
@@ -49,12 +54,9 @@ const DuelSettingsForm = ({ nearbyPlayers, currentElo }: DuelSettingsForm) => {
   });
 
   const watchisRanked = watch("isRanked");
+  const watchIsOwnWeapons = watch("useOwnWeapons");
   const getNearbyPlayers = getValues("nearbyPlayers");
-
-  console.log("isValid", isValid);
-
   const watchSelectedPlayer = watch("selectedPlayer");
-
   const isInviteValid = !!watchSelectedPlayer && isValid;
 
   return (
@@ -82,6 +84,36 @@ const DuelSettingsForm = ({ nearbyPlayers, currentElo }: DuelSettingsForm) => {
           <Checkbox label="Use own weapons" {...register("useOwnWeapons")} />
           <Checkbox label="Ranked duel" {...register("isRanked")} />
         </div>
+
+        {!watchIsOwnWeapons && (
+          <div className="flex flex-col gap-2">
+            {" "}
+            <Select
+              {...register("weaponId")}
+              label="Weapon"
+              selected={{ name: "Fists", value: "" }}
+              items={[
+                { name: "Fists", value: "" },
+                ...weapons.map((weapon) => ({
+                  name: weapon.englishName || weapon.name,
+                  value: String(weapon.id),
+                })),
+              ]}
+            />
+            <Select
+              {...register("shieldId")}
+              label="Shield"
+              selected={{ name: "No shield", value: "" }}
+              items={[
+                { name: "No shield", value: "" },
+                ...shields.map((shield) => ({
+                  name: shield.englishName || shield.name,
+                  value: String(shield.id),
+                })),
+              ]}
+            />
+          </div>
+        )}
 
         <DialogPlayers
           onPlayerClick={(name) => setValue("selectedPlayer", name)}

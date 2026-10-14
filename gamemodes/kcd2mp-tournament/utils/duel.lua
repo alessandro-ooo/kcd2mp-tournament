@@ -24,6 +24,8 @@ function duel.add(playerOne, playerTwo)
     settings = {
       time = 60,
       useOwnWeapons = false,
+      weaponId = nil,
+      shieldId = nil,
       isRanked = false,
       numberOfRounds = 1,
     },
