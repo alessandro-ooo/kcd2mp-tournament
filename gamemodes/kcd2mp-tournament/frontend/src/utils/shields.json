@@ -1,0 +1,987 @@
+[
+    {
+        "id":  1534,
+        "name":  "combattest_shield",
+        "englishName":  "A suspicious bag"
+    },
+    {
+        "id":  1535,
+        "name":  "combattest_shield_bad",
+        "englishName":  "A suspicious bag"
+    },
+    {
+        "id":  1797,
+        "name":  "dvojityAgent_petrsShield",
+        "englishName":  "Lord of Suchotlesky heater shield"
+    },
+    {
+        "id":  3421,
+        "name":  "nebakovPruzkum_lordsOfLeipaShield",
+        "englishName":  "Lords of Leipa shield"
+    },
+    {
+        "id":  4265,
+        "name":  "shieldCuman",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4266,
+        "name":  "shieldCuman_01",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4267,
+        "name":  "shieldCuman_01_A",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4269,
+        "name":  "shieldCuman_01_B",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4272,
+        "name":  "shieldCuman_02",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4274,
+        "name":  "shieldCuman_03",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4276,
+        "name":  "shieldCuman_04",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4278,
+        "name":  "shieldCuman_05",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4280,
+        "name":  "shieldCuman_06",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4282,
+        "name":  "shieldCuman_07",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4284,
+        "name":  "shieldCuman_08",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4286,
+        "name":  "shieldCuman_09",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4288,
+        "name":  "shieldCuman_10",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4290,
+        "name":  "shieldCuman_11",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4292,
+        "name":  "shieldCuman_12",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4293,
+        "name":  "shieldCuman_12_B",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4296,
+        "name":  "shieldCuman_12_C",
+        "englishName":  "Cuman shield"
+    },
+    {
+        "id":  4298,
+        "name":  "shieldCuman_summer",
+        "englishName":  "Shield of Summer"
+    },
+    {
+        "id":  4300,
+        "name":  "shieldHeater_autumn",
+        "englishName":  "Shield of Autumn"
+    },
+    {
+        "id":  4302,
+        "name":  "shieldHeater_bergov_A",
+        "englishName":  "Von Bergow knight shield"
+    },
+    {
+        "id":  4304,
+        "name":  "shieldHeater_chevronny_gw",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4306,
+        "name":  "shieldHeater_chevronny_rw_a",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4308,
+        "name":  "shieldHeater_chevronny_rw_b",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4310,
+        "name":  "shieldHeater_chevronny_ryw",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4312,
+        "name":  "shieldHeater_chevronny_yk",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4314,
+        "name":  "shieldHeater_eagle_A",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4316,
+        "name":  "shieldHeater_eagle_B",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4318,
+        "name":  "shieldHeater_holohlav_A",
+        "englishName":  "Lords of Holohlavy heater shield"
+    },
+    {
+        "id":  4320,
+        "name":  "shieldHeater_lipa_A",
+        "englishName":  "Lords of Leipa heater shield"
+    },
+    {
+        "id":  4322,
+        "name":  "shieldHeater_lipa_B",
+        "englishName":  "Lords of Leipa heater shield"
+    },
+    {
+        "id":  4324,
+        "name":  "shieldHeater_peony",
+        "englishName":  "Sir Zavish heater shield"
+    },
+    {
+        "id":  4325,
+        "name":  "shieldHeater_pisek_A",
+        "englishName":  "Lord Pisek heater shield"
+    },
+    {
+        "id":  4327,
+        "name":  "shieldHeater_pisek_B",
+        "englishName":  "Lord of Pisek knight shield"
+    },
+    {
+        "id":  4329,
+        "name":  "shieldHeater_pisek_C",
+        "englishName":  "Lords of Holohlavy heater shield"
+    },
+    {
+        "id":  4331,
+        "name":  "shieldHeater_pisek_D",
+        "englishName":  "Lords of Holohlavy heater shield"
+    },
+    {
+        "id":  4333,
+        "name":  "shieldHeater_polner",
+        "englishName":  "Lord Polner heater shield"
+    },
+    {
+        "id":  4335,
+        "name":  "shieldHeater_prague_A",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4337,
+        "name":  "shieldHeater_prague_B",
+        "englishName":  "City of Prague heater shield"
+    },
+    {
+        "id":  4339,
+        "name":  "shieldHeater_prague_C",
+        "englishName":  "City of Prague heater shield"
+    },
+    {
+        "id":  4341,
+        "name":  "shieldHeater_prague_D",
+        "englishName":  "City of Prague heater shield"
+    },
+    {
+        "id":  4343,
+        "name":  "shieldHeater_sigismund_A",
+        "englishName":  "Hungarian heater shield"
+    },
+    {
+        "id":  4345,
+        "name":  "shieldHeater_sigismund_B",
+        "englishName":  "Hungarian heater shield"
+    },
+    {
+        "id":  4347,
+        "name":  "shieldHeater_sigismund_C",
+        "englishName":  "Hungarian heater shield"
+    },
+    {
+        "id":  4349,
+        "name":  "shieldHeater_sigismund_D",
+        "englishName":  "Hungarian heater shield"
+    },
+    {
+        "id":  4351,
+        "name":  "ShieldHeater_TournamentA",
+        "englishName":  "Kuttenberg heater shield"
+    },
+    {
+        "id":  4353,
+        "name":  "ShieldHeater_TournamentB",
+        "englishName":  "Kuttenberg heater shield"
+    },
+    {
+        "id":  4355,
+        "name":  "shieldHeater_whole_K",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4357,
+        "name":  "shieldHeater_whole_R",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4359,
+        "name":  "shieldHeater_whole_T",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4361,
+        "name":  "shieldHeater_whole_W",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4363,
+        "name":  "shieldHeater_zavis",
+        "englishName":  "Sir Zavish heater shield"
+    },
+    {
+        "id":  4365,
+        "name":  "shieldHeater_zizka",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4367,
+        "name":  "shieldHeater_zizka_inverted",
+        "englishName":  "Heater shield"
+    },
+    {
+        "id":  4368,
+        "name":  "shieldKite_3Wells_A",
+        "englishName":  "Painter’s Guild knight shield"
+    },
+    {
+        "id":  4370,
+        "name":  "shieldKite_3Wells_B",
+        "englishName":  "Painter’s Guild knight shield"
+    },
+    {
+        "id":  4372,
+        "name":  "shieldKite_armoursmith",
+        "englishName":  "Painter’s Guild knight shield"
+    },
+    {
+        "id":  4373,
+        "name":  "shieldKite_bendy_by",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4375,
+        "name":  "shieldKite_bendy_devil",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4376,
+        "name":  "shieldKite_bendy_gw",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4378,
+        "name":  "shieldKite_bendy_gy",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4380,
+        "name":  "shieldKite_bendy_quart_by",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4382,
+        "name":  "shieldKite_bendy_quart_kw",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4384,
+        "name":  "shieldKite_bendy_quart_kw_inverted",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4385,
+        "name":  "shieldKite_bendy_quart_rw_A",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4387,
+        "name":  "shieldKite_bendy_quart_rw_B",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4389,
+        "name":  "shieldKite_bendy_quart_rwg",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4391,
+        "name":  "shieldKite_bendy_quart_rwy",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4393,
+        "name":  "shieldKite_bendy_quart_ry",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4395,
+        "name":  "shieldKite_bendy_rg",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4397,
+        "name":  "shieldKite_bendy_rw",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4399,
+        "name":  "shieldKite_bendy_ry",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4401,
+        "name":  "shieldKite_bergov_A",
+        "englishName":  "Von Bergow knight shield"
+    },
+    {
+        "id":  4403,
+        "name":  "shieldKite_bergov_B",
+        "englishName":  "Von Bergow knight shield"
+    },
+    {
+        "id":  4405,
+        "name":  "shieldKite_blacksmith",
+        "englishName":  "Painter’s Guild knight shield"
+    },
+    {
+        "id":  4407,
+        "name":  "shieldKite_cech_A",
+        "englishName":  "Cobblers’ Guild knight shield"
+    },
+    {
+        "id":  4409,
+        "name":  "shieldKite_cech_B",
+        "englishName":  "Apothecary guild knight shield"
+    },
+    {
+        "id":  4411,
+        "name":  "shieldKite_cech_C",
+        "englishName":  "Saddler guild knight shield"
+    },
+    {
+        "id":  4413,
+        "name":  "shieldKite_cech_D",
+        "englishName":  "Butcher guild knight shield"
+    },
+    {
+        "id":  4415,
+        "name":  "shieldKite_cech_E",
+        "englishName":  "Painter’s Guild knight shield"
+    },
+    {
+        "id":  4417,
+        "name":  "shieldKite_cech_F",
+        "englishName":  "Baker guild knight shield"
+    },
+    {
+        "id":  4419,
+        "name":  "shieldKite_chevronny_gw",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4421,
+        "name":  "shieldKite_chevronny_rw",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4423,
+        "name":  "shieldKite_chevronny_rwy",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4425,
+        "name":  "shieldKite_chevronny_yk",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4427,
+        "name":  "shieldKite_cimburk",
+        "englishName":  "Lords of Zimburg knight shield"
+    },
+    {
+        "id":  4429,
+        "name":  "shieldKite_cross_gw",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4431,
+        "name":  "shieldKite_cross_gy",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4433,
+        "name":  "shieldKite_cross_rw",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4435,
+        "name":  "shieldKite_cross_ry",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4437,
+        "name":  "shieldKite_cross_yk",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4439,
+        "name":  "shieldKite_deserter_A",
+        "englishName":  "Deserter’s kite shield"
+    },
+    {
+        "id":  4441,
+        "name":  "shieldKite_embattled_gy",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4443,
+        "name":  "shieldKite_embattled_wk",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4445,
+        "name":  "shieldKite_embattled_yk",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4447,
+        "name":  "shieldKite_gyronny_gy",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4448,
+        "name":  "shieldKite_gyronny_gy_B",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4452,
+        "name":  "shieldKite_gyronny_rwy",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4454,
+        "name":  "shieldKite_gyronny_yb",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4456,
+        "name":  "shieldKite_gyronny_yk",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4458,
+        "name":  "shieldKite_kuttenberg_A",
+        "englishName":  "Kuttenberg knight shield"
+    },
+    {
+        "id":  4460,
+        "name":  "shieldKite_kuttenberg_B",
+        "englishName":  "Kuttenberg knight shield"
+    },
+    {
+        "id":  4462,
+        "name":  "shieldKite_lipa",
+        "englishName":  "Von Bergow knight shield"
+    },
+    {
+        "id":  4464,
+        "name":  "shieldKite_nebak_A",
+        "englishName":  "Lords of Nebakov kite shield"
+    },
+    {
+        "id":  4466,
+        "name":  "shieldKite_nebak_B",
+        "englishName":  "Lords of Nebakov kite shield"
+    },
+    {
+        "id":  4468,
+        "name":  "shieldKite_nebak_C",
+        "englishName":  "Lords of Nebakov kite shield"
+    },
+    {
+        "id":  4470,
+        "name":  "shieldKite_nebak_C_inverted",
+        "englishName":  "Lords of Nebakov kite shield"
+    },
+    {
+        "id":  4471,
+        "name":  "shieldKite_owl",
+        "englishName":  "Owl shield"
+    },
+    {
+        "id":  4473,
+        "name":  "shieldKite_partyPerBend_by",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4474,
+        "name":  "shieldkite_partyPerBend_by",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4477,
+        "name":  "shieldKite_partyPerBend_gr",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4479,
+        "name":  "shieldKite_partyPerBend_rw",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4481,
+        "name":  "shieldKite_partyPerBend_wk",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4483,
+        "name":  "shieldKite_partyPerBend_yk",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4485,
+        "name":  "shieldKite_partyPerFess_yb",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4487,
+        "name":  "shieldKite_partyPerPale_rw",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4489,
+        "name":  "shieldKite_pisek_A",
+        "englishName":  "Lords of Hradetz knight shield"
+    },
+    {
+        "id":  4491,
+        "name":  "shieldKite_pisek_B",
+        "englishName":  "Lords of Hradetz knight shield"
+    },
+    {
+        "id":  4493,
+        "name":  "shieldKite_pisek_C",
+        "englishName":  "Lords of Hradetz knight shield"
+    },
+    {
+        "id":  4495,
+        "name":  "shieldKite_prague_A",
+        "englishName":  "Old Town of Prague knight shield"
+    },
+    {
+        "id":  4497,
+        "name":  "shieldKite_prague_B",
+        "englishName":  "Old Town of Prague knight shield"
+    },
+    {
+        "id":  4499,
+        "name":  "shieldKite_prague_B_inverted",
+        "englishName":  "Old Town of Prague knight shield"
+    },
+    {
+        "id":  4500,
+        "name":  "shieldKite_prague_C",
+        "englishName":  "Old Town of Prague knight shield"
+    },
+    {
+        "id":  4502,
+        "name":  "shieldKite_prague_C_inverted",
+        "englishName":  "Old Town of Prague knight shield"
+    },
+    {
+        "id":  4503,
+        "name":  "shieldKite_redstar_A",
+        "englishName":  "Order of the cross knight shield"
+    },
+    {
+        "id":  4505,
+        "name":  "shieldKite_redstar_B",
+        "englishName":  "Order of the cross knight shield"
+    },
+    {
+        "id":  4507,
+        "name":  "shieldKite_ruthard_A",
+        "englishName":  "Lord Ruthard knight shield"
+    },
+    {
+        "id":  4509,
+        "name":  "shieldKite_ruthard_A_inverted",
+        "englishName":  "Lord Ruthard knight shield"
+    },
+    {
+        "id":  4510,
+        "name":  "shieldKite_semin_A",
+        "englishName":  "Lords of Semine knight shield"
+    },
+    {
+        "id":  4512,
+        "name":  "shieldKite_sigismund_A",
+        "englishName":  "Hungarian knight shield"
+    },
+    {
+        "id":  4514,
+        "name":  "shieldKite_sigismund_B",
+        "englishName":  "Hungarian knight shield"
+    },
+    {
+        "id":  4516,
+        "name":  "shieldKite_sigismund_C",
+        "englishName":  "Hungarian knight shield"
+    },
+    {
+        "id":  4518,
+        "name":  "shieldKite_skalitz",
+        "englishName":  "Skalitz knight’s shield"
+    },
+    {
+        "id":  4519,
+        "name":  "shieldKite_skalitz_02",
+        "englishName":  "Sir Radzig knight’s shield"
+    },
+    {
+        "id":  4522,
+        "name":  "shieldKite_spring",
+        "englishName":  "Shield of Spring"
+    },
+    {
+        "id":  4524,
+        "name":  "shieldKite_teuton_01",
+        "englishName":  "Teutonic knight’s shield"
+    },
+    {
+        "id":  4525,
+        "name":  "shieldKite_teuton_02",
+        "englishName":  "Teutonic knight’s shield"
+    },
+    {
+        "id":  4526,
+        "name":  "shieldKite_teuton_03",
+        "englishName":  "Teutonic knight’s shield"
+    },
+    {
+        "id":  4527,
+        "name":  "shieldKite_twitch",
+        "englishName":  "Warhorse shield"
+    },
+    {
+        "id":  4529,
+        "name":  "shieldKite_vavak_A",
+        "englishName":  "Lords of Hradetz knight shield"
+    },
+    {
+        "id":  4531,
+        "name":  "shieldKite_vavak_B",
+        "englishName":  "Lords of Hradetz knight shield"
+    },
+    {
+        "id":  4533,
+        "name":  "shieldKite_weaponsmith",
+        "englishName":  "Painter’s Guild knight shield"
+    },
+    {
+        "id":  4534,
+        "name":  "shieldKite_whole_K",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4536,
+        "name":  "shieldKite_whole_R",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4538,
+        "name":  "shieldKite_whole_T",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4540,
+        "name":  "shieldKite_whole_W",
+        "englishName":  "Knight shield"
+    },
+    {
+        "id":  4542,
+        "name":  "shieldKiteTraining",
+        "englishName":  "Practice shield"
+    },
+    {
+        "id":  4544,
+        "name":  "shieldPavise_bar_GW",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4546,
+        "name":  "shieldPavise_bar_GY",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4548,
+        "name":  "shieldPavise_bar_KW",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4550,
+        "name":  "shieldPavise_bar_RK",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4552,
+        "name":  "shieldPavise_bar_RW",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4554,
+        "name":  "shieldPavise_bar_RY",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4556,
+        "name":  "shieldPavise_bergov_A",
+        "englishName":  "Trosky pavese"
+    },
+    {
+        "id":  4558,
+        "name":  "shieldPavise_bergov_B",
+        "englishName":  "Trosky pavese"
+    },
+    {
+        "id":  4560,
+        "name":  "shieldPavise_dragon",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4562,
+        "name":  "shieldPavise_GY_A",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4564,
+        "name":  "shieldPavise_half_KW",
+        "englishName":  "Halved pavese"
+    },
+    {
+        "id":  4566,
+        "name":  "shieldPavise_half_RK",
+        "englishName":  "Halved pavese"
+    },
+    {
+        "id":  4568,
+        "name":  "shieldPavise_half_RW",
+        "englishName":  "Halved pavese"
+    },
+    {
+        "id":  4570,
+        "name":  "shieldPavise_pisek_A",
+        "englishName":  "Suchdol pavese"
+    },
+    {
+        "id":  4572,
+        "name":  "shieldPavise_pisek_B",
+        "englishName":  "Suchdol pavese"
+    },
+    {
+        "id":  4574,
+        "name":  "shieldPavise_pisek_C",
+        "englishName":  "Suchdol pavese"
+    },
+    {
+        "id":  4576,
+        "name":  "shieldPavise_Pisek_Combat_A",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4577,
+        "name":  "shieldPavise_Pisek_Combat_A_02",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4578,
+        "name":  "shieldPavise_Pisek_Combat_B",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4579,
+        "name":  "shieldPavise_Pisek_Combat_C",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4580,
+        "name":  "shieldPavise_Pisek_Combat_D",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4581,
+        "name":  "shieldPavise_prague_A",
+        "englishName":  "City of Prague pavese"
+    },
+    {
+        "id":  4583,
+        "name":  "shieldPavise_prague_B",
+        "englishName":  "City of Prague pavese"
+    },
+    {
+        "id":  4585,
+        "name":  "shieldPavise_prague_C",
+        "englishName":  "City of Prague pavese"
+    },
+    {
+        "id":  4587,
+        "name":  "shieldPavise_prague_D",
+        "englishName":  "City of Prague pavese"
+    },
+    {
+        "id":  4589,
+        "name":  "shieldPavise_RG_A",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4591,
+        "name":  "shieldPavise_RGW_A",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4593,
+        "name":  "shieldPavise_RK_A",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4595,
+        "name":  "shieldPavise_RW_A",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4597,
+        "name":  "shieldPavise_RWY_A",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4599,
+        "name":  "shieldPavise_RY_A",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4601,
+        "name":  "shieldPavise_sigismund_A",
+        "englishName":  "Hungarian pavese"
+    },
+    {
+        "id":  4603,
+        "name":  "shieldPavise_sigismund_B",
+        "englishName":  "Hungarian pavese"
+    },
+    {
+        "id":  4605,
+        "name":  "shieldPavise_teuton_01",
+        "englishName":  "Teutonic pavese"
+    },
+    {
+        "id":  4606,
+        "name":  "shieldPavise_teuton_02",
+        "englishName":  "Teutonic pavese"
+    },
+    {
+        "id":  4607,
+        "name":  "shieldPavise_whole_G",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4609,
+        "name":  "shieldPavise_whole_K",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4611,
+        "name":  "shieldPavise_whole_R",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4613,
+        "name":  "shieldPavise_whole_W",
+        "englishName":  "Painted pavese"
+    },
+    {
+        "id":  4615,
+        "name":  "shieldPavise_winter",
+        "englishName":  "Shield of Winter"
+    },
+    {
+        "id":  4920,
+        "name":  "taboryLapkuTrosecko_tlamaShield",
+        "englishName":  "Johnny the Gob’s shield"
+    },
+    {
+        "id":  4975,
+        "name":  "test_barbora_shield",
+        "englishName":  "A suspicious bag"
+    },
+    {
+        "id":  4990,
+        "name":  "test_better_shield",
+        "englishName":  "A suspicious bag"
+    },
+    {
+        "id":  5074,
+        "name":  "tournament_shieldHeaterGold",
+        "englishName":  "Golden tournament shield"
+    },
+    {
+        "id":  5075,
+        "name":  "tournament_shieldHeaterRed",
+        "englishName":  "Red tournament shield"
+    },
+    {
+        "id":  5563,
+        "name":  "zbranePanaSemina_sukShield",
+        "englishName":  "Gnarly’s shield"
+    },
+    {
+        "id":  5592,
+        "name":  "ztracenaCest_lordsOfHolohlavShield",
+        "englishName":  "Lord of Holohlavy heater shield"
+    }
+]

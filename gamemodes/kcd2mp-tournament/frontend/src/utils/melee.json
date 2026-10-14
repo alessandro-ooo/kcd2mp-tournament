@@ -1,1897 +1,912 @@
 [
-    {
-        "id":  148,
-        "name":  "artefakt_shortswordBavor",
-        "englishName":  "Boleslav Bavor’s sword"
-    },
-    {
-        "id":  150,
-        "name":  "artefakt_shortswordBavor_reforged",
-        "englishName":  "Boleslav Bavor’s reforged sword"
-    },
-    {
-        "id":  151,
-        "name":  "autotest_halberd",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  154,
-        "name":  "axeBattle01",
-        "englishName":  "Bearded axe"
-    },
-    {
-        "id":  156,
-        "name":  "axeBattle02",
-        "englishName":  "Broad axe"
-    },
-    {
-        "id":  158,
-        "name":  "axeBattle03",
-        "englishName":  "Horseman’s pick"
-    },
-    {
-        "id":  160,
-        "name":  "axeBattle04",
-        "englishName":  "Knight’s axe"
-    },
-    {
-        "id":  162,
-        "name":  "axeCalvaria",
-        "englishName":  "Calvaria axe"
-    },
-    {
-        "id":  164,
-        "name":  "axeCuman",
-        "englishName":  "Cuman fokos"
-    },
-    {
-        "id":  166,
-        "name":  "axeFancy",
-        "englishName":  "Executioner’s axe"
-    },
-    {
-        "id":  168,
-        "name":  "axeTraining",
-        "englishName":  "Training axe"
-    },
-    {
-        "id":  169,
-        "name":  "axeWork01",
-        "englishName":  "Work axe"
-    },
-    {
-        "id":  171,
-        "name":  "axeWork02",
-        "englishName":  "Carpenter’s axe"
-    },
-    {
-        "id":  174,
-        "name":  "axeWork02_kunesh",
-        "englishName":  "Skalitz axe"
-    },
-    {
-        "id":  193,
-        "name":  "balatro_jimboMace",
-        "englishName":  "Jimbo’s marotte"
-    },
-    {
-        "id":  622,
-        "name":  "bratriZCimburka_balsanHalberd",
-        "englishName":  "Balshanka"
-    },
-    {
-        "id":  623,
-        "name":  "bratriZCimburka_balsanSword",
-        "englishName":  "Balshan’s sword"
-    },
-    {
-        "id":  1514,
-        "name":  "combattest_axe",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  1526,
-        "name":  "combattest_halberd",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  1527,
-        "name":  "combattest_halberd_bad",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  1530,
-        "name":  "combattest_mace",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  1531,
-        "name":  "combattest_mace_bad",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  1533,
-        "name":  "combattest_sabre",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  1534,
-        "name":  "combattest_shield",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  1535,
-        "name":  "combattest_shield_bad",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  1536,
-        "name":  "combattest_short_sword",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  1537,
-        "name":  "combattest_short_sword_bad",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  1539,
-        "name":  "combattest_sword_long",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  1645,
-        "name":  "daggerAncient",
-        "englishName":  "Old dagger"
-    },
-    {
-        "id":  1646,
-        "name":  "daggerBruncvik",
-        "englishName":  "Brunswick’s dagger"
-    },
-    {
-        "id":  1647,
-        "name":  "daggerCommon",
-        "englishName":  "Dagger"
-    },
-    {
-        "id":  1793,
-        "name":  "duels_blackKnightSabre",
-        "englishName":  "Owl’s Claw sabre"
-    },
-    {
-        "id":  1797,
-        "name":  "dvojityAgent_petrsShield",
-        "englishName":  "Lord of Suchotlesky heater shield"
-    },
-    {
-        "id":  1799,
-        "name":  "dvojityAgent_petrsShortSword",
-        "englishName":  "Peter of Suchotlesky’s sword"
-    },
-    {
-        "id":  2176,
-        "name":  "finale_hanusLongsword",
-        "englishName":  "Hanush’s sword"
-    },
-    {
-        "id":  2813,
-        "name":  "hromovyKamen_ramsHead",
-        "englishName":  "Ramhead hammer"
-    },
-    {
-        "id":  2818,
-        "name":  "huntingSwordBasic",
-        "englishName":  "Hunting sword"
-    },
-    {
-        "id":  2820,
-        "name":  "huntingSwordFalchion",
-        "englishName":  "Falchion"
-    },
-    {
-        "id":  2822,
-        "name":  "huntingSwordGuard",
-        "englishName":  "Burgher’s hunting sword"
-    },
-    {
-        "id":  2824,
-        "name":  "huntingSwordMussle",
-        "englishName":  "Shell hunting sword"
-    },
-    {
-        "id":  2826,
-        "name":  "huntingSwordSashka",
-        "englishName":  "Cuman shashka"
-    },
-    {
-        "id":  2828,
-        "name":  "huntingSwordSword",
-        "englishName":  "Noble’s hunting sword"
-    },
-    {
-        "id":  2917,
-        "name":  "kovaniAsiDoVezi_protectiveAxe",
-        "englishName":  "Protective axe"
-    },
-    {
-        "id":  2920,
-        "name":  "kovaniKatuvSleh_longSwordExecutioner",
-        "englishName":  "Executioner’s sword"
-    },
-    {
-        "id":  2923,
-        "name":  "kovaniKopie_longSwordAbsolver",
-        "englishName":  "Longsword “Absolver”"
-    },
-    {
-        "id":  2925,
-        "name":  "kovaniKopie_penitent",
-        "englishName":  "Replica of the longsword “Absolver”"
-    },
-    {
-        "id":  2927,
-        "name":  "kovaniKovarskaSoutez_huntingKnifeApprentice",
-        "englishName":  "Competition hunting sword"
-    },
-    {
-        "id":  2929,
-        "name":  "kovaniKovarskaSoutez_huntingKnifeForContest",
-        "englishName":  "Competition sword"
-    },
-    {
-        "id":  2932,
-        "name":  "kovaniNaKovarne_pajslSword",
-        "englishName":  "Pieschel’s sword"
-    },
-    {
-        "id":  2934,
-        "name":  "kovaniNaKovarne_smithsDefense",
-        "englishName":  "Blacksmith’s defender"
-    },
-    {
-        "id":  2936,
-        "name":  "kovaniPoklad_adornedAxe",
-        "englishName":  "Adorned axe"
-    },
-    {
-        "id":  2939,
-        "name":  "kovaniRelikvie_shortSwordKnightValentin",
-        "englishName":  "Sword of Sir Valentine"
-    },
-    {
-        "id":  2943,
-        "name":  "kovaniSymbolSermirny_longSwordGuildRemake",
-        "englishName":  "Guild Longsword"
-    },
-    {
-        "id":  2945,
-        "name":  "kovaniVajdovaKletba_botchedRikonaris",
-        "englishName":  "Rikonaris’ sabre"
-    },
-    {
-        "id":  2948,
-        "name":  "kovaniVajdovaKletba_rikonaris",
-        "englishName":  "Rikonaris’ sabre"
-    },
-    {
-        "id":  2952,
-        "name":  "kovarskeZakazky_4evangeliste",
-        "englishName":  "Longsword of the Four Evangelists"
-    },
-    {
-        "id":  2956,
-        "name":  "kovarskeZakazky_dragonAxe",
-        "englishName":  "Dragon fang Axe"
-    },
-    {
-        "id":  2958,
-        "name":  "kovarskeZakazky_durendal",
-        "englishName":  "Durendal"
-    },
-    {
-        "id":  2960,
-        "name":  "kovarskeZakazky_durensral",
-        "englishName":  "Durendull"
-    },
-    {
-        "id":  2961,
-        "name":  "kovarskeZakazky_excalibur",
-        "englishName":  "Excalibur"
-    },
-    {
-        "id":  2963,
-        "name":  "kovarskeZakazky_fejxcalibur",
-        "englishName":  "Fakescalibur"
-    },
-    {
-        "id":  2964,
-        "name":  "kovarskeZakazky_magdalenaAxe",
-        "englishName":  "Magdalena’s axe"
-    },
-    {
-        "id":  3153,
-        "name":  "longswordBohuta",
-        "englishName":  "Godwin’s longsword"
-    },
-    {
-        "id":  3154,
-        "name":  "longswordBroad",
-        "englishName":  "Broad longsword"
-    },
-    {
-        "id":  3156,
-        "name":  "longswordCapon",
-        "englishName":  "Lord Capon’s longsword"
-    },
-    {
-        "id":  3157,
-        "name":  "longswordCommon",
-        "englishName":  "Common longsword"
-    },
-    {
-        "id":  3159,
-        "name":  "longswordDevil",
-        "englishName":  "Dry Devil’s longsword"
-    },
-    {
-        "id":  3160,
-        "name":  "longswordDevil_duel",
-        "englishName":  "Dry Devil’s longsword"
-    },
-    {
-        "id":  3161,
-        "name":  "longswordDevil_empty",
-        "englishName":  "Dry Devil’s longsword"
-    },
-    {
-        "id":  3162,
-        "name":  "longSwordDuel",
-        "englishName":  "Duelling longsword"
-    },
-    {
-        "id":  3164,
-        "name":  "longSwordDuel_empty",
-        "englishName":  "Duelling longsword"
-    },
-    {
-        "id":  3165,
-        "name":  "longSwordDuel_khTournament",
-        "englishName":  "Tournament longsword"
-    },
-    {
-        "id":  3167,
-        "name":  "longswordevangelists",
-        "englishName":  "Four Evangelists’ longsword"
-    },
-    {
-        "id":  3169,
-        "name":  "longswordHenry",
-        "englishName":  "Henry’s longsword"
-    },
-    {
-        "id":  3170,
-        "name":  "longswordHenry_reforged",
-        "englishName":  "Henry’s sword reforged"
-    },
-    {
-        "id":  3171,
-        "name":  "longswordIstvan",
-        "englishName":  "Radzig Kobyla’s longsword"
-    },
-    {
-        "id":  3172,
-        "name":  "longSwordLilium",
-        "englishName":  "Lingua belli longsword"
-    },
-    {
-        "id":  3174,
-        "name":  "longswordOld",
-        "englishName":  "Knight’s longsword"
-    },
-    {
-        "id":  3176,
-        "name":  "longswordRadzig",
-        "englishName":  "Radzig Kobyla’s longsword"
-    },
-    {
-        "id":  3178,
-        "name":  "longswordRadzig_reforged",
-        "englishName":  "Reforged Radzig Kobyla’s sword"
-    },
-    {
-        "id":  3179,
-        "name":  "longswordSturdy",
-        "englishName":  "Battle longsword"
-    },
-    {
-        "id":  3181,
-        "name":  "longswordTraining",
-        "englishName":  "Training longsword"
-    },
-    {
-        "id":  3183,
-        "name":  "longswordZizka_duel",
-        "englishName":  "Common longsword"
-    },
-    {
-        "id":  3301,
-        "name":  "mace01",
-        "englishName":  "Light mace"
-    },
-    {
-        "id":  3303,
-        "name":  "mace02",
-        "englishName":  "Common mace"
-    },
-    {
-        "id":  3305,
-        "name":  "mace03",
-        "englishName":  "Flanged mace"
-    },
-    {
-        "id":  3307,
-        "name":  "mace04",
-        "englishName":  "Ornate mace"
-    },
-    {
-        "id":  3309,
-        "name":  "maceBailiff",
-        "englishName":  "Bailiff’s mace"
-    },
-    {
-        "id":  3311,
-        "name":  "maceBuchar",
-        "englishName":  "Buchar mace"
-    },
-    {
-        "id":  3313,
-        "name":  "maceClub",
-        "englishName":  "Club"
-    },
-    {
-        "id":  3315,
-        "name":  "maceClubSpiked",
-        "englishName":  "Spiked bludgeon"
-    },
-    {
-        "id":  3317,
-        "name":  "maceClubTraining",
-        "englishName":  "Training bludgeon"
-    },
-    {
-        "id":  3318,
-        "name":  "maceDagger",
-        "englishName":  "Dagger mace"
-    },
-    {
-        "id":  3320,
-        "name":  "maceHeavy",
-        "englishName":  "Heavy mace"
-    },
-    {
-        "id":  3322,
-        "name":  "maceHetman",
-        "englishName":  "Captain’s mace"
-    },
-    {
-        "id":  3324,
-        "name":  "maceZizka",
-        "englishName":  "Zizka’s mace"
-    },
-    {
-        "id":  3406,
-        "name":  "nalezeniDelnici_denesDagger",
-        "englishName":  "Denes’ dagger"
-    },
-    {
-        "id":  3411,
-        "name":  "naTroskach_axeKolda",
-        "englishName":  "Kolda’s axe"
-    },
-    {
-        "id":  3421,
-        "name":  "nebakovPruzkum_lordsOfLeipaShield",
-        "englishName":  "Lords of Leipa shield"
-    },
-    {
-        "id":  3435,
-        "name":  "nemcuvPoklad_bejkovecShortSwordRusty",
-        "englishName":  "Old rusty sword"
-    },
-    {
-        "id":  3612,
-        "name":  "oblehaniSuchdole_flag",
-        "englishName":  ""
-    },
-    {
-        "id":  3613,
-        "name":  "oblehaniSuchdole_oldSword",
-        "englishName":  "Old longsword"
-    },
-    {
-        "id":  3783,
-        "name":  "poi_ratborschButcherAxe",
-        "englishName":  "Raborsch butcher’s axe"
-    },
-    {
-        "id":  3811,
-        "name":  "polearmBardiche",
-        "englishName":  "Bardiche"
-    },
-    {
-        "id":  3813,
-        "name":  "polearmBruncvik",
-        "englishName":  "Brunswick’s poleaxe"
-    },
-    {
-        "id":  3815,
-        "name":  "polearmGlaive",
-        "englishName":  "Glaive"
-    },
-    {
-        "id":  3817,
-        "name":  "polearmGuisarm",
-        "englishName":  "Guisarme"
-    },
-    {
-        "id":  3819,
-        "name":  "polearmMorgenstern",
-        "englishName":  "Morgenstern"
-    },
-    {
-        "id":  3821,
-        "name":  "polearmPitchfork",
-        "englishName":  "Pitchfork"
-    },
-    {
-        "id":  3823,
-        "name":  "polearmPitchforkSedlakaMateje",
-        "englishName":  "Farmer Matthew’s pitchfork"
-    },
-    {
-        "id":  3824,
-        "name":  "polearmPoleaxe",
-        "englishName":  "Poleaxe"
-    },
-    {
-        "id":  3826,
-        "name":  "polearmSpear",
-        "englishName":  "Billhook"
-    },
-    {
-        "id":  3828,
-        "name":  "polearmTraining",
-        "englishName":  "Staff"
-    },
-    {
-        "id":  3829,
-        "name":  "polearmVoulge",
-        "englishName":  "Voulge"
-    },
-    {
-        "id":  3832,
-        "name":  "pomatenec_longsword",
-        "englishName":  "Madman’s longsword"
-    },
-    {
-        "id":  3934,
-        "name":  "poustevnik_seminLongSword",
-        "englishName":  "Toledo steel sword"
-    },
-    {
-        "id":  4198,
-        "name":  "rutinaAVypad_trackview_torch_weapon",
-        "englishName":  "Torch"
-    },
-    {
-        "id":  4203,
-        "name":  "sabreCommon",
-        "englishName":  "Common sabre"
-    },
-    {
-        "id":  4205,
-        "name":  "sabreLionHead",
-        "englishName":  "Lion’s roar Kilij"
-    },
-    {
-        "id":  4207,
-        "name":  "sabreNoble",
-        "englishName":  "Ataman’s sabre"
-    },
-    {
-        "id":  4237,
-        "name":  "sermiry_huntingSwordJimram",
-        "englishName":  "Emmeram’s hunting sword"
-    },
-    {
-        "id":  4239,
-        "name":  "sermiry_longSwordGuild",
-        "englishName":  "Guild Longsword"
-    },
-    {
-        "id":  4241,
-        "name":  "sermiry_longSwordMenhart",
-        "englishName":  "Master Menhart’s longsword"
-    },
-    {
-        "id":  4243,
-        "name":  "sermiry_trainingSword",
-        "englishName":  "Training longsword"
-    },
-    {
-        "id":  4248,
-        "name":  "sesivaniTonici_svancara",
-        "englishName":  "St. Anthony’s standard"
-    },
-    {
-        "id":  4256,
-        "name":  "setkaniVRatbori1_stolenDagger",
-        "englishName":  "Stolen dagger"
-    },
-    {
-        "id":  4265,
-        "name":  "shieldCuman",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4266,
-        "name":  "shieldCuman_01",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4267,
-        "name":  "shieldCuman_01_A",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4269,
-        "name":  "shieldCuman_01_B",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4272,
-        "name":  "shieldCuman_02",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4274,
-        "name":  "shieldCuman_03",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4276,
-        "name":  "shieldCuman_04",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4278,
-        "name":  "shieldCuman_05",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4280,
-        "name":  "shieldCuman_06",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4282,
-        "name":  "shieldCuman_07",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4284,
-        "name":  "shieldCuman_08",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4286,
-        "name":  "shieldCuman_09",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4288,
-        "name":  "shieldCuman_10",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4290,
-        "name":  "shieldCuman_11",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4292,
-        "name":  "shieldCuman_12",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4293,
-        "name":  "shieldCuman_12_B",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4296,
-        "name":  "shieldCuman_12_C",
-        "englishName":  "Cuman shield"
-    },
-    {
-        "id":  4298,
-        "name":  "shieldCuman_summer",
-        "englishName":  "Shield of Summer"
-    },
-    {
-        "id":  4300,
-        "name":  "shieldHeater_autumn",
-        "englishName":  "Shield of Autumn"
-    },
-    {
-        "id":  4302,
-        "name":  "shieldHeater_bergov_A",
-        "englishName":  "Von Bergow knight shield"
-    },
-    {
-        "id":  4304,
-        "name":  "shieldHeater_chevronny_gw",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4306,
-        "name":  "shieldHeater_chevronny_rw_a",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4308,
-        "name":  "shieldHeater_chevronny_rw_b",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4310,
-        "name":  "shieldHeater_chevronny_ryw",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4312,
-        "name":  "shieldHeater_chevronny_yk",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4314,
-        "name":  "shieldHeater_eagle_A",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4316,
-        "name":  "shieldHeater_eagle_B",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4318,
-        "name":  "shieldHeater_holohlav_A",
-        "englishName":  "Lords of Holohlavy heater shield"
-    },
-    {
-        "id":  4320,
-        "name":  "shieldHeater_lipa_A",
-        "englishName":  "Lords of Leipa heater shield"
-    },
-    {
-        "id":  4322,
-        "name":  "shieldHeater_lipa_B",
-        "englishName":  "Lords of Leipa heater shield"
-    },
-    {
-        "id":  4324,
-        "name":  "shieldHeater_peony",
-        "englishName":  "Sir Zavish heater shield"
-    },
-    {
-        "id":  4325,
-        "name":  "shieldHeater_pisek_A",
-        "englishName":  "Lord Pisek heater shield"
-    },
-    {
-        "id":  4327,
-        "name":  "shieldHeater_pisek_B",
-        "englishName":  "Lord of Pisek knight shield"
-    },
-    {
-        "id":  4329,
-        "name":  "shieldHeater_pisek_C",
-        "englishName":  "Lords of Holohlavy heater shield"
-    },
-    {
-        "id":  4331,
-        "name":  "shieldHeater_pisek_D",
-        "englishName":  "Lords of Holohlavy heater shield"
-    },
-    {
-        "id":  4333,
-        "name":  "shieldHeater_polner",
-        "englishName":  "Lord Polner heater shield"
-    },
-    {
-        "id":  4335,
-        "name":  "shieldHeater_prague_A",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4337,
-        "name":  "shieldHeater_prague_B",
-        "englishName":  "City of Prague heater shield"
-    },
-    {
-        "id":  4339,
-        "name":  "shieldHeater_prague_C",
-        "englishName":  "City of Prague heater shield"
-    },
-    {
-        "id":  4341,
-        "name":  "shieldHeater_prague_D",
-        "englishName":  "City of Prague heater shield"
-    },
-    {
-        "id":  4343,
-        "name":  "shieldHeater_sigismund_A",
-        "englishName":  "Hungarian heater shield"
-    },
-    {
-        "id":  4345,
-        "name":  "shieldHeater_sigismund_B",
-        "englishName":  "Hungarian heater shield"
-    },
-    {
-        "id":  4347,
-        "name":  "shieldHeater_sigismund_C",
-        "englishName":  "Hungarian heater shield"
-    },
-    {
-        "id":  4349,
-        "name":  "shieldHeater_sigismund_D",
-        "englishName":  "Hungarian heater shield"
-    },
-    {
-        "id":  4351,
-        "name":  "ShieldHeater_TournamentA",
-        "englishName":  "Kuttenberg heater shield"
-    },
-    {
-        "id":  4353,
-        "name":  "ShieldHeater_TournamentB",
-        "englishName":  "Kuttenberg heater shield"
-    },
-    {
-        "id":  4355,
-        "name":  "shieldHeater_whole_K",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4357,
-        "name":  "shieldHeater_whole_R",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4359,
-        "name":  "shieldHeater_whole_T",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4361,
-        "name":  "shieldHeater_whole_W",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4363,
-        "name":  "shieldHeater_zavis",
-        "englishName":  "Sir Zavish heater shield"
-    },
-    {
-        "id":  4365,
-        "name":  "shieldHeater_zizka",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4367,
-        "name":  "shieldHeater_zizka_inverted",
-        "englishName":  "Heater shield"
-    },
-    {
-        "id":  4368,
-        "name":  "shieldKite_3Wells_A",
-        "englishName":  "Painter’s Guild knight shield"
-    },
-    {
-        "id":  4370,
-        "name":  "shieldKite_3Wells_B",
-        "englishName":  "Painter’s Guild knight shield"
-    },
-    {
-        "id":  4372,
-        "name":  "shieldKite_armoursmith",
-        "englishName":  "Painter’s Guild knight shield"
-    },
-    {
-        "id":  4373,
-        "name":  "shieldKite_bendy_by",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4375,
-        "name":  "shieldKite_bendy_devil",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4376,
-        "name":  "shieldKite_bendy_gw",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4378,
-        "name":  "shieldKite_bendy_gy",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4380,
-        "name":  "shieldKite_bendy_quart_by",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4382,
-        "name":  "shieldKite_bendy_quart_kw",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4384,
-        "name":  "shieldKite_bendy_quart_kw_inverted",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4385,
-        "name":  "shieldKite_bendy_quart_rw_A",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4387,
-        "name":  "shieldKite_bendy_quart_rw_B",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4389,
-        "name":  "shieldKite_bendy_quart_rwg",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4391,
-        "name":  "shieldKite_bendy_quart_rwy",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4393,
-        "name":  "shieldKite_bendy_quart_ry",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4395,
-        "name":  "shieldKite_bendy_rg",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4397,
-        "name":  "shieldKite_bendy_rw",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4399,
-        "name":  "shieldKite_bendy_ry",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4401,
-        "name":  "shieldKite_bergov_A",
-        "englishName":  "Von Bergow knight shield"
-    },
-    {
-        "id":  4403,
-        "name":  "shieldKite_bergov_B",
-        "englishName":  "Von Bergow knight shield"
-    },
-    {
-        "id":  4405,
-        "name":  "shieldKite_blacksmith",
-        "englishName":  "Painter’s Guild knight shield"
-    },
-    {
-        "id":  4407,
-        "name":  "shieldKite_cech_A",
-        "englishName":  "Cobblers’ Guild knight shield"
-    },
-    {
-        "id":  4409,
-        "name":  "shieldKite_cech_B",
-        "englishName":  "Apothecary guild knight shield"
-    },
-    {
-        "id":  4411,
-        "name":  "shieldKite_cech_C",
-        "englishName":  "Saddler guild knight shield"
-    },
-    {
-        "id":  4413,
-        "name":  "shieldKite_cech_D",
-        "englishName":  "Butcher guild knight shield"
-    },
-    {
-        "id":  4415,
-        "name":  "shieldKite_cech_E",
-        "englishName":  "Painter’s Guild knight shield"
-    },
-    {
-        "id":  4417,
-        "name":  "shieldKite_cech_F",
-        "englishName":  "Baker guild knight shield"
-    },
-    {
-        "id":  4419,
-        "name":  "shieldKite_chevronny_gw",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4421,
-        "name":  "shieldKite_chevronny_rw",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4423,
-        "name":  "shieldKite_chevronny_rwy",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4425,
-        "name":  "shieldKite_chevronny_yk",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4427,
-        "name":  "shieldKite_cimburk",
-        "englishName":  "Lords of Zimburg knight shield"
-    },
-    {
-        "id":  4429,
-        "name":  "shieldKite_cross_gw",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4431,
-        "name":  "shieldKite_cross_gy",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4433,
-        "name":  "shieldKite_cross_rw",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4435,
-        "name":  "shieldKite_cross_ry",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4437,
-        "name":  "shieldKite_cross_yk",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4439,
-        "name":  "shieldKite_deserter_A",
-        "englishName":  "Deserter’s kite shield"
-    },
-    {
-        "id":  4441,
-        "name":  "shieldKite_embattled_gy",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4443,
-        "name":  "shieldKite_embattled_wk",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4445,
-        "name":  "shieldKite_embattled_yk",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4447,
-        "name":  "shieldKite_gyronny_gy",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4448,
-        "name":  "shieldKite_gyronny_gy_B",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4452,
-        "name":  "shieldKite_gyronny_rwy",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4454,
-        "name":  "shieldKite_gyronny_yb",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4456,
-        "name":  "shieldKite_gyronny_yk",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4458,
-        "name":  "shieldKite_kuttenberg_A",
-        "englishName":  "Kuttenberg knight shield"
-    },
-    {
-        "id":  4460,
-        "name":  "shieldKite_kuttenberg_B",
-        "englishName":  "Kuttenberg knight shield"
-    },
-    {
-        "id":  4462,
-        "name":  "shieldKite_lipa",
-        "englishName":  "Von Bergow knight shield"
-    },
-    {
-        "id":  4464,
-        "name":  "shieldKite_nebak_A",
-        "englishName":  "Lords of Nebakov kite shield"
-    },
-    {
-        "id":  4466,
-        "name":  "shieldKite_nebak_B",
-        "englishName":  "Lords of Nebakov kite shield"
-    },
-    {
-        "id":  4468,
-        "name":  "shieldKite_nebak_C",
-        "englishName":  "Lords of Nebakov kite shield"
-    },
-    {
-        "id":  4470,
-        "name":  "shieldKite_nebak_C_inverted",
-        "englishName":  "Lords of Nebakov kite shield"
-    },
-    {
-        "id":  4471,
-        "name":  "shieldKite_owl",
-        "englishName":  "Owl shield"
-    },
-    {
-        "id":  4473,
-        "name":  "shieldKite_partyPerBend_by",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4474,
-        "name":  "shieldkite_partyPerBend_by",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4477,
-        "name":  "shieldKite_partyPerBend_gr",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4479,
-        "name":  "shieldKite_partyPerBend_rw",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4481,
-        "name":  "shieldKite_partyPerBend_wk",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4483,
-        "name":  "shieldKite_partyPerBend_yk",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4485,
-        "name":  "shieldKite_partyPerFess_yb",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4487,
-        "name":  "shieldKite_partyPerPale_rw",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4489,
-        "name":  "shieldKite_pisek_A",
-        "englishName":  "Lords of Hradetz knight shield"
-    },
-    {
-        "id":  4491,
-        "name":  "shieldKite_pisek_B",
-        "englishName":  "Lords of Hradetz knight shield"
-    },
-    {
-        "id":  4493,
-        "name":  "shieldKite_pisek_C",
-        "englishName":  "Lords of Hradetz knight shield"
-    },
-    {
-        "id":  4495,
-        "name":  "shieldKite_prague_A",
-        "englishName":  "Old Town of Prague knight shield"
-    },
-    {
-        "id":  4497,
-        "name":  "shieldKite_prague_B",
-        "englishName":  "Old Town of Prague knight shield"
-    },
-    {
-        "id":  4499,
-        "name":  "shieldKite_prague_B_inverted",
-        "englishName":  "Old Town of Prague knight shield"
-    },
-    {
-        "id":  4500,
-        "name":  "shieldKite_prague_C",
-        "englishName":  "Old Town of Prague knight shield"
-    },
-    {
-        "id":  4502,
-        "name":  "shieldKite_prague_C_inverted",
-        "englishName":  "Old Town of Prague knight shield"
-    },
-    {
-        "id":  4503,
-        "name":  "shieldKite_redstar_A",
-        "englishName":  "Order of the cross knight shield"
-    },
-    {
-        "id":  4505,
-        "name":  "shieldKite_redstar_B",
-        "englishName":  "Order of the cross knight shield"
-    },
-    {
-        "id":  4507,
-        "name":  "shieldKite_ruthard_A",
-        "englishName":  "Lord Ruthard knight shield"
-    },
-    {
-        "id":  4509,
-        "name":  "shieldKite_ruthard_A_inverted",
-        "englishName":  "Lord Ruthard knight shield"
-    },
-    {
-        "id":  4510,
-        "name":  "shieldKite_semin_A",
-        "englishName":  "Lords of Semine knight shield"
-    },
-    {
-        "id":  4512,
-        "name":  "shieldKite_sigismund_A",
-        "englishName":  "Hungarian knight shield"
-    },
-    {
-        "id":  4514,
-        "name":  "shieldKite_sigismund_B",
-        "englishName":  "Hungarian knight shield"
-    },
-    {
-        "id":  4516,
-        "name":  "shieldKite_sigismund_C",
-        "englishName":  "Hungarian knight shield"
-    },
-    {
-        "id":  4518,
-        "name":  "shieldKite_skalitz",
-        "englishName":  "Skalitz knight’s shield"
-    },
-    {
-        "id":  4519,
-        "name":  "shieldKite_skalitz_02",
-        "englishName":  "Sir Radzig knight’s shield"
-    },
-    {
-        "id":  4522,
-        "name":  "shieldKite_spring",
-        "englishName":  "Shield of Spring"
-    },
-    {
-        "id":  4524,
-        "name":  "shieldKite_teuton_01",
-        "englishName":  "Teutonic knight’s shield"
-    },
-    {
-        "id":  4525,
-        "name":  "shieldKite_teuton_02",
-        "englishName":  "Teutonic knight’s shield"
-    },
-    {
-        "id":  4526,
-        "name":  "shieldKite_teuton_03",
-        "englishName":  "Teutonic knight’s shield"
-    },
-    {
-        "id":  4527,
-        "name":  "shieldKite_twitch",
-        "englishName":  "Warhorse shield"
-    },
-    {
-        "id":  4529,
-        "name":  "shieldKite_vavak_A",
-        "englishName":  "Lords of Hradetz knight shield"
-    },
-    {
-        "id":  4531,
-        "name":  "shieldKite_vavak_B",
-        "englishName":  "Lords of Hradetz knight shield"
-    },
-    {
-        "id":  4533,
-        "name":  "shieldKite_weaponsmith",
-        "englishName":  "Painter’s Guild knight shield"
-    },
-    {
-        "id":  4534,
-        "name":  "shieldKite_whole_K",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4536,
-        "name":  "shieldKite_whole_R",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4538,
-        "name":  "shieldKite_whole_T",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4540,
-        "name":  "shieldKite_whole_W",
-        "englishName":  "Knight shield"
-    },
-    {
-        "id":  4542,
-        "name":  "shieldKiteTraining",
-        "englishName":  "Practice shield"
-    },
-    {
-        "id":  4544,
-        "name":  "shieldPavise_bar_GW",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4546,
-        "name":  "shieldPavise_bar_GY",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4548,
-        "name":  "shieldPavise_bar_KW",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4550,
-        "name":  "shieldPavise_bar_RK",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4552,
-        "name":  "shieldPavise_bar_RW",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4554,
-        "name":  "shieldPavise_bar_RY",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4556,
-        "name":  "shieldPavise_bergov_A",
-        "englishName":  "Trosky pavese"
-    },
-    {
-        "id":  4558,
-        "name":  "shieldPavise_bergov_B",
-        "englishName":  "Trosky pavese"
-    },
-    {
-        "id":  4560,
-        "name":  "shieldPavise_dragon",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4562,
-        "name":  "shieldPavise_GY_A",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4564,
-        "name":  "shieldPavise_half_KW",
-        "englishName":  "Halved pavese"
-    },
-    {
-        "id":  4566,
-        "name":  "shieldPavise_half_RK",
-        "englishName":  "Halved pavese"
-    },
-    {
-        "id":  4568,
-        "name":  "shieldPavise_half_RW",
-        "englishName":  "Halved pavese"
-    },
-    {
-        "id":  4570,
-        "name":  "shieldPavise_pisek_A",
-        "englishName":  "Suchdol pavese"
-    },
-    {
-        "id":  4572,
-        "name":  "shieldPavise_pisek_B",
-        "englishName":  "Suchdol pavese"
-    },
-    {
-        "id":  4574,
-        "name":  "shieldPavise_pisek_C",
-        "englishName":  "Suchdol pavese"
-    },
-    {
-        "id":  4576,
-        "name":  "shieldPavise_Pisek_Combat_A",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4577,
-        "name":  "shieldPavise_Pisek_Combat_A_02",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4578,
-        "name":  "shieldPavise_Pisek_Combat_B",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4579,
-        "name":  "shieldPavise_Pisek_Combat_C",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4580,
-        "name":  "shieldPavise_Pisek_Combat_D",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4581,
-        "name":  "shieldPavise_prague_A",
-        "englishName":  "City of Prague pavese"
-    },
-    {
-        "id":  4583,
-        "name":  "shieldPavise_prague_B",
-        "englishName":  "City of Prague pavese"
-    },
-    {
-        "id":  4585,
-        "name":  "shieldPavise_prague_C",
-        "englishName":  "City of Prague pavese"
-    },
-    {
-        "id":  4587,
-        "name":  "shieldPavise_prague_D",
-        "englishName":  "City of Prague pavese"
-    },
-    {
-        "id":  4589,
-        "name":  "shieldPavise_RG_A",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4591,
-        "name":  "shieldPavise_RGW_A",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4593,
-        "name":  "shieldPavise_RK_A",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4595,
-        "name":  "shieldPavise_RW_A",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4597,
-        "name":  "shieldPavise_RWY_A",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4599,
-        "name":  "shieldPavise_RY_A",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4601,
-        "name":  "shieldPavise_sigismund_A",
-        "englishName":  "Hungarian pavese"
-    },
-    {
-        "id":  4603,
-        "name":  "shieldPavise_sigismund_B",
-        "englishName":  "Hungarian pavese"
-    },
-    {
-        "id":  4605,
-        "name":  "shieldPavise_teuton_01",
-        "englishName":  "Teutonic pavese"
-    },
-    {
-        "id":  4606,
-        "name":  "shieldPavise_teuton_02",
-        "englishName":  "Teutonic pavese"
-    },
-    {
-        "id":  4607,
-        "name":  "shieldPavise_whole_G",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4609,
-        "name":  "shieldPavise_whole_K",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4611,
-        "name":  "shieldPavise_whole_R",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4613,
-        "name":  "shieldPavise_whole_W",
-        "englishName":  "Painted pavese"
-    },
-    {
-        "id":  4615,
-        "name":  "shieldPavise_winter",
-        "englishName":  "Shield of Winter"
-    },
-    {
-        "id":  4667,
-        "name":  "shortSwordBasilard",
-        "englishName":  "Basilard"
-    },
-    {
-        "id":  4669,
-        "name":  "shortswordBergov",
-        "englishName":  "Lord von Bergow’s sword"
-    },
-    {
-        "id":  4671,
-        "name":  "shortswordBrabant",
-        "englishName":  "Opportunity"
-    },
-    {
-        "id":  4673,
-        "name":  "shortswordBroad",
-        "englishName":  "Broadsword"
-    },
-    {
-        "id":  4675,
-        "name":  "shortswordCeremony",
-        "englishName":  "Noble’s sword"
-    },
-    {
-        "id":  4677,
-        "name":  "shortswordCleaver",
-        "englishName":  "Homemade hunting sword"
-    },
-    {
-        "id":  4678,
-        "name":  "shortswordCommon",
-        "englishName":  "Military sword"
-    },
-    {
-        "id":  4680,
-        "name":  "shortswordCommon_khTournament",
-        "englishName":  "Tournament sword"
-    },
-    {
-        "id":  4682,
-        "name":  "shortswordHeavy",
-        "englishName":  "Knight’s sword"
-    },
-    {
-        "id":  4684,
-        "name":  "shortSwordStGeorge",
-        "englishName":  "St. George’s sword"
-    },
-    {
-        "id":  4686,
-        "name":  "shortswordTraining",
-        "englishName":  "Training sword"
-    },
-    {
-        "id":  4883,
-        "name":  "stealthMiseZaJindru_aulitzSword",
-        "englishName":  "Markvart von Aulitz’s sword"
-    },
-    {
-        "id":  4885,
-        "name":  "stealthMiseZaJindru_samHuntingKnife",
-        "englishName":  "Samuel’s hunting sword"
-    },
-    {
-        "id":  4899,
-        "name":  "svatba_longswordTournament",
-        "englishName":  "Tournament practice sword"
-    },
-    {
-        "id":  4909,
-        "name":  "svatyAntonin_svancaraAntonFlag",
-        "englishName":  "St. Anthony’s standard"
-    },
-    {
-        "id":  4911,
-        "name":  "svatyne_dagger",
-        "englishName":  "Rondel dagger"
-    },
-    {
-        "id":  4918,
-        "name":  "taboryLapkuTrosecko_plesnivecMace",
-        "englishName":  "Canker’s mace"
-    },
-    {
-        "id":  4920,
-        "name":  "taboryLapkuTrosecko_tlamaShield",
-        "englishName":  "Johnny the Gob’s shield"
-    },
-    {
-        "id":  4959,
-        "name":  "test_axe_small_01",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4961,
-        "name":  "test_barbora_axe",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4966,
-        "name":  "test_barbora_halberd",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4967,
-        "name":  "test_barbora_huntingsword",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4970,
-        "name":  "test_barbora_longsword",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4973,
-        "name":  "test_barbora_mace",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4974,
-        "name":  "test_barbora_sabre",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4975,
-        "name":  "test_barbora_shield",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4976,
-        "name":  "test_barbora_shortsword",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4982,
-        "name":  "test_barbora_stick",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4990,
-        "name":  "test_better_shield",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4991,
-        "name":  "test_blacksmith_axe",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4995,
-        "name":  "test_blacksmith_sword_high",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  4996,
-        "name":  "test_blacksmith_sword_low",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5013,
-        "name":  "test_dagger",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5023,
-        "name":  "test_inventory_sword",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5031,
-        "name":  "test_long_spear_01",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5032,
-        "name":  "test_longscabbard_01",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5033,
-        "name":  "test_longscabbard_02",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5034,
-        "name":  "test_longscabbard_03",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5038,
-        "name":  "test_npcoutfitting_longsword",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5047,
-        "name":  "test_sabre_shortsword1",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5048,
-        "name":  "test_shortscabbard_01",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5049,
-        "name":  "test_shortscabbard_02",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5056,
-        "name":  "test_sword_long_bad",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5057,
-        "name":  "test_sword_short",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5058,
-        "name":  "test_sword_short_valuable",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5059,
-        "name":  "test_swordWithLongName",
-        "englishName":  "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
-    },
-    {
-        "id":  5061,
-        "name":  "test_weapon_test2",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5062,
-        "name":  "test_weapontest2",
-        "englishName":  "A suspicious bag"
-    },
-    {
-        "id":  5066,
-        "name":  "torch_weapon",
-        "englishName":  "Torch"
-    },
-    {
-        "id":  5070,
-        "name":  "tournament_kuttenbergSword",
-        "englishName":  "Kuttenberg longsword"
-    },
-    {
-        "id":  5072,
-        "name":  "tournament_maceHerald",
-        "englishName":  "Tournament mace"
-    },
-    {
-        "id":  5074,
-        "name":  "tournament_shieldHeaterGold",
-        "englishName":  "Golden tournament shield"
-    },
-    {
-        "id":  5075,
-        "name":  "tournament_shieldHeaterRed",
-        "englishName":  "Red tournament shield"
-    },
-    {
-        "id":  5257,
-        "name":  "uchazec_guildSword",
-        "englishName":  "Blacksmiths’ guild longsword"
-    },
-    {
-        "id":  5259,
-        "name":  "uchazec_guildSwordQuest",
-        "englishName":  "Blacksmiths’ guild longsword"
-    },
-    {
-        "id":  5433,
-        "name":  "warhammer01",
-        "englishName":  "Common war hammer"
-    },
-    {
-        "id":  5435,
-        "name":  "warhammer02",
-        "englishName":  "Rider’s war hammer"
-    },
-    {
-        "id":  5437,
-        "name":  "warhammer03",
-        "englishName":  "Knight’s war hammer"
-    },
-    {
-        "id":  5439,
-        "name":  "warhammer03_trollslayer",
-        "englishName":  "Trollbane hammer"
-    },
-    {
-        "id":  5441,
-        "name":  "warhammer04",
-        "englishName":  "Lavish warhammer"
-    },
-    {
-        "id":  5443,
-        "name":  "warhammerBasilisc",
-        "englishName":  "Basilisk warhammer"
-    },
-    {
-        "id":  5445,
-        "name":  "warhammerRaven",
-        "englishName":  "Raven’s beak"
-    },
-    {
-        "id":  5447,
-        "name":  "warhammerStab",
-        "englishName":  "War hammer"
-    },
-    {
-        "id":  5559,
-        "name":  "zbranePanaSemina_sukClub",
-        "englishName":  "Gnarly’s club"
-    },
-    {
-        "id":  5563,
-        "name":  "zbranePanaSemina_sukShield",
-        "englishName":  "Gnarly’s shield"
-    },
-    {
-        "id":  5574,
-        "name":  "zikmunduvTabor_stabProofDagger",
-        "englishName":  "Bloody knife"
-    },
-    {
-        "id":  5592,
-        "name":  "ztracenaCest_lordsOfHolohlavShield",
-        "englishName":  "Lord of Holohlavy heater shield"
-    }
+  {
+    "id": 148,
+    "name": "artefakt_shortswordBavor",
+    "englishName": "Boleslav Bavor’s sword"
+  },
+  {
+    "id": 150,
+    "name": "artefakt_shortswordBavor_reforged",
+    "englishName": "Boleslav Bavor’s reforged sword"
+  },
+  {
+    "id": 151,
+    "name": "autotest_halberd",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 154,
+    "name": "axeBattle01",
+    "englishName": "Bearded axe"
+  },
+  {
+    "id": 156,
+    "name": "axeBattle02",
+    "englishName": "Broad axe"
+  },
+  {
+    "id": 158,
+    "name": "axeBattle03",
+    "englishName": "Horseman’s pick"
+  },
+  {
+    "id": 160,
+    "name": "axeBattle04",
+    "englishName": "Knight’s axe"
+  },
+  {
+    "id": 162,
+    "name": "axeCalvaria",
+    "englishName": "Calvaria axe"
+  },
+  {
+    "id": 164,
+    "name": "axeCuman",
+    "englishName": "Cuman fokos"
+  },
+  {
+    "id": 166,
+    "name": "axeFancy",
+    "englishName": "Executioner’s axe"
+  },
+  {
+    "id": 168,
+    "name": "axeTraining",
+    "englishName": "Training axe"
+  },
+  {
+    "id": 169,
+    "name": "axeWork01",
+    "englishName": "Work axe"
+  },
+  {
+    "id": 171,
+    "name": "axeWork02",
+    "englishName": "Carpenter’s axe"
+  },
+  {
+    "id": 174,
+    "name": "axeWork02_kunesh",
+    "englishName": "Skalitz axe"
+  },
+  {
+    "id": 193,
+    "name": "balatro_jimboMace",
+    "englishName": "Jimbo’s marotte"
+  },
+  {
+    "id": 622,
+    "name": "bratriZCimburka_balsanHalberd",
+    "englishName": "Balshanka"
+  },
+  {
+    "id": 623,
+    "name": "bratriZCimburka_balsanSword",
+    "englishName": "Balshan’s sword"
+  },
+  {
+    "id": 1514,
+    "name": "combattest_axe",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 1526,
+    "name": "combattest_halberd",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 1527,
+    "name": "combattest_halberd_bad",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 1530,
+    "name": "combattest_mace",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 1531,
+    "name": "combattest_mace_bad",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 1533,
+    "name": "combattest_sabre",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 1536,
+    "name": "combattest_short_sword",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 1537,
+    "name": "combattest_short_sword_bad",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 1539,
+    "name": "combattest_sword_long",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 1645,
+    "name": "daggerAncient",
+    "englishName": "Old dagger"
+  },
+  {
+    "id": 1646,
+    "name": "daggerBruncvik",
+    "englishName": "Brunswick’s dagger"
+  },
+  {
+    "id": 1647,
+    "name": "daggerCommon",
+    "englishName": "Dagger"
+  },
+  {
+    "id": 1793,
+    "name": "duels_blackKnightSabre",
+    "englishName": "Owl’s Claw sabre"
+  },
+  {
+    "id": 1799,
+    "name": "dvojityAgent_petrsShortSword",
+    "englishName": "Peter of Suchotlesky’s sword"
+  },
+  {
+    "id": 2176,
+    "name": "finale_hanusLongsword",
+    "englishName": "Hanush’s sword"
+  },
+  {
+    "id": 2813,
+    "name": "hromovyKamen_ramsHead",
+    "englishName": "Ramhead hammer"
+  },
+  {
+    "id": 2818,
+    "name": "huntingSwordBasic",
+    "englishName": "Hunting sword"
+  },
+  {
+    "id": 2820,
+    "name": "huntingSwordFalchion",
+    "englishName": "Falchion"
+  },
+  {
+    "id": 2822,
+    "name": "huntingSwordGuard",
+    "englishName": "Burgher’s hunting sword"
+  },
+  {
+    "id": 2824,
+    "name": "huntingSwordMussle",
+    "englishName": "Shell hunting sword"
+  },
+  {
+    "id": 2826,
+    "name": "huntingSwordSashka",
+    "englishName": "Cuman shashka"
+  },
+  {
+    "id": 2828,
+    "name": "huntingSwordSword",
+    "englishName": "Noble’s hunting sword"
+  },
+  {
+    "id": 2917,
+    "name": "kovaniAsiDoVezi_protectiveAxe",
+    "englishName": "Protective axe"
+  },
+  {
+    "id": 2920,
+    "name": "kovaniKatuvSleh_longSwordExecutioner",
+    "englishName": "Executioner’s sword"
+  },
+  {
+    "id": 2923,
+    "name": "kovaniKopie_longSwordAbsolver",
+    "englishName": "Longsword “Absolver”"
+  },
+  {
+    "id": 2925,
+    "name": "kovaniKopie_penitent",
+    "englishName": "Replica of the longsword “Absolver”"
+  },
+  {
+    "id": 2927,
+    "name": "kovaniKovarskaSoutez_huntingKnifeApprentice",
+    "englishName": "Competition hunting sword"
+  },
+  {
+    "id": 2929,
+    "name": "kovaniKovarskaSoutez_huntingKnifeForContest",
+    "englishName": "Competition sword"
+  },
+  {
+    "id": 2932,
+    "name": "kovaniNaKovarne_pajslSword",
+    "englishName": "Pieschel’s sword"
+  },
+  {
+    "id": 2934,
+    "name": "kovaniNaKovarne_smithsDefense",
+    "englishName": "Blacksmith’s defender"
+  },
+  {
+    "id": 2936,
+    "name": "kovaniPoklad_adornedAxe",
+    "englishName": "Adorned axe"
+  },
+  {
+    "id": 2939,
+    "name": "kovaniRelikvie_shortSwordKnightValentin",
+    "englishName": "Sword of Sir Valentine"
+  },
+  {
+    "id": 2943,
+    "name": "kovaniSymbolSermirny_longSwordGuildRemake",
+    "englishName": "Guild Longsword"
+  },
+  {
+    "id": 2945,
+    "name": "kovaniVajdovaKletba_botchedRikonaris",
+    "englishName": "Rikonaris’ sabre"
+  },
+  {
+    "id": 2948,
+    "name": "kovaniVajdovaKletba_rikonaris",
+    "englishName": "Rikonaris’ sabre"
+  },
+  {
+    "id": 2952,
+    "name": "kovarskeZakazky_4evangeliste",
+    "englishName": "Longsword of the Four Evangelists"
+  },
+  {
+    "id": 2956,
+    "name": "kovarskeZakazky_dragonAxe",
+    "englishName": "Dragon fang Axe"
+  },
+  {
+    "id": 2958,
+    "name": "kovarskeZakazky_durendal",
+    "englishName": "Durendal"
+  },
+  {
+    "id": 2960,
+    "name": "kovarskeZakazky_durensral",
+    "englishName": "Durendull"
+  },
+  {
+    "id": 2961,
+    "name": "kovarskeZakazky_excalibur",
+    "englishName": "Excalibur"
+  },
+  {
+    "id": 2963,
+    "name": "kovarskeZakazky_fejxcalibur",
+    "englishName": "Fakescalibur"
+  },
+  {
+    "id": 2964,
+    "name": "kovarskeZakazky_magdalenaAxe",
+    "englishName": "Magdalena’s axe"
+  },
+  {
+    "id": 3153,
+    "name": "longswordBohuta",
+    "englishName": "Godwin’s longsword"
+  },
+  {
+    "id": 3154,
+    "name": "longswordBroad",
+    "englishName": "Broad longsword"
+  },
+  {
+    "id": 3156,
+    "name": "longswordCapon",
+    "englishName": "Lord Capon’s longsword"
+  },
+  {
+    "id": 3157,
+    "name": "longswordCommon",
+    "englishName": "Common longsword"
+  },
+  {
+    "id": 3159,
+    "name": "longswordDevil",
+    "englishName": "Dry Devil’s longsword"
+  },
+  {
+    "id": 3160,
+    "name": "longswordDevil_duel",
+    "englishName": "Dry Devil’s longsword"
+  },
+  {
+    "id": 3161,
+    "name": "longswordDevil_empty",
+    "englishName": "Dry Devil’s longsword"
+  },
+  {
+    "id": 3162,
+    "name": "longSwordDuel",
+    "englishName": "Duelling longsword"
+  },
+  {
+    "id": 3164,
+    "name": "longSwordDuel_empty",
+    "englishName": "Duelling longsword"
+  },
+  {
+    "id": 3165,
+    "name": "longSwordDuel_khTournament",
+    "englishName": "Tournament longsword"
+  },
+  {
+    "id": 3167,
+    "name": "longswordevangelists",
+    "englishName": "Four Evangelists’ longsword"
+  },
+  {
+    "id": 3169,
+    "name": "longswordHenry",
+    "englishName": "Henry’s longsword"
+  },
+  {
+    "id": 3170,
+    "name": "longswordHenry_reforged",
+    "englishName": "Henry’s sword reforged"
+  },
+  {
+    "id": 3171,
+    "name": "longswordIstvan",
+    "englishName": "Radzig Kobyla’s longsword"
+  },
+  {
+    "id": 3172,
+    "name": "longSwordLilium",
+    "englishName": "Lingua belli longsword"
+  },
+  {
+    "id": 3174,
+    "name": "longswordOld",
+    "englishName": "Knight’s longsword"
+  },
+  {
+    "id": 3176,
+    "name": "longswordRadzig",
+    "englishName": "Radzig Kobyla’s longsword"
+  },
+  {
+    "id": 3178,
+    "name": "longswordRadzig_reforged",
+    "englishName": "Reforged Radzig Kobyla’s sword"
+  },
+  {
+    "id": 3179,
+    "name": "longswordSturdy",
+    "englishName": "Battle longsword"
+  },
+  {
+    "id": 3181,
+    "name": "longswordTraining",
+    "englishName": "Training longsword"
+  },
+  {
+    "id": 3183,
+    "name": "longswordZizka_duel",
+    "englishName": "Common longsword"
+  },
+  {
+    "id": 3301,
+    "name": "mace01",
+    "englishName": "Light mace"
+  },
+  {
+    "id": 3303,
+    "name": "mace02",
+    "englishName": "Common mace"
+  },
+  {
+    "id": 3305,
+    "name": "mace03",
+    "englishName": "Flanged mace"
+  },
+  {
+    "id": 3307,
+    "name": "mace04",
+    "englishName": "Ornate mace"
+  },
+  {
+    "id": 3309,
+    "name": "maceBailiff",
+    "englishName": "Bailiff’s mace"
+  },
+  {
+    "id": 3311,
+    "name": "maceBuchar",
+    "englishName": "Buchar mace"
+  },
+  {
+    "id": 3313,
+    "name": "maceClub",
+    "englishName": "Club"
+  },
+  {
+    "id": 3315,
+    "name": "maceClubSpiked",
+    "englishName": "Spiked bludgeon"
+  },
+  {
+    "id": 3317,
+    "name": "maceClubTraining",
+    "englishName": "Training bludgeon"
+  },
+  {
+    "id": 3318,
+    "name": "maceDagger",
+    "englishName": "Dagger mace"
+  },
+  {
+    "id": 3320,
+    "name": "maceHeavy",
+    "englishName": "Heavy mace"
+  },
+  {
+    "id": 3322,
+    "name": "maceHetman",
+    "englishName": "Captain’s mace"
+  },
+  {
+    "id": 3324,
+    "name": "maceZizka",
+    "englishName": "Zizka’s mace"
+  },
+  {
+    "id": 3406,
+    "name": "nalezeniDelnici_denesDagger",
+    "englishName": "Denes’ dagger"
+  },
+  {
+    "id": 3411,
+    "name": "naTroskach_axeKolda",
+    "englishName": "Kolda’s axe"
+  },
+  {
+    "id": 3435,
+    "name": "nemcuvPoklad_bejkovecShortSwordRusty",
+    "englishName": "Old rusty sword"
+  },
+  {
+    "id": 3612,
+    "name": "oblehaniSuchdole_flag",
+    "englishName": ""
+  },
+  {
+    "id": 3613,
+    "name": "oblehaniSuchdole_oldSword",
+    "englishName": "Old longsword"
+  },
+  {
+    "id": 3783,
+    "name": "poi_ratborschButcherAxe",
+    "englishName": "Raborsch butcher’s axe"
+  },
+  {
+    "id": 3811,
+    "name": "polearmBardiche",
+    "englishName": "Bardiche"
+  },
+  {
+    "id": 3813,
+    "name": "polearmBruncvik",
+    "englishName": "Brunswick’s poleaxe"
+  },
+  {
+    "id": 3815,
+    "name": "polearmGlaive",
+    "englishName": "Glaive"
+  },
+  {
+    "id": 3817,
+    "name": "polearmGuisarm",
+    "englishName": "Guisarme"
+  },
+  {
+    "id": 3819,
+    "name": "polearmMorgenstern",
+    "englishName": "Morgenstern"
+  },
+  {
+    "id": 3821,
+    "name": "polearmPitchfork",
+    "englishName": "Pitchfork"
+  },
+  {
+    "id": 3823,
+    "name": "polearmPitchforkSedlakaMateje",
+    "englishName": "Farmer Matthew’s pitchfork"
+  },
+  {
+    "id": 3824,
+    "name": "polearmPoleaxe",
+    "englishName": "Poleaxe"
+  },
+  {
+    "id": 3826,
+    "name": "polearmSpear",
+    "englishName": "Billhook"
+  },
+  {
+    "id": 3828,
+    "name": "polearmTraining",
+    "englishName": "Staff"
+  },
+  {
+    "id": 3829,
+    "name": "polearmVoulge",
+    "englishName": "Voulge"
+  },
+  {
+    "id": 3832,
+    "name": "pomatenec_longsword",
+    "englishName": "Madman’s longsword"
+  },
+  {
+    "id": 3934,
+    "name": "poustevnik_seminLongSword",
+    "englishName": "Toledo steel sword"
+  },
+  {
+    "id": 4198,
+    "name": "rutinaAVypad_trackview_torch_weapon",
+    "englishName": "Torch"
+  },
+  {
+    "id": 4203,
+    "name": "sabreCommon",
+    "englishName": "Common sabre"
+  },
+  {
+    "id": 4205,
+    "name": "sabreLionHead",
+    "englishName": "Lion’s roar Kilij"
+  },
+  {
+    "id": 4207,
+    "name": "sabreNoble",
+    "englishName": "Ataman’s sabre"
+  },
+  {
+    "id": 4237,
+    "name": "sermiry_huntingSwordJimram",
+    "englishName": "Emmeram’s hunting sword"
+  },
+  {
+    "id": 4239,
+    "name": "sermiry_longSwordGuild",
+    "englishName": "Guild Longsword"
+  },
+  {
+    "id": 4241,
+    "name": "sermiry_longSwordMenhart",
+    "englishName": "Master Menhart’s longsword"
+  },
+  {
+    "id": 4243,
+    "name": "sermiry_trainingSword",
+    "englishName": "Training longsword"
+  },
+  {
+    "id": 4248,
+    "name": "sesivaniTonici_svancara",
+    "englishName": "St. Anthony’s standard"
+  },
+  {
+    "id": 4256,
+    "name": "setkaniVRatbori1_stolenDagger",
+    "englishName": "Stolen dagger"
+  },
+  {
+    "id": 4667,
+    "name": "shortSwordBasilard",
+    "englishName": "Basilard"
+  },
+  {
+    "id": 4669,
+    "name": "shortswordBergov",
+    "englishName": "Lord von Bergow’s sword"
+  },
+  {
+    "id": 4671,
+    "name": "shortswordBrabant",
+    "englishName": "Opportunity"
+  },
+  {
+    "id": 4673,
+    "name": "shortswordBroad",
+    "englishName": "Broadsword"
+  },
+  {
+    "id": 4675,
+    "name": "shortswordCeremony",
+    "englishName": "Noble’s sword"
+  },
+  {
+    "id": 4677,
+    "name": "shortswordCleaver",
+    "englishName": "Homemade hunting sword"
+  },
+  {
+    "id": 4678,
+    "name": "shortswordCommon",
+    "englishName": "Military sword"
+  },
+  {
+    "id": 4680,
+    "name": "shortswordCommon_khTournament",
+    "englishName": "Tournament sword"
+  },
+  {
+    "id": 4682,
+    "name": "shortswordHeavy",
+    "englishName": "Knight’s sword"
+  },
+  {
+    "id": 4684,
+    "name": "shortSwordStGeorge",
+    "englishName": "St. George’s sword"
+  },
+  {
+    "id": 4686,
+    "name": "shortswordTraining",
+    "englishName": "Training sword"
+  },
+  {
+    "id": 4883,
+    "name": "stealthMiseZaJindru_aulitzSword",
+    "englishName": "Markvart von Aulitz’s sword"
+  },
+  {
+    "id": 4885,
+    "name": "stealthMiseZaJindru_samHuntingKnife",
+    "englishName": "Samuel’s hunting sword"
+  },
+  {
+    "id": 4899,
+    "name": "svatba_longswordTournament",
+    "englishName": "Tournament practice sword"
+  },
+  {
+    "id": 4909,
+    "name": "svatyAntonin_svancaraAntonFlag",
+    "englishName": "St. Anthony’s standard"
+  },
+  {
+    "id": 4911,
+    "name": "svatyne_dagger",
+    "englishName": "Rondel dagger"
+  },
+  {
+    "id": 4918,
+    "name": "taboryLapkuTrosecko_plesnivecMace",
+    "englishName": "Canker’s mace"
+  },
+  {
+    "id": 4959,
+    "name": "test_axe_small_01",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 4961,
+    "name": "test_barbora_axe",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 4966,
+    "name": "test_barbora_halberd",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 4967,
+    "name": "test_barbora_huntingsword",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 4970,
+    "name": "test_barbora_longsword",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 4973,
+    "name": "test_barbora_mace",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 4974,
+    "name": "test_barbora_sabre",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 4976,
+    "name": "test_barbora_shortsword",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 4982,
+    "name": "test_barbora_stick",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 4991,
+    "name": "test_blacksmith_axe",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 4995,
+    "name": "test_blacksmith_sword_high",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 4996,
+    "name": "test_blacksmith_sword_low",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5013,
+    "name": "test_dagger",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5023,
+    "name": "test_inventory_sword",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5031,
+    "name": "test_long_spear_01",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5032,
+    "name": "test_longscabbard_01",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5033,
+    "name": "test_longscabbard_02",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5034,
+    "name": "test_longscabbard_03",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5038,
+    "name": "test_npcoutfitting_longsword",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5047,
+    "name": "test_sabre_shortsword1",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5048,
+    "name": "test_shortscabbard_01",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5049,
+    "name": "test_shortscabbard_02",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5056,
+    "name": "test_sword_long_bad",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5057,
+    "name": "test_sword_short",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5058,
+    "name": "test_sword_short_valuable",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5059,
+    "name": "test_swordWithLongName",
+    "englishName": "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+  },
+  {
+    "id": 5061,
+    "name": "test_weapon_test2",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5062,
+    "name": "test_weapontest2",
+    "englishName": "A suspicious bag"
+  },
+  {
+    "id": 5066,
+    "name": "torch_weapon",
+    "englishName": "Torch"
+  },
+  {
+    "id": 5070,
+    "name": "tournament_kuttenbergSword",
+    "englishName": "Kuttenberg longsword"
+  },
+  {
+    "id": 5072,
+    "name": "tournament_maceHerald",
+    "englishName": "Tournament mace"
+  },
+  {
+    "id": 5257,
+    "name": "uchazec_guildSword",
+    "englishName": "Blacksmiths’ guild longsword"
+  },
+  {
+    "id": 5259,
+    "name": "uchazec_guildSwordQuest",
+    "englishName": "Blacksmiths’ guild longsword"
+  },
+  {
+    "id": 5433,
+    "name": "warhammer01",
+    "englishName": "Common war hammer"
+  },
+  {
+    "id": 5435,
+    "name": "warhammer02",
+    "englishName": "Rider’s war hammer"
+  },
+  {
+    "id": 5437,
+    "name": "warhammer03",
+    "englishName": "Knight’s war hammer"
+  },
+  {
+    "id": 5439,
+    "name": "warhammer03_trollslayer",
+    "englishName": "Trollbane hammer"
+  },
+  {
+    "id": 5441,
+    "name": "warhammer04",
+    "englishName": "Lavish warhammer"
+  },
+  {
+    "id": 5443,
+    "name": "warhammerBasilisc",
+    "englishName": "Basilisk warhammer"
+  },
+  {
+    "id": 5445,
+    "name": "warhammerRaven",
+    "englishName": "Raven’s beak"
+  },
+  {
+    "id": 5447,
+    "name": "warhammerStab",
+    "englishName": "War hammer"
+  },
+  {
+    "id": 5559,
+    "name": "zbranePanaSemina_sukClub",
+    "englishName": "Gnarly’s club"
+  },
+  {
+    "id": 5574,
+    "name": "zikmunduvTabor_stabProofDagger",
+    "englishName": "Bloody knife"
+  }
 ]

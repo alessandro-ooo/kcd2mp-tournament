@@ -1,6 +1,8 @@
 ---@class DuelSettings
 ---@field time number
 ---@field useOwnWeapons boolean
+---@field weaponId? number
+---@field shieldId? number
 ---@field isRanked boolean
 ---@field numberOfRounds number
 
