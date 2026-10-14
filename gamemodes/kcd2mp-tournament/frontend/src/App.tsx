@@ -3,6 +3,7 @@ import { Route, Switch, useLocation } from "wouter";
 import { lazy } from "react";
 
 const DuelSettingsPage = lazy(() => import("./wouter/duel-settings-page"));
+const DuelInvitePage = lazy(() => import("./wouter/duel-invite-page"));
 
 const App = () => {
   const [, navigate] = useLocation();
@@ -20,6 +21,7 @@ const App = () => {
   return (
     <Switch>
       <Route path="/duel-settings-page" component={DuelSettingsPage} />
+      <Route path="/duel-invite-page" component={DuelInvitePage} />
     </Switch>
   );
 };
