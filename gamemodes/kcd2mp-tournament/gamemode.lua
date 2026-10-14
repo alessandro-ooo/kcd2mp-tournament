@@ -13,10 +13,6 @@ function OnPlayerConnect(pid)
 end
 
 function OnClientEvent(pid, name, payload, source)
-  if source ~= "duelsettings" or name ~= "panel.duelsettings.start" then
-    return
-  end
-
   Log(string.format(
     "Web event: player=%s name=%s source=%s payload=%s",
     tostring(pid),
