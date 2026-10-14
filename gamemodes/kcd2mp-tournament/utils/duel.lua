@@ -1,3 +1,4 @@
+---@type Duels
 local data = require("data")
 
 local duel = {}
@@ -12,10 +13,20 @@ function duel.isPlayerInDuel(pid)
 end
 
 function duel.add(playerOne, playerTwo)
+  ---@type Duel
   local newDuel = {
     playerOne = playerOne,
     playerTwo = playerTwo,
-    status = "pending"
+    status = "pending",
+    currentRound = 0,
+    playerOneRoundsWon = 0,
+    playerTwoRoundsWon = 0,
+    settings = {
+      time = 60,
+      useOwnWeapons = false,
+      isRanked = false,
+      numberOfRounds = 1,
+    },
   }
 
   table.insert(data.duels, newDuel)
@@ -34,6 +45,8 @@ function duel.remove(duelToRemove)
 end
 
 
+---@param pid number
+---@return Duel|nil
 function duel.findByPlayer(pid)
   for _, duelData in pairs(data.duels) do
     if duelData.playerOne == pid or duelData.playerTwo == pid then
