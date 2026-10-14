@@ -4,36 +4,58 @@ import Checkbox from "./inputs/checkbox";
 import DialogBody from "../dialog/dialogbody";
 import Button from "./inputs/button";
 import DialogElo from "../dialog/dialogelo";
+import DialogPlayers from "../dialog/dialogplayers";
 
-const DuelSettingsForm = () => {
-  type DuelSettingsFormT = {
+type DuelSettingsForm = {
+  currentElo: number;
+  nearbyPlayers: {
+    name: string;
+    elo: number;
+  }[];
+};
+
+const DuelSettingsForm = ({ nearbyPlayers, currentElo }: DuelSettingsForm) => {
+  type FormData = {
     time: number;
     useOwnWeapons: boolean;
     isRanked: boolean;
     currentElo?: number;
-    opponentElo?: number;
     numberOfRounds: number;
+    nearbyPlayers: {
+      name: string;
+      elo: number;
+    }[];
+    selectedPlayer: {
+      name: string;
+      elo: number;
+    };
   };
 
-  const { register, watch } = useForm<DuelSettingsFormT>({
+  const {
+    register,
+    watch,
+    setValue,
+    getValues,
+    formState: { isValid },
+  } = useForm<FormData>({
     defaultValues: {
       time: 60,
       useOwnWeapons: false,
       isRanked: false,
-      currentElo: 1000, // placeholder value, replace with actual current Elo if available
-      opponentElo: 1000, // placeholder value, replace with actual opponent Elo if available
+      currentElo: currentElo, // placeholder value, replace with actual current Elo if available
       numberOfRounds: 1,
+      nearbyPlayers: nearbyPlayers,
     },
   });
 
-  // const onSubmit: SubmitHandler<DuelSettingsFormT> = (data) => {
-  //   KcdMp.emitServer("panel.duelsettings.start", data).catch((error) =>
-  //     KcdMp.log.warn(`panel.duelsettings.start: ${error.message}`),
-  //   );
-  //   return;
-  // };
-
   const watchisRanked = watch("isRanked");
+  const getNearbyPlayers = getValues("nearbyPlayers");
+
+  console.log("isValid", isValid);
+
+  const watchSelectedPlayer = watch("selectedPlayer");
+
+  const isInviteValid = !!watchSelectedPlayer && isValid;
 
   return (
     <DialogBody title="Duel" subtitle="General settings">
@@ -61,21 +83,25 @@ const DuelSettingsForm = () => {
           <Checkbox label="Ranked duel" {...register("isRanked")} />
         </div>
 
-        {watchisRanked && (
+        <DialogPlayers
+          onPlayerClick={(name) => setValue("selectedPlayer", name)}
+          nearbyPlayers={getNearbyPlayers}
+          selected={watch("selectedPlayer")}
+        ></DialogPlayers>
+
+        {watchisRanked && !!watchSelectedPlayer && (
           <>
-            {" "}
-            <div className="border-b border-[#c4b596] pb-5">
-              <h1 className="font-display text-3xl text-[#121010] sm:text-4xl">
-                Ranked information
-              </h1>
-            </div>
             <DialogElo
               playerOne={{ name: "Player One", elo: 1000 }}
-              playerTwo={{ name: "Player Two", elo: 1000 }}
+              playerTwo={{
+                name: watchSelectedPlayer.name,
+                elo: watchSelectedPlayer.elo,
+              }}
             />
           </>
         )}
         <Button
+          disabled={!isInviteValid}
           type="button"
           onClick={() => {
             KcdMp.emitServer("panel.duelsettings.start", watch()).catch(
@@ -84,7 +110,7 @@ const DuelSettingsForm = () => {
             );
           }}
         >
-          Start duel
+          Send duel
         </Button>
       </form>
     </DialogBody>
