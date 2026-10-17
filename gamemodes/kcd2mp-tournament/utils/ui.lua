@@ -1,4 +1,5 @@
 local duel = require("utils.duel")
+local player = require("utils.players")
 local ui = {};
 
 -- Custom function to show the ui, to keep things clean with the error handling.
@@ -9,19 +10,20 @@ local ui = {};
 ---@param cursor boolean
 ---@param keepInput boolean
 
-function ui.show(pid, uiName, keyboard, cursor, keepInput)
-  local shown, showReason = ShowPlayerWebFrame(pid, uiName);
-
+function ui.show(pid, keyboard, cursor, keepInput)
+  local shown, showReason = ShowPlayerWebFrame(pid, "frame");
   if not shown then
     SendClientMessage(pid, COLOR_RED, "(ui.shown): " .. tostring(showReason))
     return true
   end
 
-  local focused, focusReason = SetPlayerWebFocus(pid, uiName, keyboard, cursor, keepInput)
+  local focused, focusReason = SetPlayerWebFocus(pid, "frame", keyboard, cursor, keepInput)
   if not focused then
     SendClientMessage(pid, COLOR_RED, "(ui.shown): " .. tostring(focusReason))
     return false
   end
+
+  player.setRequestingUI(pid, ui.UI_LIST.duelSettings)
   return true
 end
 
@@ -46,6 +48,7 @@ function OnPlayerWebReady(pid, frame)
   end
 end
 
+-- TODO: Route player based on the requestedUI with web and client events.
 function OnClientEvent(pid, name, payload, source)
   if source == ui.UI_LIST.duelSettings then
     if name == ui.EMITS_NAMES.duelSettings_SendInvite then
@@ -65,7 +68,7 @@ function OnClientEvent(pid, name, payload, source)
         for _, nearbyPid in ipairs(GetPlayersInRange(x, y, z, 20, GetPlayerVirtualWorld(pid))) do
           if duelSettings.selectedPlayer == nearbyPid and not nil then
             duel.add(pid, duelSettings.selectedPlayer, duelSettings.settings.numberOfRounds, duelSettings.settings.numberOfRounds, duelSettings.settings.useOwnWeapons, duelSettings.settings.isRanked, duelSettings.settings.weaponId, duelSettings.settings.shieldId)
-            -- TODO: SHOOW INvITE
+            -- TODO: SHOW INvITE
             break
           end
         end
