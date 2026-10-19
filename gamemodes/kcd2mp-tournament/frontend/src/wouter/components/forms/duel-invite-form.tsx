@@ -1,6 +1,8 @@
 import { cn } from "../../../utils/cn";
 import DialogBody from "../dialog/dialogbody";
 import Button from "./inputs/button";
+import weapons from "../../../utils/melee.json";
+import shields from "../../../utils/shields.json";
 
 type DuelInviteFormProps = {
   isRanked: boolean;
@@ -8,6 +10,10 @@ type DuelInviteFormProps = {
   numbersOfRounds: number;
   time: number;
   useOwnWeapons: boolean;
+  weaponId?: string;
+  shieldId?: string;
+  onAccept: () => void;
+  onDecline: () => void;
 };
 
 const DuelInviteForm = ({
@@ -16,7 +22,14 @@ const DuelInviteForm = ({
   numbersOfRounds,
   time,
   useOwnWeapons,
+  weaponId,
+  shieldId,
+  onAccept,
+  onDecline,
 }: DuelInviteFormProps) => {
+  const weapon = weapons.find((item) => item.name === weaponId);
+  const shield = shields.find((item) => item.name === shieldId);
+
   return (
     <DialogBody title="You've received an invite to duel">
       <div className="flex flex-col gap-6">
@@ -56,9 +69,19 @@ const DuelInviteForm = ({
             <div className="flex items-center justify-between gap-4 py-3">
               <div className="text-sm text-[#746751]">Equipment</div>
               <div className="text-right font-medium">
-                {useOwnWeapons ? "Own weapons" : "Duel equipment"}
+                {useOwnWeapons
+                  ? "Own weapons"
+                  : weapon?.englishName || weapon?.name || "Duel equipment"}
               </div>
             </div>
+            {shield && (
+              <div className="flex items-center justify-between gap-4 py-3">
+                <div className="text-sm text-[#746751]">Shield</div>
+                <div className="text-right font-medium">
+                  {shield.englishName || shield.name}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -88,8 +111,10 @@ const DuelInviteForm = ({
         </div>
 
         <div className="flex flex-row justify-between">
-          <Button type="button">Accept</Button>
-          <Button variant="secondary" type="button">
+          <Button type="button" onClick={onAccept}>
+            Accept
+          </Button>
+          <Button variant="secondary" type="button" onClick={onDecline}>
             Decline
           </Button>
         </div>

@@ -23,15 +23,11 @@ function ui.show(pid, keyboard, cursor, keepInput)
 end
 
 ---@param pid number
----@param uiName string
-function ui.hide(pid, uiName) return HidePlayerWebFrame(pid, uiName) end
+function ui.hide(pid) return HidePlayerWebFrame(pid, "frontend") end
 
 function OnPlayerWebReady(pid, frame)
-  SendClientMessage(pid, COLOR_RED, "Current frame " ..frame)
   if frame == "frontend" then
-    SendClientMessage(pid, COLOR_RED, "Inside IF frontend")
     local requestingUI = player.getRequestingUI(pid)
-    SendClientMessage(pid, COLOR_RED, "Current requesting ui" ..requestingUI)
     if requestingUI ~= "" then
       SendClientEvent(pid, "panel.frontend", { router = requestingUI })
       player.setRequestingUI(pid, ui.UI_LIST.NO_UI)
@@ -44,7 +40,6 @@ end
 function OnClientEvent(pid, name, payload, source)
   if source == "frontend" then
     if name == "panel.frontend.duel.fetch" then
-      SendClientMessage(pid, COLOR_RED, "fetching duel")
       local x, y, z = GetPlayerPos(pid);
       local nearbyPlayers = {}
       for _, nearbyPid in ipairs(GetPlayersInRange(x, y, z, 20, GetPlayerVirtualWorld(pid))) do
@@ -67,7 +62,6 @@ function OnClientEvent(pid, name, payload, source)
       })
     end
     if name == ui.EMITS_NAMES.sendInvite then
-        SendClientMessage(pid, COLOR_RED, "sendinvite")
         local settings, decodeReason = JsonDecode(payload or "")
         if decodeReason or settings == nil then
           SendClientMessage(pid, COLOR_RED, "Could not read duel settings.")
@@ -84,11 +78,12 @@ function OnClientEvent(pid, name, payload, source)
 
         -- TODO: Player not being found for some reason
           for _, nearbyPid in ipairs(GetPlayersInRange(x, y, z, 20, GetPlayerVirtualWorld(pid))) do
-            if duelSettings.selectedPlayer == nearbyPid and not nil then
-              duel.add(pid, duelSettings.selectedPlayer, duelSettings.settings.numberOfRounds, duelSettings.settings.numberOfRounds, duelSettings.settings.useOwnWeapons, duelSettings.settings.isRanked, duelSettings.settings.weaponId, duelSettings.settings.shieldId)
-              SendClientMessage(pid, COLOR_RED, "pid" ..duelSettings.selectedPlayer)
-              player.setRequestingUI(duelSettings.selectedPlayer, ui.EMITS_NAMES.showInvite)
-              ui.show(duelSettings.selectedPlayer, true, true, true);
+            if duelSettings.selectedPlayer.pid == nearbyPid and not nil then
+              duel.add(pid, duelSettings.selectedPlayer.pid, duelSettings.numberOfRounds, duelSettings.time, duelSettings.useOwnWeapons, duelSettings.isRanked, duelSettings.weaponId, duelSettings.shieldId)
+              ui.hide(pid);
+
+              player.setRequestingUI(duelSettings.selectedPlayer.pid, ui.UI_LIST.invite)
+              ui.show(duelSettings.selectedPlayer.pid, true, true, true);
               break
             end
           end
@@ -98,9 +93,19 @@ function OnClientEvent(pid, name, payload, source)
       local duelData = duel.isPlayerInDuel(pid);
 
       if duelData ~= false then
-      SendClientEvent(pid, ui.EMITS_NAMES.sendInviteReponse, {
-        duelData
-      })
+        local opponentPid = duelData.playerOne == pid and duelData.playerTwo or duelData.playerOne
+        local opponentData = player.get(opponentPid)
+        if not opponentData then
+          return
+        end
+
+        SendClientEvent(pid, ui.EMITS_NAMES.sendInviteReponse, {
+          opponent = {
+            name = opponentData.name,
+            elo = opponentData.playerDuels.elo,
+          },
+          settings = duelData.settings,
+        })
       end
     end
   end
@@ -115,7 +120,7 @@ ui.UI_LIST = {
 ui.EMITS_NAMES = {
   sendInvite = "panel.frontend.duel.sendinvite",
   fetchInvite = "panel.frontend.invite.fetch",
-  sendInviteReponse = "panel.frontend.invite.sendresponse"
+  sendInviteReponse = "panel.frontend.invite.fetch.sendresponse"
 }
 
 return ui;

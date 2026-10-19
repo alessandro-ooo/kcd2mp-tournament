@@ -1,27 +1,33 @@
-import { useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import { lazy } from "react";
 
 const DuelSettingsPage = lazy(() => import("./wouter/duel-settings-page"));
 const DuelInvitePage = lazy(() => import("./wouter/duel-invite-page"));
 
+type KcdMpRouter = { router: string };
+
 const App = () => {
   const [, navigate] = useLocation();
 
-  useEffect(
-    () =>
-      KcdMp.onServer("panel.duelsettings", (value) => {
-        if (Array.isArray(value) && value[0] === "main") {
-          navigate("/duel-settings-page");
-        }
-      }),
-    [navigate],
-  );
+  KcdMp.onServer("panel.frontend", (value) => {
+    const { router } = value as KcdMpRouter;
+    if (router === "duelsettings") {
+      navigate("/duel-settings-page");
+    }
+
+    if (router === "duelinvite") {
+      navigate("/duel-invite-page");
+    }
+  });
 
   return (
     <Switch>
-      <Route path="/duel-settings-page" component={DuelSettingsPage} />
-      <Route path="/duel-invite-page" component={DuelInvitePage} />
+      <Route path="/duel-settings-page">
+        <DuelSettingsPage />
+      </Route>
+      <Route path="/duel-invite-page">
+        <DuelInvitePage />
+      </Route>
     </Switch>
   );
 };

@@ -2,12 +2,13 @@ import { cn } from "../../../utils/cn";
 import H1 from "../typography/header";
 
 type DialogPlayersProps = {
-  nearbyPlayers: { name: string; elo: number }[];
+  nearbyPlayers: { pid: number; name: string; elo: number }[];
   selected?: {
+    pid: number;
     name: string;
     elo: number;
   };
-  onPlayerClick: (player: { name: string; elo: number }) => void;
+  onPlayerClick: (player: { pid: number; name: string; elo: number }) => void;
 };
 
 const DialogPlayers = ({
@@ -20,9 +21,9 @@ const DialogPlayers = ({
       <H1>Available players</H1>
       <div className="flex flex-col gap-2">
         {" "}
-        {nearbyPlayers.map((player, id) => (
+        {nearbyPlayers.map((player) => (
           <button
-            key={id}
+            key={player.pid}
             type="button"
             className={cn(
               "text-[#121010] hover:text-[#842326] hover:cursor-pointer w-full text-left h-8",

@@ -10,27 +10,28 @@ import shields from "../../../utils/shields.json";
 import Select from "./inputs/select";
 
 type DuelSettingsForm = {
-  currentElo: number;
-  nearbyPlayers: {
+  player: {
     name: string;
     elo: number;
-  }[];
+  };
+  nearbyPlayers: { pid: number; name: string; elo: number }[];
 };
 
-const DuelSettingsForm = ({ nearbyPlayers, currentElo }: DuelSettingsForm) => {
+const DuelSettingsForm = ({ player, nearbyPlayers }: DuelSettingsForm) => {
   type FormData = {
     time: number;
     useOwnWeapons: boolean;
     isRanked: boolean;
-    currentElo?: number;
     numberOfRounds: number;
-    weaponId?: number;
-    shieldId?: number;
+    weaponId?: string;
+    shieldId?: string;
     nearbyPlayers: {
+      pid: number;
       name: string;
       elo: number;
     }[];
     selectedPlayer: {
+      pid: number;
       name: string;
       elo: number;
     };
@@ -40,22 +41,19 @@ const DuelSettingsForm = ({ nearbyPlayers, currentElo }: DuelSettingsForm) => {
     register,
     watch,
     setValue,
-    getValues,
+
     formState: { isValid },
   } = useForm<FormData>({
     defaultValues: {
       time: 60,
       useOwnWeapons: false,
       isRanked: false,
-      currentElo: currentElo, // placeholder value, replace with actual current Elo if available
       numberOfRounds: 1,
-      nearbyPlayers: nearbyPlayers,
     },
   });
 
   const watchisRanked = watch("isRanked");
   const watchIsOwnWeapons = watch("useOwnWeapons");
-  const getNearbyPlayers = getValues("nearbyPlayers");
   const watchSelectedPlayer = watch("selectedPlayer");
   const isInviteValid = !!watchSelectedPlayer && isValid;
 
@@ -89,26 +87,30 @@ const DuelSettingsForm = ({ nearbyPlayers, currentElo }: DuelSettingsForm) => {
           <div className="flex flex-col gap-2">
             {" "}
             <Select
-              {...register("weaponId")}
+              {...register("weaponId", {
+                setValueAs: (value) => (value === "" ? undefined : value),
+              })}
               label="Weapon"
               selected={{ name: "Fists", value: "" }}
               items={[
                 { name: "Fists", value: "" },
                 ...weapons.map((weapon) => ({
                   name: weapon.englishName || weapon.name,
-                  value: String(weapon.id),
+                  value: weapon.name,
                 })),
               ]}
             />
             <Select
-              {...register("shieldId")}
+              {...register("shieldId", {
+                setValueAs: (value) => (value === "" ? undefined : value),
+              })}
               label="Shield"
               selected={{ name: "No shield", value: "" }}
               items={[
                 { name: "No shield", value: "" },
                 ...shields.map((shield) => ({
                   name: shield.englishName || shield.name,
-                  value: String(shield.id),
+                  value: shield.name,
                 })),
               ]}
             />
@@ -116,15 +118,17 @@ const DuelSettingsForm = ({ nearbyPlayers, currentElo }: DuelSettingsForm) => {
         )}
 
         <DialogPlayers
-          onPlayerClick={(name) => setValue("selectedPlayer", name)}
-          nearbyPlayers={getNearbyPlayers}
+          onPlayerClick={(selectedPlayer) =>
+            setValue("selectedPlayer", selectedPlayer)
+          }
+          nearbyPlayers={nearbyPlayers}
           selected={watch("selectedPlayer")}
         ></DialogPlayers>
 
         {watchisRanked && !!watchSelectedPlayer && (
           <>
             <DialogElo
-              playerOne={{ name: "Player One", elo: 1000 }}
+              playerOne={player}
               playerTwo={{
                 name: watchSelectedPlayer.name,
                 elo: watchSelectedPlayer.elo,
@@ -136,9 +140,13 @@ const DuelSettingsForm = ({ nearbyPlayers, currentElo }: DuelSettingsForm) => {
           disabled={!isInviteValid}
           type="button"
           onClick={() => {
-            KcdMp.emitServer("panel.duelsettings.start", watch()).catch(
-              (error) =>
-                KcdMp.log.warn(`panel.duelsettings.start: ${error.message}`),
+            KcdMp.emitServer("panel.frontend.duel.sendinvite", {
+              ...watch(),
+              selectedPlayer: watchSelectedPlayer,
+            }).catch((error) =>
+              KcdMp.log.warn(
+                `panel.frontend.duel.sendinvite: ${error.message}`,
+              ),
             );
           }}
         >
