@@ -3,6 +3,7 @@ local utils = require("utils.utils")
 
 local duel = {}
 
+---This function checks the type of the data received from the frontend.
 function duel.validateSettings(settings)
   if type(settings) ~= "table" then
     return false, "Invalid settings payload."
@@ -38,6 +39,8 @@ function duel.isShieldItem(info)
   )
 end
 
+---Function to check if a player is in a duel.
+---@param pid number
 function duel.isPlayerInDuel(pid)
   for _, duelData in pairs(data.duels) do
     if duelData.playerOne == pid or duelData.playerTwo == pid then
@@ -47,6 +50,27 @@ function duel.isPlayerInDuel(pid)
   return false
 end
 
+---@param pid number
+---@return Duel|nil
+function duel.findByPlayer(pid)
+  for _, duelData in pairs(data.duels) do
+    if duelData.playerOne == pid or duelData.playerTwo == pid then
+      return duelData
+    end
+  end
+  return nil
+end
+
+---A function to create an duel data.
+---@param playerOne number
+---@param playerTwo number
+---@param numberOfRounds number
+---@param time number
+---@param useOwnWeapons boolean
+---@param isRanked boolean
+---@param weaponId string
+---@param shieldId string
+---@return Duel
 function duel.add(playerOne, playerTwo, numberOfRounds, time, useOwnWeapons, isRanked, weaponId, shieldId)
   ---@type Duel
   local newDuel = {
@@ -70,6 +94,9 @@ function duel.add(playerOne, playerTwo, numberOfRounds, time, useOwnWeapons, isR
   return newDuel
 end
 
+---Function to remove the duel completely.
+---For now, it does not stop anything.
+---@param duelToRemove Duel
 function duel.remove(duelToRemove)
   for i, currentDuel in ipairs(data.duels) do
     if currentDuel == duelToRemove then
@@ -81,19 +108,9 @@ function duel.remove(duelToRemove)
   return false
 end
 
-
----@param pid number
----@return Duel|nil
-function duel.findByPlayer(pid)
-  for _, duelData in pairs(data.duels) do
-    if duelData.playerOne == pid or duelData.playerTwo == pid then
-      return duelData
-    end
-  end
-  return nil
-end
-
-
+---This function changes the status of the duel.
+---@param duelData Duel
+---@param newStatus string
 function duel.changeStatus(duelData, newStatus)
   -- Available status are: ( TO BE EDITED )
     -- creating: user had just /duel and it's setting up the options.
@@ -104,6 +121,9 @@ function duel.changeStatus(duelData, newStatus)
   end
 end
 
+---This function gets the data duel based on the playerid.
+---@param pid number
+---@return Duel?
 function duel.getData(pid)
   -- this to feed the ui duel
   local x, y, z = GetPlayerPos(pid)
@@ -128,6 +148,42 @@ function duel.getData(pid)
     elo = 100,
     nearbyPlayers = nearbyPlayers
   }
+end
+
+---Function to give the player a weapond and shield.
+---@param pid number
+---@param weaponId string
+---@param shieldId string
+function duel.giveEquipment(pid, weaponId, shieldId) 
+
+  local items = {}
+  if weaponId and weaponId ~= "" and weaponId ~= "fist" then
+    items[#items + 1] = {
+      class = weaponId,
+      amount = 1,
+      health = 100,
+      worn = true,
+    }
+  end
+
+  if shieldId and shieldId ~= "" and shieldId ~= "fist" then
+    items[#items + 1] = {
+      class = shieldId,
+      amount = 1,
+      health = 100,
+      worn = true,
+    }
+  end
+
+  return SetPlayerInventory(pid, items)
+end
+
+---This function initiates the duel.
+---@param duelData Duel
+function duel.initiate(duelData) 
+  duel.changeStatus(duelData, "fighting")
+  duel.giveEquipment(duelData.playerOne, duelData.settings.weaponId, duelData.settings.shieldId)
+  duel.giveEquipment(duelData.playerTwo, duelData.settings.weaponId, duelData.settings.shieldId)
 end
 
 return duel;

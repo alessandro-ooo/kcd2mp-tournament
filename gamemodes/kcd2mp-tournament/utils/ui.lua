@@ -22,6 +22,7 @@ function ui.show(pid, keyboard, cursor, keepInput)
   return true
 end
 
+---A function to hide the ui.
 ---@param pid number
 function ui.hide(pid) return HidePlayerWebFrame(pid, "frontend") end
 
@@ -36,7 +37,6 @@ function OnPlayerWebReady(pid, frame)
 
 end
 
--- TODO: Route player based on the requestedUI with web and client events.
 function OnClientEvent(pid, name, payload, source)
   if source == "frontend" then
     if name == "panel.frontend.duel.fetch" then
@@ -75,12 +75,12 @@ function OnClientEvent(pid, name, payload, source)
         end
 
         local x, y, z = GetPlayerPos(pid);
-
-        -- TODO: Player not being found for some reason
           for _, nearbyPid in ipairs(GetPlayersInRange(x, y, z, 20, GetPlayerVirtualWorld(pid))) do
             if duelSettings.selectedPlayer.pid == nearbyPid and not nil then
               duel.add(pid, duelSettings.selectedPlayer.pid, duelSettings.numberOfRounds, duelSettings.time, duelSettings.useOwnWeapons, duelSettings.isRanked, duelSettings.weaponId, duelSettings.shieldId)
               ui.hide(pid);
+
+              SendClientMessage(pid, COLOR_YELLOW, "You have invited " .. GetPlayerName(duelSettings.selectedPlayer.pid) .. "to duel.")
 
               player.setRequestingUI(duelSettings.selectedPlayer.pid, ui.UI_LIST.invite)
               ui.show(duelSettings.selectedPlayer.pid, true, true, true);
@@ -108,6 +108,35 @@ function OnClientEvent(pid, name, payload, source)
         })
       end
     end
+
+    if name == ui.EMITS_NAMES.declineInvite then
+      local duelInfo = duel.findByPlayer(pid)
+
+      if duelInfo == nil then
+        SendClientMessage(pid, COLOR_YELLOW, "You don't have any pending duels.")
+        return;
+      end
+
+      SendClientMessage(pid, COLOR_YELLOW, "You have denied ".. GetPlayerName(duelInfo.playerOne) .. "'s invite to duel.");
+      SendClientMessage(duelInfo.playerOne, COLOR_YELLOW, "".. GetPlayerName(duelInfo.playerTwo) .. " declined your invite to duel");
+
+      ui.hide(pid);
+      duel.remove(duelInfo)
+    end
+
+    if name == ui.EMITS_NAMES.acceptInvite then
+      local duelInfo = duel.findByPlayer(pid);
+      if duelInfo == nil then
+        SendClientMessage(pid, COLOR_YELLOW, "You don't have any pending duels.")
+        return;
+      end
+
+            SendClientMessage(duelInfo.playerTwo, COLOR_YELLOW, "You have accepted ".. GetPlayerName(duelInfo.playerOne) .. "'s invite to duel.");
+      SendClientMessage(duelInfo.playerOne, COLOR_YELLOW, "".. GetPlayerName(duelInfo.playerTwo) .. " accepted your invite to duel");
+
+      ui.hide(duelInfo.playerTwo)
+      duel.initiate(duelInfo)
+    end
   end
 end
 
@@ -120,7 +149,9 @@ ui.UI_LIST = {
 ui.EMITS_NAMES = {
   sendInvite = "panel.frontend.duel.sendinvite",
   fetchInvite = "panel.frontend.invite.fetch",
-  sendInviteReponse = "panel.frontend.invite.fetch.sendresponse"
+  sendInviteReponse = "panel.frontend.invite.fetch.sendresponse",
+  acceptInvite = "panel.frontend.invite.accept",
+  declineInvite = "panel.frontend.invite.decline"
 }
 
 return ui;

@@ -37,6 +37,12 @@ const DuelInvitePage = () => {
     return unsubscribe;
   }, []);
 
+  const onInviteButtonClick = (action: "decline" | "accept") => {
+    const emit = "panel.frontend.invite." + action;
+    void KcdMp.emitServer(emit, {});
+    return;
+  };
+
   return (
     <div className="flex px-10 py-10 justify-left text-[#24201d]">
       <DuelInviteForm
@@ -47,8 +53,8 @@ const DuelInvitePage = () => {
         useOwnWeapons={invite.settings.useOwnWeapons}
         weaponId={invite.settings.weaponId}
         shieldId={invite.settings.shieldId}
-        onAccept={() => {}}
-        onDecline={() => {}}
+        onAccept={() => onInviteButtonClick("accept")}
+        onDecline={() => onInviteButtonClick("decline")}
       />
     </div>
   );
