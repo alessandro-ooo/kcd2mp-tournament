@@ -1,0 +1,110 @@
+[2026-10-20 04:29:40.076] [main] [info] KcdMp.Server 0.43.0 (protocol 96) starting: 30 Hz tick, 30 Hz snapshots, config server.toml, log C:\Users\Alessandro\Documents\GitHub\kcd2mp-tournament\server.log
+[2026-10-20 04:29:40.427] [main] [info] combat tables: data/combat/items.json (298 weapons, 3150 armour pieces): damage from the tables
+[2026-10-20 04:29:40.427] [main] [info] smithing: the anvil's recipes make 62 item classes
+[2026-10-20 04:29:40.427] [main] [info] alchemy: the alchemy table's recipes make 106 item classes
+[2026-10-20 04:29:40.506] [main] [info] item catalogue: 5604 item classes by name, id or GUID
+[2026-10-20 04:29:40.570] [main] [info] soul catalogue: 8206 souls by name, id or GUID (616 horses)
+[2026-10-20 04:29:40.622] [main] [info] look catalogue: 745 parts (47 body, 212 head, 262 hair, 51 beard for a man's look, 41 body, 61 head, 71 hair for a woman's)
+[2026-10-20 04:29:40.677] [main] [info] buff catalogue: 929 buffs by name, id or GUID in 22 classes
+[2026-10-20 04:29:40.729] [main] [info] perk catalogue: 945 perks by name, English name or GUID
+[2026-10-20 04:29:40.783] [main] [info] consumables: 371 items apply their health and buff when used
+[2026-10-20 04:29:40.830] [main] [info] mesh catalogue: none in data/combat/items.json (an older export): props by path only
+[2026-10-20 04:29:40.977] [main] [info] loot tables: 3834 presets; klaster has 206 stashes and 411 item slots in the export; chests hold the game's loot, restock game
+[2026-10-20 04:29:41.200] [main] [info] voice lines: 27644 lines in 93 voices, 1527 barks, 85 conversations
+[2026-10-20 04:29:41.294] [main] [info] smart objects: 759 seats, beds and work spots on klaster
+[2026-10-20 04:29:41.295] [main] [info] claimed buffs: none (the game applies its own potions, poisons and drunkenness)
+[2026-10-20 04:29:41.352] [main] [info] database: data/server.db (schema 1)
+[2026-10-20 04:29:41.371] [main] [info] database: 0 door(s), 0 container(s), 0 taken item(s) of klaster
+[2026-10-20 04:29:41.393] [main] [info] heightmap: no data/heightmaps/klaster.hmap: no terrain check (tools/KcdMp.ExportHeightmap.exe of the Windows server folder makes it from the game)
+[2026-10-20 04:29:41.393] [main] [info] navmesh: no data/navmesh/klaster.knav: the actors walk straight lines, FindPath answers nil (tools/KcdMp.ExportNavmesh.exe of the Windows server folder makes it from the game)
+[2026-10-20 04:29:41.393] [main] [info] collision: no data/collision/klaster.kcol: no rays, no line of sight (tools/KcdMp.ExportCollision.exe of the Windows server folder makes it from the game)
+[2026-10-20 04:29:41.394] [main] [info] item ledger: observe - everything is judged and logged, nothing is removed ([audit] mode = "enforce" removes what the server cannot explain)
+[2026-10-20 04:29:41.394] [main] [info] progression audit: observe - levels, XP, perk points, perks, nourishment, energy and carry weight are judged and counted, a rise the server cannot explain is logged as "would set back"; nothing is sent to the player's game for it ([audit] mode = "enforce" puts back what the server cannot explain)
+[2026-10-20 04:29:41.395] [main] [info] nourishment and energy audit: OBSERVE - hunger and exhaust are judged and logged, nothing is put back or tickled; [audit] mode = "enforce" lets the hard cap act
+[2026-10-20 04:29:41.395] [main] [info] nourishment and energy audit: the drain-below-the-floor and unexplained-rise advisories are counted, not sent (CF-11 is not calibrated)
+[2026-10-20 04:29:41.395] [main] [info] mods: any
+[2026-10-20 04:29:41.396] [main] [info] client scripts: none in C:\Users\Alessandro\Documents\GitHub\kcd2mp-tournament\gamemodes\kcd2mp-tournament\client
+[2026-10-20 04:29:41.645] [main] [info] ui: gamemodes/kcd2mp-tournament/ui: 16 files, 612 KB (196 KB over the game connection), bundle 2928895c; frames: frontend
+[2026-10-20 04:29:41.647] [main] [info] voice: on, 25 m, 400 bytes a frame at most
+[2026-10-20 04:29:41.648] [main] [info] emotes: 9 known, the wheel wave, bow, cheer, clap, dance, come
+[2026-10-20 04:29:41.654] [main] [info] carts: no data/carts/klaster.toml: no routes yet (/cartroute makes them in the game; CreateCart and /cart make free carts)
+[2026-10-20 04:29:41.670] [main] [info] map: data/maps/klaster - nothing placed or removed yet
+[2026-10-20 04:29:41.676] [main] [info] weather: cloudy_no_rain, rain 0.00 (the server's rotation, for 3.1 game hours)
+[2026-10-20 04:29:41.727] [main] [info] [lua] C:\Users\Alessandro\Documents\GitHub\kcd2mp-tournament\gamemodes\kcd2mp-tournament\gamemode.lua loaded (7 callbacks: OnGameModeInit, OnPlayerConnect, OnPlayerDisconnect, OnPlayerCommandText, OnPlayerDeath, OnClientEvent, OnPlayerWebReady)
+[2026-10-20 04:29:41.728] [main] [info] [lua] Tournament gamemode
+[2026-10-20 04:29:41.728] [main] [info] game mode: gamemode, level klaster, 32 slots, area of interest 200 m (64 m cells)
+[2026-10-20 04:29:41.729] [main] [info] console: commands are read from this console's input (help lists them)
+[2026-10-20 04:29:41.730] [main] [info] threads: net=1 sim=1 workers=10 (cpu=12), server GC=True
+[2026-10-20 04:29:41.734] [main] [info] listening on udp/7777 (40 peers max, reliable messages at most 24 MB/s)
+[2026-10-20 04:29:41.750] [main] [info] status: http://<this host>:7777/ answers the server's status as JSON
+[2026-10-20 04:29:42.399] [.NET TP Worker] [info] master: announced to https://kcd-mp.com/server-list/heartbeat (0/32 players, klaster)
+[2026-10-20 04:29:42.400] [.NET TP Worker] [info] master: the list cannot reach this server at 95.235.60.181:7777 (no connection within 3 s) - it stays off the public list until it answers, and players outside your network cannot join it either. Open udp/7777 to the internet (the router's port forwarding, the firewall), or set [master] public_address to the address players use
+[2026-10-20 04:29:42.826] [KcdMp-sim] [info] twonuggets#0 (::1:64512): id 512bf5e37353421b81b1931727bc7b05, Steam ID 76561198144951909
+[2026-10-20 04:29:42.861] [KcdMp-sim] [info] twonuggets#0 (::1:64512): joined (client KcdMp_client 0.43.0, build steam-1.5.6-bdf8f9e4)
+[2026-10-20 04:29:42.863] [KcdMp-sim] [info] ui: twonuggets's web layer: ready
+[2026-10-20 04:29:42.869] [KcdMp-sim] [info] testbuddy#1 (::1:52917): id 512bf5e37353421b81b1931727bc7b05, Steam ID 76561198144951909
+[2026-10-20 04:29:42.870] [KcdMp-sim] [info] testbuddy#1 (::1:52917): joined (client KcdMp_client 0.43.0, build steam-1.5.6-bdf8f9e4)
+[2026-10-20 04:29:42.870] [KcdMp-sim] [info] ui: testbuddy's web layer: ready
+[2026-10-20 04:29:42.918] [KcdMp-sim] [info] testbuddy#1 (::1:52917): client features 0xFF (bit 0 the rider's throw, 1 the pull-down, 2 carrying, 3 pickpocketing, 4 carry items, 5 quests, 6 judges blows, 7 herbs)
+[2026-10-20 04:29:42.955] [KcdMp-sim] [info] testbuddy#1 (::1:52917): spawned at 1280.0 1088.0 -1.0 yaw 0
+[2026-10-20 04:29:42.958] [KcdMp-sim] [info] twonuggets#0 (::1:64512): client features 0xFF (bit 0 the rider's throw, 1 the pull-down, 2 carrying, 3 pickpocketing, 4 carry items, 5 quests, 6 judges blows, 7 herbs)
+[2026-10-20 04:29:42.958] [KcdMp-sim] [info] twonuggets#0 (::1:64512): spawned at 1280.0 1088.0 -1.0 yaw 0
+[2026-10-20 04:29:42.959] [KcdMp-sim] [info] map: twonuggets drew it (0 object(s), 0 removal(s), revision 0)
+[2026-10-20 04:29:42.959] [KcdMp-sim] [info] map: testbuddy drew it (0 object(s), 0 removal(s), revision 0)
+[2026-10-20 04:29:43.043] [KcdMp-sim] [info] twonuggets#0 (::1:64512): item ledger open (0 item(s) reported)
+[2026-10-20 04:29:43.084] [KcdMp-sim] [info] testbuddy#1 (::1:52917): item ledger open (0 item(s) reported)
+[2026-10-20 04:29:45.056] [KcdMp-sim] [info] twonuggets#0 (::1:64512): outfits current A; A 0 item(s), B 0 item(s), C 0 item(s)
+[2026-10-20 04:29:45.118] [KcdMp-sim] [info] testbuddy#1 (::1:52917): outfits current A; A 0 item(s), B 0 item(s), C 0 item(s)
+[2026-10-20 04:29:46.083] [KcdMp-sim] [info] twonuggets#0 (::1:64512): progression: no memory of this player's XP potions (a restart, another server or more than six hours away): the potions and meals the game has are all taken as running for their own window, the longest 3.5 hours
+[2026-10-20 04:29:46.150] [KcdMp-sim] [info] testbuddy#1 (::1:52917): progression: no memory of this player's XP potions (a restart, another server or more than six hours away): the potions and meals the game has are all taken as running for their own window, the longest 3.5 hours
+[2026-10-20 04:29:46.151] [KcdMp-sim] [info] ui: twonuggets's frame 'frontend' is ready
+[2026-10-20 04:29:47.088] [KcdMp-sim] [info] twonuggets#0 (::1:64512): weight trace: carried 1.0, capacity judged 140.0 (bound 140.0, strength 5, reported 140.0), not overloaded
+[2026-10-20 04:29:47.151] [KcdMp-sim] [info] testbuddy#1 (::1:52917): weight trace: carried 1.0, capacity judged 140.0 (bound 140.0, strength 5, reported 140.0), not overloaded
+[2026-10-20 04:29:51.751] [KcdMp-sim] [info] tick 301 (10 s uptime): 2 sessions, 2 in world, packets in 535 out 815, late ticks 2 (total 2), backlog drops 0, snapshots 0.9 KB/s (31 % of whole; 522 deltas, 2 whole), held back 6 for slow links, 2 for the network thread
+[2026-10-20 04:29:51.751] [KcdMp-sim] [info] network thread: 0 % busy, 734 rounds/s; of 10 s it read for 10.0 s (ENet's service also sends), handed packets over for 0.0 s and flushed for 0.0 s
+[2026-10-20 04:29:51.759] [KcdMp-sim] [info] tick time: avg 1.5 ms, slowest 97 ms (events 89.5, world 0.9, snapshots 4.4, queue 1.3, hand-off 1.0); a tick on average: events 0.92, world 0.24, snapshots 0.30, queue 0.03, hand-off 0.01; the events' top: Hello 0.19 ms a tick (0 a tick, 28544.9 us each), ProgressReport 0.18 ms a tick (0 a tick, 26857.7 us each), Ready 0.14 ms a tick (0 a tick, 20566.0 us each), connects 0.08 ms a tick (0 a tick, 11556.0 us each); game mode 0.06 ms a tick, slowest call OnPlayerWebReady 6.6 ms; GC 0 / 0 / 0 (gen 0 / 1 / 2), paused 0 ms, heap 88 MB
+[2026-10-20 04:29:51.760] [KcdMp-sim] [info] reliable out: 226 messages, 10 KB; the top: UiManifestPart 2 (4 KB), WorldItemState 64 (1 KB), EntityStat 72 (1 KB), HerbArea 32 (0 KB), ServerChat 6 (0 KB), Spawn 4 (0 KB); the busiest tick 32: 34 messages, 6 KB - UiManifestPart 2 (4 KB), ServerChat 6 (0 KB), Welcome 2 (0 KB), ChatSuggestions 2 (0 KB), UiManifest 2 (0 KB), EmoteWheel 2 (0 KB)
+[2026-10-20 04:29:51.760] [KcdMp-sim] [info] warning: the slowest tick took 97 ms against a 33 ms budget (5 over budget since the last report), most of it in the network's events (the mode's callbacks on them): 90 ms (the tick time line has the stages)
+[2026-10-20 04:29:54.986] [KcdMp-sim] [info] ui: testbuddy's frame 'frontend' is ready
+[2026-10-20 04:29:57.685] [KcdMp-sim] [info] [lua] error in OnClientEvent: ...d2mp-tournament\gamemodes\kcd2mp-tournament/utils\ui.lua:128: attempt to call a nil value (field 'findByPlayer')
+stack traceback:
+	...d2mp-tournament\gamemodes\kcd2mp-tournament/utils\ui.lua:128: in function 'OnClientEvent'
+[2026-10-20 04:29:57.686] [KcdMp-sim] [info] [lua] error in OnClientEvent: ...d2mp-tournament\gamemodes\kcd2mp-tournament/utils\ui.lua:128: attempt to call a nil value (field 'findByPlayer')
+stack traceback:
+	...d2mp-tournament\gamemodes\kcd2mp-tournament/utils\ui.lua:128: in function 'OnClientEvent'
+[2026-10-20 04:30:01.785] [KcdMp-sim] [info] tick 602 (20 s uptime): 2 sessions, 2 in world, packets in 1116 out 1447, late ticks 0 (total 2), backlog drops 0, snapshots 0.9 KB/s (28 % of whole; 602 deltas, 0 whole)
+[2026-10-20 04:30:01.786] [KcdMp-sim] [info] network thread: 0 % busy, 756 rounds/s; of 10 s it read for 10.0 s (ENet's service also sends), handed packets over for 0.0 s and flushed for 0.0 s
+[2026-10-20 04:30:01.787] [KcdMp-sim] [info] tick time: avg 0.3 ms, slowest 5 ms (events 0.0, world 0.0, snapshots 5.1, queue 0.0, hand-off 0.0); a tick on average: events 0.03, world 0.03, snapshots 0.19, queue 0.00, hand-off 0.00; the events' top: WebEvent 0.02 ms a tick (0 a tick, 1402.0 us each), StateReport 0.01 ms a tick (2 a tick, 6.3 us each), WebFrameReport 0.00 ms a tick (0 a tick, 360.0 us each), InventoryDelta 0.00 ms a tick (0 a tick, 21.8 us each); game mode 0.02 ms a tick, slowest call OnClientEvent 3.1 ms; GC 0 / 0 / 0 (gen 0 / 1 / 2), paused 0 ms, heap 89 MB
+[2026-10-20 04:30:01.787] [KcdMp-sim] [info] reliable out: 6 messages, 0 KB; the top: ScriptEvent 2 (0 KB), ServerChat 1 (0 KB), WebFrameControl 3 (0 KB); the busiest tick 400: 1 messages, 0 KB - ScriptEvent 1 (0 KB)
+[2026-10-20 04:30:11.819] [KcdMp-sim] [info] tick 903 (30 s uptime): 2 sessions, 2 in world, packets in 1738 out 2071, late ticks 0 (total 2), backlog drops 0, snapshots 0.9 KB/s (27 % of whole; 602 deltas, 0 whole)
+[2026-10-20 04:30:11.819] [KcdMp-sim] [info] network thread: 0 % busy, 766 rounds/s; of 10 s it read for 10.0 s (ENet's service also sends), handed packets over for 0.0 s and flushed for 0.0 s
+[2026-10-20 04:30:11.819] [KcdMp-sim] [info] tick time: avg 0.4 ms, slowest 5 ms (events 0.0, world 0.0, snapshots 5.0, queue 0.0, hand-off 0.0); a tick on average: events 0.03, world 0.04, snapshots 0.28, queue 0.00, hand-off 0.00; the events' top: StateReport 0.03 ms a tick (2 a tick, 12.9 us each), InventoryDelta 0.00 ms a tick (0 a tick, 26.9 us each), Ping 0.00 ms a tick (0 a tick, 0.9 us each); game mode 0.00 ms a tick; GC 0 / 0 / 0 (gen 0 / 1 / 2), paused 0 ms, heap 91 MB
+[2026-10-20 04:30:11.819] [KcdMp-sim] [info] reliable out: 2 messages, 0 KB; the top: WorldState 2 (0 KB); the busiest tick 900: 2 messages, 0 KB - WorldState 2 (0 KB)
+[2026-10-20 04:30:21.850] [KcdMp-sim] [info] tick 1204 (40 s uptime): 2 sessions, 2 in world, packets in 2356 out 2693, late ticks 0 (total 2), backlog drops 0, snapshots 0.9 KB/s (27 % of whole; 602 deltas, 0 whole)
+[2026-10-20 04:30:21.850] [KcdMp-sim] [info] network thread: 0 % busy, 779 rounds/s; of 10 s it read for 10.0 s (ENet's service also sends), handed packets over for 0.0 s and flushed for 0.0 s
+[2026-10-20 04:30:21.851] [KcdMp-sim] [info] tick time: avg 0.3 ms, slowest 9 ms (events 0.0, world 0.0, snapshots 8.7, queue 0.0, hand-off 0.0); a tick on average: events 0.01, world 0.03, snapshots 0.28, queue 0.00, hand-off 0.00; the events' top: StateReport 0.01 ms a tick (2 a tick, 5.6 us each), InventoryDelta 0.00 ms a tick (0 a tick, 16.7 us each), Ping 0.00 ms a tick (0 a tick, 1.1 us each); game mode 0.00 ms a tick; GC 0 / 0 / 0 (gen 0 / 1 / 2), paused 0 ms, heap 92 MB
+[2026-10-20 04:30:31.884] [KcdMp-sim] [info] tick 1505 (50 s uptime): 2 sessions, 2 in world, packets in 2979 out 3315, late ticks 0 (total 2), backlog drops 0, snapshots 0.9 KB/s (27 % of whole; 602 deltas, 0 whole)
+[2026-10-20 04:30:31.884] [KcdMp-sim] [info] network thread: 0 % busy, 789 rounds/s; of 10 s it read for 10.0 s (ENet's service also sends), handed packets over for 0.0 s and flushed for 0.0 s
+[2026-10-20 04:30:31.884] [KcdMp-sim] [info] tick time: avg 0.3 ms, slowest 7 ms (events 0.0, world 0.0, snapshots 7.0, queue 0.0, hand-off 0.0); a tick on average: events 0.02, world 0.03, snapshots 0.27, queue 0.00, hand-off 0.00; the events' top: StateReport 0.01 ms a tick (2 a tick, 7.2 us each), InventoryDelta 0.00 ms a tick (0 a tick, 20.8 us each), Ping 0.00 ms a tick (0 a tick, 1.1 us each); game mode 0.00 ms a tick; GC 0 / 0 / 0 (gen 0 / 1 / 2), paused 0 ms, heap 93 MB
+[2026-10-20 04:30:41.918] [KcdMp-sim] [info] tick 1806 (60 s uptime): 2 sessions, 2 in world, packets in 3604 out 3939, late ticks 0 (total 2), backlog drops 0, snapshots 0.9 KB/s (27 % of whole; 602 deltas, 0 whole)
+[2026-10-20 04:30:41.918] [KcdMp-sim] [info] network thread: 0 % busy, 783 rounds/s; of 10 s it read for 10.0 s (ENet's service also sends), handed packets over for 0.0 s and flushed for 0.0 s
+[2026-10-20 04:30:41.918] [KcdMp-sim] [info] tick time: avg 0.3 ms, slowest 5 ms (events 0.0, world 0.1, snapshots 5.2, queue 0.0, hand-off 0.0); a tick on average: events 0.02, world 0.04, snapshots 0.24, queue 0.00, hand-off 0.00; the events' top: StateReport 0.01 ms a tick (2 a tick, 6.2 us each), InventoryDelta 0.00 ms a tick (0 a tick, 38.4 us each), Ping 0.00 ms a tick (0 a tick, 1.3 us each); game mode 0.00 ms a tick; GC 0 / 0 / 0 (gen 0 / 1 / 2), paused 0 ms, heap 95 MB
+[2026-10-20 04:30:41.918] [KcdMp-sim] [info] reliable out: 2 messages, 0 KB; the top: WorldState 2 (0 KB); the busiest tick 1800: 2 messages, 0 KB - WorldState 2 (0 KB)
+[2026-10-20 04:30:51.951] [KcdMp-sim] [info] tick 2107 (70 s uptime): 2 sessions, 2 in world, packets in 4232 out 4561, late ticks 0 (total 2), backlog drops 0, snapshots 0.9 KB/s (27 % of whole; 602 deltas, 0 whole)
+[2026-10-20 04:30:51.951] [KcdMp-sim] [info] network thread: 0 % busy, 781 rounds/s; of 10 s it read for 10.0 s (ENet's service also sends), handed packets over for 0.0 s and flushed for 0.0 s
+[2026-10-20 04:30:51.951] [KcdMp-sim] [info] tick time: avg 0.4 ms, slowest 9 ms (events 0.0, world 0.0, snapshots 8.8, queue 0.0, hand-off 0.0); a tick on average: events 0.03, world 0.03, snapshots 0.37, queue 0.00, hand-off 0.00; the events' top: ProgressReport 0.01 ms a tick (0 a tick, 991.0 us each), StateReport 0.01 ms a tick (2 a tick, 4.6 us each), InventoryDelta 0.00 ms a tick (0 a tick, 27.0 us each), Ping 0.00 ms a tick (0 a tick, 1.4 us each); game mode 0.00 ms a tick; GC 0 / 0 / 0 (gen 0 / 1 / 2), paused 0 ms, heap 96 MB
+[2026-10-20 04:31:01.984] [KcdMp-sim] [info] tick 2408 (80 s uptime): 2 sessions, 2 in world, packets in 4853 out 5183, late ticks 0 (total 2), backlog drops 0, snapshots 0.9 KB/s (27 % of whole; 602 deltas, 0 whole)
+[2026-10-20 04:31:01.984] [KcdMp-sim] [info] network thread: 0 % busy, 772 rounds/s; of 10 s it read for 10.0 s (ENet's service also sends), handed packets over for 0.0 s and flushed for 0.0 s
+[2026-10-20 04:31:01.984] [KcdMp-sim] [info] tick time: avg 0.3 ms, slowest 5 ms (events 0.0, world 0.0, snapshots 4.9, queue 0.0, hand-off 0.0); a tick on average: events 0.01, world 0.03, snapshots 0.25, queue 0.00, hand-off 0.00; the events' top: StateReport 0.01 ms a tick (2 a tick, 4.4 us each), InventoryDelta 0.00 ms a tick (0 a tick, 22.3 us each), Ping 0.00 ms a tick (0 a tick, 1.5 us each); game mode 0.00 ms a tick; GC 0 / 0 / 0 (gen 0 / 1 / 2), paused 0 ms, heap 98 MB
+[2026-10-20 04:31:11.984] [KcdMp-sim] [info] tick 2708 (90 s uptime): 2 sessions, 2 in world, packets in 5474 out 5804, late ticks 0 (total 2), backlog drops 0, snapshots 0.9 KB/s (27 % of whole; 600 deltas, 0 whole)
+[2026-10-20 04:31:11.984] [KcdMp-sim] [info] network thread: 0 % busy, 778 rounds/s; of 10 s it read for 10.0 s (ENet's service also sends), handed packets over for 0.0 s and flushed for 0.0 s
+[2026-10-20 04:31:11.984] [KcdMp-sim] [info] tick time: avg 0.4 ms, slowest 9 ms (events 0.0, world 0.0, snapshots 8.6, queue 0.0, hand-off 0.0); a tick on average: events 0.01, world 0.03, snapshots 0.36, queue 0.00, hand-off 0.00; the events' top: StateReport 0.01 ms a tick (2 a tick, 4.4 us each), InventoryDelta 0.00 ms a tick (0 a tick, 17.3 us each), Ping 0.00 ms a tick (0 a tick, 1.3 us each); game mode 0.00 ms a tick; GC 0 / 0 / 0 (gen 0 / 1 / 2), paused 0 ms, heap 99 MB
+[2026-10-20 04:31:11.985] [KcdMp-sim] [info] reliable out: 2 messages, 0 KB; the top: WorldState 2 (0 KB); the busiest tick 2700: 2 messages, 0 KB - WorldState 2 (0 KB)
+[2026-10-20 04:31:22.018] [KcdMp-sim] [info] tick 3009 (100 s uptime): 2 sessions, 2 in world, packets in 6099 out 6424, late ticks 0 (total 2), backlog drops 0, snapshots 0.9 KB/s (27 % of whole; 600 deltas, 0 whole), held back 0 for slow links, 2 for the network thread
+[2026-10-20 04:31:22.018] [KcdMp-sim] [info] network thread: 0 % busy, 781 rounds/s; of 10 s it read for 10.0 s (ENet's service also sends), handed packets over for 0.0 s and flushed for 0.0 s
+[2026-10-20 04:31:22.018] [KcdMp-sim] [info] tick time: avg 0.3 ms, slowest 23 ms (events 0.0, world 8.7, snapshots 13.9, queue 0.0, hand-off 0.0); a tick on average: events 0.02, world 0.05, snapshots 0.27, queue 0.00, hand-off 0.00; the events' top: StateReport 0.01 ms a tick (2 a tick, 5.8 us each), InventoryDelta 0.00 ms a tick (0 a tick, 16.6 us each), Ping 0.00 ms a tick (0 a tick, 1.3 us each); game mode 0.00 ms a tick; GC 0 / 0 / 0 (gen 0 / 1 / 2), paused 0 ms, heap 101 MB
+[2026-10-20 04:31:32.051] [KcdMp-sim] [info] tick 3310 (110 s uptime): 2 sessions, 2 in world, packets in 6716 out 7045, late ticks 0 (total 2), backlog drops 0, snapshots 0.9 KB/s (27 % of whole; 602 deltas, 0 whole)
+[2026-10-20 04:31:32.051] [KcdMp-sim] [info] network thread: 0 % busy, 786 rounds/s; of 10 s it read for 10.0 s (ENet's service also sends), handed packets over for 0.0 s and flushed for 0.0 s
+[2026-10-20 04:31:32.051] [KcdMp-sim] [info] tick time: avg 0.3 ms, slowest 8 ms (events 0.0, world 0.0, snapshots 7.6, queue 0.0, hand-off 0.0); a tick on average: events 0.02, world 0.03, snapshots 0.22, queue 0.00, hand-off 0.00; the events' top: StateReport 0.01 ms a tick (2 a tick, 5.6 us each), InventoryDelta 0.00 ms a tick (0 a tick, 16.9 us each), Ping 0.00 ms a tick (0 a tick, 1.3 us each); game mode 0.00 ms a tick; GC 0 / 0 / 0 (gen 0 / 1 / 2), paused 0 ms, heap 102 MB
+[2026-10-20 04:31:37.270] [main] [info] database: closed (1 row(s) in 1 transaction(s) this run)
+[2026-10-20 04:31:37.271] [main] [info] KcdMp.Server stopped after 3466 ticks

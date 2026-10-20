@@ -1,14 +1,46 @@
+// import DuelSettingsForm from "./components/forms/duel-settings-form";
+import { useEffect, useState } from "react";
 import DuelSettingsForm from "./components/forms/duel-settings-form";
 
 const DuelSettingsPage = () => {
+  type DuelData = {
+    player: { name: string; elo: number };
+    nearbyPlayers: { pid: number; name: string; elo: number }[];
+  };
+
+  const [duelData, setDuelData] = useState<DuelData>({
+    player: {
+      name: "",
+      elo: 0,
+    },
+    nearbyPlayers: [],
+  });
+
+  // KcdMp.emitServer("panel.frontend.fetch.duel", {});
+
+  // KcdMp.onServer("panel.frontend.fetch.duel.response", (value) => {
+  //   const data = value as DuelData;
+  //   setDuelData(data);
+  // });
+
+  useEffect(() => {
+    const unsubscribe = KcdMp.onServer(
+      "panel.frontend.duel.fetch.sendresponse",
+      (value) => setDuelData(value as DuelData),
+    );
+
+    void KcdMp.emitServer("panel.frontend.duel.fetch", {});
+
+    return unsubscribe;
+  }, []);
+
+  console.log(duelData);
+
   return (
     <div className="flex px-10 py-10 justify-left text-[#24201d]">
       <DuelSettingsForm
-        currentElo={100}
-        nearbyPlayers={[
-          { name: "Alessandro Buonocore", elo: 100 },
-          { name: "Marco Rossi", elo: 500 },
-        ]}
+        player={duelData.player}
+        nearbyPlayers={duelData.nearbyPlayers}
       />
     </div>
   );

@@ -4,3 +4,4 @@ data/server.db-shm
 data/server.db-shm
 data/server.db-wal
 data/server.db-wal
+server.log.1

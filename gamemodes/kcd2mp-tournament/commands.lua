@@ -1,71 +1,20 @@
 local duel = require("utils.duel")
-local pendingDuelSettingsRoute = {}
+local player = require("utils.players")
+local ui = require("utils.ui")
 
 function OnPlayerCommandText(pid, cmd, args)
   cmd = cmd:lower()
   if cmd == "duel" then
-    local target, reason = sscanf(args, "u") or sscanf(args, "s")
-    if target == false then
-      SendClientMessage(pid, COLOR_RED, "usage: /duel <player_id|player_name> - " .. reason)
-      return true
-    end
-
     if duel.isPlayerInDuel(pid) then
       SendClientMessage(pid, COLOR_RED, "You are already in a duel.")
       return true
     end
 
-    if duel.isPlayerInDuel(target) then
-      SendClientMessage(pid, COLOR_RED, "The target player is already in a duel.")
-      return true
-    end
-    SendClientMessage(pid, COLOR_SERVER, "Duel request sent to " .. target)
-    SendClientMessage(target, COLOR_SERVER, "Duel request from " .. GetPlayerName(pid) .. ". Type /acceptduel to accept or /declineduel to decline.")
-    
-    duel.add(pid, target);
+    player.setRequestingUI(pid, ui.UI_LIST.duelSettings)
+    local success = ui.show(pid, true, true, true)
+
+    if success == false then return false end
     return true
-  end
-
-  if cmd == "acceptduel" then
-    local duelData = duel.findByPlayer(pid)
-    if duelData and duelData.status == "pending" then
-      duel.changeStatus(duelData, "accepted")
-      SendClientMessage(duelData.playerOne, COLOR_SERVER, GetPlayerName(pid) .. " has accepted your duel request.")
-      SendClientMessage(duelData.playerTwo, COLOR_SERVER, "You have accepted the duel request from " .. GetPlayerName(duelData.playerOne) .. ". Waiting for player one to start the duel.")
-
-      local shown, showReason = ShowPlayerWebFrame(duelData.playerOne, "duelsettings")
-
-      if not shown then
-        SendClientMessage(duelData.playerOne, COLOR_RED, "Could not show interface: " .. tostring(showReason))
-        return true
-      end
-
-      local focused, focusReason = SetPlayerWebFocus(duelData.playerOne, "duelsettings", true, true, true)
-      if not focused then
-        SendClientMessage(duelData.playerOne, COLOR_RED, "Interface opened, but mouse focus failed: " .. tostring(focusReason))
-      end
-
-      if IsPlayerWebFrameReady(duelData.playerOne, "duelsettings") then
-        pendingDuelSettingsRoute[duelData.playerOne] = nil
-        local sent, sendReason = SendClientEvent(duelData.playerOne, "panel.duelsettings", { "main" })
-        if not sent then
-          SendClientMessage(duelData.playerOne, COLOR_RED, "Could not open duel settings page: " .. tostring(sendReason))
-        end
-      else
-        pendingDuelSettingsRoute[duelData.playerOne] = true
-      end
-    end
-  end
-
-  if cmd == "declineduel" then
-    local duelData = duel.findByPlayer(pid)
-    if duelData and duelData.status == "pending" then
-      duel.remove(duelData)
-      SendClientMessage(duelData.playerOne, COLOR_SERVER, GetPlayerName(pid) .. " has declined your duel request.")
-      SendClientMessage(duelData.playerTwo, COLOR_SERVER, "You have declined the duel request from " .. GetPlayerName(duelData.playerOne) .. ".")
-    else
-      SendClientMessage(pid, COLOR_RED, "You have no pending duel requests.")
-    end
   end
 
   if cmd == "getduelstatus" then
@@ -104,16 +53,14 @@ function OnPlayerCommandText(pid, cmd, args)
   return true
 end
 
-function OnPlayerWebReady(pid, frame)
-  if frame == "duelsettings" and pendingDuelSettingsRoute[pid] then
-    pendingDuelSettingsRoute[pid] = nil
-    local sent, sendReason = SendClientEvent(pid, "panel.duelsettings", { "main" })
-    if not sent then
-      SendClientMessage(pid, COLOR_RED, "Could not open duel settings page: " .. tostring(sendReason))
+function OnPlayerDisconnect(pid)
+  local duelInfo = duel.findByPlayer(pid)
+  if duelInfo then
+    local opponent = duelInfo.playerOne == pid and duelInfo.playerTwo or duelInfo.playerOne
+    duel.remove(duelInfo)
+    if opponent and opponent ~= pid and GetPlayerName(opponent) then
+      HidePlayerWebFrame(opponent, "duelsettings")
+      SendClientMessage(opponent, COLOR_RED, "The duel was cancelled because the other player disconnected.")
     end
   end
-end
-
-function OnPlayerDisconnect(pid)
-  pendingDuelSettingsRoute[pid] = nil
 end
