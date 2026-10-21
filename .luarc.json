@@ -1,5 +1,5 @@
 {
   "runtime.version": "Lua 5.4",
-  "workspace.library": ["../sdk"],
+  "workspace.library": ["./sdk"],
   "workspace.checkThirdParty": false
 }

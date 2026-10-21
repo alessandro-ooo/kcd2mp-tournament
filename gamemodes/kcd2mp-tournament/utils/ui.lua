@@ -131,7 +131,11 @@ function OnClientEvent(pid, name, payload, source)
         return;
       end
 
-            SendClientMessage(duelInfo.playerTwo, COLOR_YELLOW, "You have accepted ".. GetPlayerName(duelInfo.playerOne) .. "'s invite to duel.");
+      if duelInfo.status ~= "pending" or pid ~= duelInfo.playerTwo then
+        return
+      end
+
+      SendClientMessage(duelInfo.playerTwo, COLOR_YELLOW, "You have accepted ".. GetPlayerName(duelInfo.playerOne) .. "'s invite to duel.");
       SendClientMessage(duelInfo.playerOne, COLOR_YELLOW, "".. GetPlayerName(duelInfo.playerTwo) .. " accepted your invite to duel");
 
       ui.hide(duelInfo.playerTwo)

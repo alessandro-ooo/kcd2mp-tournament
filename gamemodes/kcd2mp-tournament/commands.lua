@@ -17,6 +17,18 @@ function OnPlayerCommandText(pid, cmd, args)
     return true
   end
 
+  if cmd == "airbreak" then
+    SetPlayerFlying(pid, not IsPlayerFlying(pid), 50)
+  end
+
+  if cmd == "test" then
+    --- 2876.9 799.2 66 325 p1
+    --- 2884.6 810 66 144 p2
+    local x, y, z = GetPlayerPos(pid);
+    local yaw = GetPlayerYaw(pid)
+    SendClientMessageToAll(COLOR_RED, "" .. x ..", " .. y ..", " .. z .. ", " .. yaw)
+  end
+
   if cmd == "getduelstatus" then
     local duelData = duel.findByPlayer(pid)
     if duelData then
@@ -34,20 +46,6 @@ function OnPlayerCommandText(pid, cmd, args)
 
   if cmd == "reload" then
     ReloadGameMode();
-  end
-
-  if cmd == "test" then
-    local shown, showReason = ShowPlayerWebFrame(pid, "duelsettings")
-    if not shown then
-      SendClientMessage(pid, COLOR_RED, "Could not show interface: " .. tostring(showReason))
-      return true
-    end
-
-    local focused, focusReason = SetPlayerWebFocus(pid, "duelsettings", true, true, true)
-    if not focused then
-      SendClientMessage(pid, COLOR_RED, "Interface opened, but mouse focus failed: " .. tostring(focusReason))
-    end
-    return true
   end
 
   return true

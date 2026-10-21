@@ -18,7 +18,7 @@ language = ""                # the language the players speak there: "en", "ru",
 port = 7777
 max_players = 32
 password = ""                # "" = open server
-level = "klaster"            # klaster, trosecko or kutnohorsko
+level = "kutnohorsko"            # klaster, trosecko or kutnohorsko
 build_hash = ""              # require one game build; "" = any
 stale_session_seconds = 5.0  # a player's rejoin under their name replaces their own old connection silent this long; 0 = never
 log_file = "server.log"      # the console's lines, written next to the server (the previous run in server.log.1); "" = console only
@@ -31,7 +31,7 @@ network_ports = []           # the other network threads' UDP ports when they ar
 # The game mode: one Lua script or one C# plugin (see gamemodes/README.md).
 # https://docs.kcd-mp.com/getting-started/server-config/#gamemode
 [gamemode]
-script = "gamemodes/freeroam.lua"   # "" = the built-in freeroam
+script = "gamemodes/kcd2mp-tournament/gamemode.lua"   # "" = the built-in freeroam
 watch = false                       # true = reload the script (or the plugin's DLL) when its file changes (development)
 
 # The game mode's own database, for whatever it wants to keep - accounts, factions, scores. Optional: without a
@@ -57,7 +57,7 @@ slow_query_ms = 500                 # a query taking longer gets a log line
 [client]
 scripts = ""                        # a folder of .lua files; "" = the client/ folder next to the game mode's script or plugin
 console = false                     # true = players may open the F9 console window on this server
-ui = ""                             # a folder (or .zip) of web interface files; "" = the ui/ folder next to the game mode's client/ folder
+ui = "gamemodes/kcd2mp-tournament/ui"                        # a folder (or .zip) of web interface files; "" = the ui/ folder next to the game mode's client/ folder
 ui_cdn = ""                         # https://... - big media files come from here (upload what --pack-ui writes); "" = none
 ui_max_mb = 8                       # the most the web interface may send over the game connection (MB, up to 64)
 ui_report_errors = false            # true = the players' games tell the game mode about script errors in its pages (OnPlayerWebError; a few a minute each)

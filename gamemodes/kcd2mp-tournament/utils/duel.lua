@@ -182,8 +182,79 @@ end
 ---@param duelData Duel
 function duel.initiate(duelData) 
   duel.changeStatus(duelData, "fighting")
+  SetSpawnInfo(duelData.playerOne, 876.9, 799.2, 66, 325)
+  SetSpawnInfo(duelData.playerTwo, 2884.6, 810, 66, 144)
+  duel.beginRound(duelData)
+end
+
+---@param duelData Duel
+function duel.beginRound(duelData)
+  duelData.currentRound = duelData.currentRound +1;
+  SetPlayerPos(duelData.playerOne, 2876.9, 799.2, 66, 325)
+  SetPlayerPos(duelData.playerTwo, 2884.6, 810, 66, 144)
   duel.giveEquipment(duelData.playerOne, duelData.settings.weaponId, duelData.settings.shieldId)
   duel.giveEquipment(duelData.playerTwo, duelData.settings.weaponId, duelData.settings.shieldId)
+  HealPlayer(duelData.playerOne)
+  HealPlayer(duelData.playerTwo)
+
+    TogglePlayerControllable(duelData.playerOne, false)
+  TogglePlayerControllable(duelData.playerTwo, false)
+
+      GameText(duelData.playerOne, "Be ready! The round is about to start." , 5000)
+    GameText(duelData.playerTwo, "Be ready! The round is about to start.", 5000)
+
+
+
+  SetTimer(function() 
+    GameText(duelData.playerOne, "Fight!" , 1500)
+    GameText(duelData.playerTwo, "Fight!", 1500)
+  TogglePlayerControllable(duelData.playerOne, true)
+  TogglePlayerControllable(duelData.playerTwo, true)
+   end, 5500)
+end
+
+---@param duelData Duel
+---@param winner number
+---@param loser number
+function duel.processRound(duelData, winner, loser)
+  if duelData.currentRound ~= duelData.settings.numberOfRounds then 
+    GameText(loser, "You lost this round!", 5000)
+    GameText(winner, "You won this round!", 5000)
+  end
+  if duelData.currentRound == duelData.settings.numberOfRounds then
+    local roundsWonField
+
+    if winner == duelData.playerOne and loser == duelData.playerTwo then
+      roundsWonField = "playerOneRoundsWon"
+    end
+    if winner == duelData.playerTwo and loser == duelData.playerOne then
+      roundsWonField = "playerTwoRoundsWon"
+    end
+
+    duelData[roundsWonField] = duelData[roundsWonField] + 1
+
+    local playerOneWon = duelData.playerOneRoundsWon
+    local playerTwoWon = duelData.playerTwoRoundsWon
+
+    local matchWinner = playerOneWon > playerTwoWon and duelData.playerOne or duelData.playerTwo
+    local matchLoser = matchWinner == duelData.playerOne and duelData.playerTwo or duelData.playerOne
+
+    GameText(matchLoser, "You lost this round!", 5000)
+    if matchWinner then 
+      GameText(matchWinner, "You won this duel!", 5000) end
+    -- local winnerData = player.get(matchWinner)
+    -- local loserData = player.get(matchLoser)
+    -- if winnerData then
+    --   winnerData.playerDuels.won = winnerData.playerDuels.won + 1
+    -- end
+
+    -- if loserData then
+    --   loserData.playerDuels.lost = loserData.playerDuels.lost + 1
+    -- end
+
+    duel.remove(duelData)
+    return true
+  end
 end
 
 return duel;
