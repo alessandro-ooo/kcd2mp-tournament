@@ -346,6 +346,30 @@ interface KcdMpApi {
    */
   call(action: string, data?: unknown): Promise<unknown>;
   /**
+   * Opens a website in the player's own web browser, after the game asks them.
+   *
+   * For what must not happen inside the game - a sign-in with Discord or Google, a donation page, the server's forum. The
+   * game never loads such a page itself: it has no address bar and a player could not tell a real sign-in page from a fake
+   * one there (Google refuses to sign in inside a game's browser anyway). Instead the game asks the player, on its own
+   * dialog, whether to open the site's host in their web browser; `Y` opens it, `N` does not.
+   *
+   * The address must be `https://`, on the default port, with no user name in it, and its host must be listed in
+   * `ui.toml`'s `[permissions] links` (exactly: list `discord.com` and `accounts.google.com` both if you need both). It is
+   * only taken right after the player's own click or key in the page, one question at a time.
+   *
+   * **A sign-in** finishes outside the game: point the provider's redirect at your own website, which links the account to
+   * the player - for one, the page puts a one-time code of the mode's in the address (`state=`), and your site hands it back
+   * to the game mode with the account (through the mode's database or a web request the mode makes). The page then hears
+   * from the mode as usual (`KcdMp.onServer`).
+   *
+   * Rejects with the reason when the game would not ask: not after a click or key, not https, a host not in `links`, or
+   * another question already waiting. In a browser, in mock mode, it resolves `true` at once and opens nothing.
+   *
+   * @param url - the https address to open
+   * @returns `true` when the player said yes and the browser opened, `false` when they said no
+   */
+  openInBrowser(url: string): Promise<boolean>;
+  /**
    * Registers a function that receives what a client script or the game mode sent this frame with a message.
    *
    * `fn(data)` is called with **exactly the value** that was sent - a client script's `SendWebMessage(frame, data)` or the

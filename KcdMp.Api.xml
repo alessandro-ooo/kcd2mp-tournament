@@ -4,6 +4,18 @@
         <name>KcdMp.Api</name>
     </assembly>
     <members>
+        <member name="T:KcdMp.Api.BleedRules">
+            <summary>
+            How cuts bleed (IServerApi.SetBleedRules); null leaves the server's own. A stab or a slash that lands opens a wound that bleeds
+            PerDamage health a second per point of the blow's damage for Seconds, then stops by itself; a later cut opens a wound of its own
+            (it no longer restarts the others), and all of them together bleed at most MaxRate a second. Armour: a cut bleeds only when the
+            armour on the struck part let at least MinThrough of the blow through (0..1; 0.5 by default - plate and mail over a gambeson hold
+            more than half); a cut the armour held back opens a wound all the same when it is the ArmouredCuts-th since the last wound (a gap
+            found; 3 by default, 0 = never). A smash never bleeds. Ranged: false = an arrow, a bolt or a bullet never opens a wound (true by
+            default - it bleeds as any stab). PerDamage, MaxRate and Seconds come from [combat] bleed_per_damage, max_bleed and bleed_seconds;
+            PerDamage 0 = no bleeding at all.
+            </summary>
+        </member>
         <member name="T:KcdMp.Api.CarryKind">
             <summary>What is carried, or who carries: a player, the body of a character that lies dead, or an NPC actor that lives.</summary>
         </member>
@@ -444,6 +456,32 @@
         <member name="P:KcdMp.Api.HudPieces.All">
             <summary>Every piece, in this order.</summary>
         </member>
+        <member name="T:KcdMp.Api.ActorBlockRules">
+            <summary>
+            2026-10-15 (combat controls, a roleplay server's ask): what a block costs a server actor - IServerApi.SetActorBlockRules. A player's
+            block of an actor's swing (<see cref="M:KcdMp.Api.IGameMode.OnActorBlocked(KcdMp.Api.IWorldEntity,KcdMp.Api.IPlayer,System.Boolean)"/>) staggers the actor: it loses its next swing for that many seconds,
+            lowers its guard and shows the game's own hit reaction on every screen. Seconds 0..5; null = the server's own (a perfect block 1.5 s,
+            a plain block none - the game's way: a perfect block opens the attacker, a plain one costs the defender stamina).
+            </summary>
+        </member>
+        <member name="P:KcdMp.Api.ActorBlockRules.PerfectStagger">
+            <summary>After a perfect block (or a master strike) of the actor's swing.</summary>
+        </member>
+        <member name="P:KcdMp.Api.ActorBlockRules.BlockStagger">
+            <summary>After a plain block of the actor's swing.</summary>
+        </member>
+        <member name="T:KcdMp.Api.CarryItemDrink">
+            <summary>
+            2026-10-15: what a carry item holds to drink (IServerApi.SetCarryItemDrink): the item class drunk from it (a beer, a wine - the
+            catalogue's, its alcohol and health as the inventory's would give) and the sips left (-1 = it never empties, 0 = empty).
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.CarryItemDrink.#ctor(System.String,System.Int32)">
+            <summary>
+            2026-10-15: what a carry item holds to drink (IServerApi.SetCarryItemDrink): the item class drunk from it (a beer, a wine - the
+            catalogue's, its alcohol and health as the inventory's would give) and the sips left (-1 = it never empties, 0 = empty).
+            </summary>
+        </member>
         <member name="T:KcdMp.Api.DialogueOption">
             <summary>
             v58: one choice of a dialogue page (<see cref="M:KcdMp.Api.IServerApi.ShowPlayerDialogue(KcdMp.Api.IPlayer,System.Int32,System.String,System.String,System.Collections.Generic.IReadOnlyList{KcdMp.Api.DialogueOption},KcdMp.Api.IWorldEntity,System.String@)"/>) - the text the player reads, and whether
@@ -562,6 +600,108 @@
         </member>
         <member name="M:KcdMp.Api.DiscoverySnapshot.Empty(System.String)">
             <summary>A snapshot with nothing in it, for the given level.</summary>
+        </member>
+        <member name="T:KcdMp.Api.EmoteOptions">
+            <summary>
+            v98: what an emote does beyond its clip and fragment (<see cref="M:KcdMp.Api.IServerApi.AddEmote(System.String,System.String,System.String,System.String,System.String,System.Boolean,KcdMp.Api.EmoteOptions)"/>).
+            The in and the out are the same two halves as the emote itself: a clip of the game's male animation set for the body the
+            others see, a Mannequin fragment with its tags for the player's own game. Either half of a phase may be left empty.
+            </summary>
+        </member>
+        <member name="P:KcdMp.Api.EmoteOptions.Upper">
+            <summary>
+            An upper-body gesture: the clip plays on the upper body for everyone (the player's own game too) over whatever the legs
+            do - walking, running and crouching do not end it. With the emote's loop it loops there until it is stopped (hands tied
+            behind the back); without, it plays once. The fragment is not used (the clip plays on the player too).
+            </summary>
+        </member>
+        <member name="P:KcdMp.Api.EmoteOptions.Locked">
+            <summary>
+            Only the mode ends it (StopPlayerEmote, another PlayPlayerEmote): the player's own keys, a step away, a crouch, a drawn
+            weapon, a fight or a hit no longer end it, and the player cannot pick another emote meanwhile. A death, a respawn, a horse,
+            a knock-out and being carried still end it - the mode plays it again after them if it should last.
+            </summary>
+        </member>
+        <member name="P:KcdMp.Api.EmoteOptions.InClip">
+            <summary>The body's clip played once before the loop (sitting down); "" = straight into the loop.</summary>
+        </member>
+        <member name="P:KcdMp.Api.EmoteOptions.InFragment">
+            <summary>The player's own fragment played once before the loop's; "" = none.</summary>
+        </member>
+        <member name="P:KcdMp.Api.EmoteOptions.InTags">
+            <summary>The in fragment's tags, "+"-joined.</summary>
+        </member>
+        <member name="P:KcdMp.Api.EmoteOptions.OutClip">
+            <summary>The body's clip played once when the emote stops (standing up); "" = back to its idle at once.</summary>
+        </member>
+        <member name="P:KcdMp.Api.EmoteOptions.OutFragment">
+            <summary>The player's own fragment played once when the emote stops; "" = none.</summary>
+        </member>
+        <member name="P:KcdMp.Api.EmoteOptions.OutTags">
+            <summary>The out fragment's tags, "+"-joined.</summary>
+        </member>
+        <member name="T:KcdMp.Api.GameScreen">
+            <summary>
+            v108: the game's own player screens (the inventory and its neighbours, one key each: I, the character's P, M, the Codex's, J) a mode
+            opens, closes and refuses (<see cref="M:KcdMp.Api.IServerApi.OpenPlayerScreen(KcdMp.Api.IPlayer,KcdMp.Api.GameScreen)"/>, <see cref="M:KcdMp.Api.IServerApi.ClosePlayerScreens(KcdMp.Api.IPlayer)"/>,
+            <see cref="M:KcdMp.Api.IServerApi.SetPlayerScreenBlocked(KcdMp.Api.IPlayer,KcdMp.Api.GameScreen,System.Boolean)"/>) and hears of (<see cref="M:KcdMp.Api.IGameMode.OnPlayerScreenChange(KcdMp.Api.IPlayer,KcdMp.Api.GameScreen,KcdMp.Api.GameScreen)"/>).
+            </summary>
+        </member>
+        <member name="F:KcdMp.Api.GameScreen.None">
+            <summary>No screen open.</summary>
+        </member>
+        <member name="F:KcdMp.Api.GameScreen.Inventory">
+            <summary>The inventory.</summary>
+        </member>
+        <member name="F:KcdMp.Api.GameScreen.Character">
+            <summary>The character screen (the stats, skills and perks).</summary>
+        </member>
+        <member name="F:KcdMp.Api.GameScreen.Map">
+            <summary>The world map.</summary>
+        </member>
+        <member name="F:KcdMp.Api.GameScreen.Codex">
+            <summary>The Codex.</summary>
+        </member>
+        <member name="F:KcdMp.Api.GameScreen.Journal">
+            <summary>The journal (the quests).</summary>
+        </member>
+        <member name="F:KcdMp.Api.GameScreen.Other">
+            <summary>Another of the game's screens of that family (crafting, the map's legend, a horse's or a dog's inventory) - reported, never opened or refused.</summary>
+        </member>
+        <member name="T:KcdMp.Api.HardwareId">
+            <summary>
+            v98 (2026-10-13, ban evasion): a player's PC as this server knows it (<see cref="P:KcdMp.Api.IPlayer.Hwid"/>). Four parts, each 16 lowercase
+            hex, joined by dashes in this order: <c>system-board-disk-machine</c> - the firmware's system UUID, the main board's serial, the
+            system disk's serial and Windows' own install id. A part the player's PC has no real value for is 16 zeros. Every part is a hash
+            made with this server's own salt: one PC gives the same parts at every join here (whatever name, address or game install), another
+            server's parts for that PC have nothing in common with these, and the PC's serials themselves never reach the server. A swapped disk
+            changes one part, a new Windows another - so match on several parts (<see cref="M:KcdMp.Api.HardwareId.Matches(System.String,System.String)"/>) rather than on the whole string. The
+            player's game reports them: a modified game can send others, so they make ban evasion hard, not impossible.
+            </summary>
+        </member>
+        <member name="P:KcdMp.Api.HardwareId.PartNames">
+            <summary>The parts' names in the string's order.</summary>
+        </member>
+        <member name="F:KcdMp.Api.HardwareId.PartLength">
+            <summary>Hex digits per part.</summary>
+        </member>
+        <member name="F:KcdMp.Api.HardwareId.NoPart">
+            <summary>A part the PC has no value for.</summary>
+        </member>
+        <member name="F:KcdMp.Api.HardwareId.Length">
+            <summary>The whole string's length (four parts and three dashes).</summary>
+        </member>
+        <member name="M:KcdMp.Api.HardwareId.Matches(System.String,System.String)">
+            <summary>
+            How many parts two hwids share - parts both have (not <see cref="F:KcdMp.Api.HardwareId.NoPart"/>) and equal, 0 to 4. A malformed or empty string shares
+            none. Case and surrounding spaces do not matter (a stored copy may have been upper-cased).
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.HardwareId.Part(System.String,System.String)">
+            <summary>One part of an hwid by its name (<see cref="P:KcdMp.Api.HardwareId.PartNames"/>): 16 hex, "" when the PC has none or the string is malformed.</summary>
+        </member>
+        <member name="M:KcdMp.Api.HardwareId.IsValid(System.String)">
+            <summary>Whether a string is an hwid of this form (four parts of 16 hex; at least one part not zeros).</summary>
         </member>
         <member name="T:KcdMp.Api.DbWriteResult">
             <summary>What a write did: the rows it touched and, on MySQL / MariaDB, the auto-increment id it made (0 elsewhere; PostgreSQL returns ids through RETURNING).</summary>
@@ -739,11 +879,24 @@
             (<see cref="P:KcdMp.Api.IPlayer.Stance"/> is the new one). A crouch is reported once it has held for a quarter of a second.
             </summary>
         </member>
+        <member name="M:KcdMp.Api.IGameMode.OnPlayerVisorChange(KcdMp.Api.IPlayer,System.Boolean)">
+            <summary>
+            2026-10-20: the player's helmet visor went down or up in their game (<see cref="P:KcdMp.Api.IPlayer.IsVisorDown"/> is the new state). A player
+            starts with it up: a visor already down at the spawn calls this once with <paramref name="down"/> true, one up does not call it.
+            </summary>
+        </member>
         <member name="M:KcdMp.Api.IGameMode.OnPlayerWhistle(KcdMp.Api.IPlayer)">
             <summary>
             2026-10-10: the player whistled for their horse with the game's own whistle (on foot; at most once a second). The game's own
             call does not bring a horse in multiplayer - a mode that wants it walks the player's horse to them (MoveActor on the horse)
             and may play the whistle's sound for the others (PlaySound "v_horse_whistle").
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IGameMode.OnPlayerScreenChange(KcdMp.Api.IPlayer,KcdMp.Api.GameScreen,KcdMp.Api.GameScreen)">
+            <summary>
+            v108: the player opened one of the game's player screens, switched to another or closed them (<see cref="F:KcdMp.Api.GameScreen.None"/>) -
+            their own key or tab, the mode's <see cref="M:KcdMp.Api.IServerApi.OpenPlayerScreen(KcdMp.Api.IPlayer,KcdMp.Api.GameScreen)"/> or <see cref="M:KcdMp.Api.IServerApi.ClosePlayerScreens(KcdMp.Api.IPlayer)"/>. A screen
+            refused to them (<see cref="M:KcdMp.Api.IServerApi.SetPlayerScreenBlocked(KcdMp.Api.IPlayer,KcdMp.Api.GameScreen,System.Boolean)"/>) never opens, so it never comes here.
             </summary>
         </member>
         <member name="M:KcdMp.Api.IGameMode.OnPlayerButcher(KcdMp.Api.IPlayer,KcdMp.Api.IWorldEntity,System.String@)">
@@ -1007,6 +1160,13 @@
             The default hands it to <see cref="M:KcdMp.Api.IGameMode.OnPlayerDamage(KcdMp.Api.IPlayer,KcdMp.Api.IPlayer,System.Single,System.Int32,System.Int32)"/>; override this one to see the details.
             </summary>
         </member>
+        <member name="M:KcdMp.Api.IGameMode.OnPlayerBleed(KcdMp.Api.IPlayer,KcdMp.Api.IPlayer,KcdMp.Api.HitInfo@)">
+            <summary>
+            A hit is landing on the victim (OnPlayerHit / OnActorAttack let it through): return whether it opens a bleeding wound.
+            hit.Bleeds is the server's own answer (BleedRules: a cut through the armour's gate); hit.Damage is what OnPlayerHit
+            returned. attacker is null for an actor's blow.
+            </summary>
+        </member>
         <member name="M:KcdMp.Api.IGameMode.OnPlayerInjury(KcdMp.Api.IPlayer,KcdMp.Api.IPlayer,KcdMp.Api.BodyPart)">
             <summary>A hit left the victim with an injured body part (plan §6.5 v2: a limb, the head or the torso; bleeding follows a stab or a slash).</summary>
         </member>
@@ -1058,6 +1218,13 @@
             on the actor). Return the damage to apply; 0 cancels the hit.
             </summary>
         </member>
+        <member name="M:KcdMp.Api.IGameMode.OnActorBleed(KcdMp.Api.IWorldEntity,KcdMp.Api.IPlayer,KcdMp.Api.HitInfo@)">
+            <summary>
+            A hit is landing on the actor (OnActorHit / OnActorAttackActor let it through): return whether it opens a bleeding wound.
+            hit.Bleeds is the server's own answer (BleedRules); hit.Damage is what the hit callback returned. attacker is null for an
+            actor's blow.
+            </summary>
+        </member>
         <member name="M:KcdMp.Api.IGameMode.OnActorInjury(KcdMp.Api.IWorldEntity,KcdMp.Api.IPlayer,KcdMp.Api.BodyPart)">
             <summary>v4: a hit left the actor with an injured body part (the players' rule: [combat] injury_threshold; bleeding follows a cut).</summary>
         </member>
@@ -1076,6 +1243,20 @@
             A blow of an NPC actor on another NPC actor landed (IServerApi.SetActorHostileToActor): the attacker's weapon priced
             by the tables against the struck part, x [actors] attack_scale, at most max_damage. Return the damage to apply; 0
             cancels it.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IGameMode.OnActorBlocked(KcdMp.Api.IWorldEntity,KcdMp.Api.IPlayer,System.Boolean)">
+            <summary>
+            2026-10-15: an NPC actor's swing at the player met the player's block - their game blocked it, or (perfect) parried it with a
+            perfect block or a master strike. Once per swing; a blow that landed comes to <see cref="M:KcdMp.Api.IGameMode.OnActorAttack(KcdMp.Api.IWorldEntity,KcdMp.Api.IPlayer,KcdMp.Api.HitInfo@)"/> instead, a dodge or a
+            miss to neither. The server's own stagger (IServerApi.SetActorBlockRules) follows this call; a mode may stagger it itself
+            (IServerApi.StaggerActor) - its own stamina for bandits, say.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IGameMode.OnPlayerBlockedByActor(KcdMp.Api.IPlayer,KcdMp.Api.IWorldEntity)">
+            <summary>
+            2026-10-15: the player's swing met an NPC actor's raised guard ([actors] block_chance) and did no harm. Once per swing; a blow
+            that glanced off without a guard comes to neither this nor <see cref="M:KcdMp.Api.IGameMode.OnActorHit(KcdMp.Api.IWorldEntity,KcdMp.Api.IPlayer,KcdMp.Api.HitInfo@)"/>.
             </summary>
         </member>
         <member name="M:KcdMp.Api.IGameMode.OnActorInteract(KcdMp.Api.IWorldEntity,KcdMp.Api.IPlayer)">
@@ -1370,8 +1551,8 @@
         <member name="M:KcdMp.Api.IGameMode.OnPlayerCheatDetected(KcdMp.Api.IPlayer,System.String,System.Boolean,System.String)">
             <summary>
             v62: the server's measures or the player's own client found a sign of cheating - `kind` is "speed", "blink", "noclip", "jump",
-            "fall", "horse", "never_hit", "void_ratio", "code", "integrity", "timescale", "clock", "state", "foreign_call", "inventory_overflow",
-            "save_reenabled", "loot_flags", the ledger's own ("ledger_desync", "ledger_silent", "removal_ignored", "removal_refused",
+            "fall", "horse", "never_hit", "void_ratio", "contact_ratio", "code", "integrity", "timescale", "clock", "state", "foreign_call",
+            "inventory_overflow", "save_reenabled", "loot_flags", the ledger's own ("ledger_desync", "ledger_silent", "removal_ignored", "removal_refused",
             "forged_claim" ...) and the kinds of the progression, nourishment / energy and carry-weight checks: PROVEN "progress_write_repeat"
             (a game that writes the same forged XP, level or perk points back after the server put them back, three times within ten
             minutes, each time a rise of at least 25 XP, or of 2 or more perk points or a perk) and "vitals_write_repeat" (the same for a
@@ -1437,6 +1618,14 @@
             v69: the player pressed the voice level key and asks for <paramref name="level"/> (0-based in IServerApi.VoiceLevels;
             <paramref name="previous"/> is the one they speak at). Return false to refuse - they stay where they are, and the mode
             tells them why if it wants to. IServerApi.SetPlayerVoiceLevel does not come here.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IGameMode.OnPlayerVoiceMute(KcdMp.Api.IPlayer,KcdMp.Api.IPlayer,System.Boolean)">
+            <summary>
+            v97: <paramref name="player"/> asks to stop hearing <paramref name="target"/> (<paramref name="muted"/> true) or to hear them
+            again - the server's /mute or /unmute (a name or a player id) or the scoreboard's mute button. Only for themselves: everyone
+            else still hears the target. Return false to refuse (nothing changes; the mode tells them why if it wants to). A mode that
+            answers the /mute command itself in OnPlayerCommand never comes here for it; IServerApi.SetPlayerVoiceMutedFor does not either.
             </summary>
         </member>
         <member name="M:KcdMp.Api.IGameMode.OnPlayerEmote(KcdMp.Api.IPlayer,System.String)">
@@ -1506,6 +1695,15 @@
             own <see cref="M:KcdMp.Api.IServerApi.SetPlayerOutfits(KcdMp.Api.IPlayer,KcdMp.Api.PlayerOutfits)"/>; the report that answers it comes a moment later.
             </summary>
         </member>
+        <member name="M:KcdMp.Api.IGameMode.OnPlayerLearnRecipe(KcdMp.Api.IPlayer,System.String,System.String)">
+            <summary>
+            v106: the player's character learned a recipe in their game - they read a recipe document, or the game taught one its own way.
+            <paramref name="recipe"/> is its key ("alchemy:1", "smithing:r_axework02"; <see cref="M:KcdMp.Api.IServerApi.GetRecipeInfo(System.String)"/>), <paramref name="kind"/>
+            "alchemy" or "smithing". The mode's moment to save it with the character; return false to take it away again (a mode that teaches
+            recipes its own way). Not for the mode's own <see cref="M:KcdMp.Api.IServerApi.GivePlayerRecipe(KcdMp.Api.IPlayer,System.String)"/> / <see cref="M:KcdMp.Api.IServerApi.SetPlayerRecipes(KcdMp.Api.IPlayer,System.Collections.Generic.IEnumerable{System.String})"/>,
+            nor for the recipes the character knew at the join.
+            </summary>
+        </member>
         <member name="M:KcdMp.Api.IGameMode.OnPlayerProgressViolation(KcdMp.Api.IPlayer,System.String,System.String,System.Single,System.Single)">
             <summary>
             v62: the progression check found a rise of the player's soul the server cannot explain - XP, a level, perk points or a perk -
@@ -1568,6 +1766,14 @@
         <member name="M:KcdMp.Api.IGameMode.OnPlayerLeaveArea(KcdMp.Api.IPlayer,System.String)">
             <summary>v83: a player left one of the map's areas - walked out, was moved, or the area was changed, taken away or switched off.
             Not when they leave the server (OnPlayerDisconnect).</summary>
+        </member>
+        <member name="M:KcdMp.Api.IGameMode.OnPlayerTrespassChange(KcdMp.Api.IPlayer,KcdMp.Api.PlayerTrespass,KcdMp.Api.TrespassLevel)">
+            <summary>
+            v107: the trespass level a player's game shows changed - they walked into a house or a keep (the level's own trespass areas, as
+            their game reports them), into or out of one of the map's areas with a trespass level, or the mode changed one. `now` is what they
+            see (Personal = the blue icon, Prohibited = the red one, Public = none); nobody reacts on their own in multiplayer - a fine, a
+            warning, a guard's call are the mode's. Not at a disconnect.
+            </summary>
         </member>
         <member name="M:KcdMp.Api.IGameMode.OnPlayerUseMapObject(KcdMp.Api.IPlayer,System.UInt32)">
             <summary>
@@ -1692,6 +1898,17 @@
         <member name="P:KcdMp.Api.IPlayer.SteamId">
             <summary>2026-10-07: the player's SteamID64 as their game's Steam client reported it - unverified (a modified game may send any); 0 = none (not on Steam).</summary>
         </member>
+        <member name="P:KcdMp.Api.IPlayer.Language">
+            <summary>v108: their game's text language as a code ("en", "de", "ru", "zh-cn" ...), "" until their level loaded (the Ready).</summary>
+        </member>
+        <member name="P:KcdMp.Api.IPlayer.Hwid">
+            <summary>
+            2026-10-13 (v98): the player's PC on this server - <c>system-board-disk-machine</c>, four parts of 16 hex (<see cref="T:KcdMp.Api.HardwareId"/>),
+            the same at every join from that PC whatever name, address or game install; "" when their game sent none (an older game, a join
+            without the launcher's look at the server first). For a mode's own bans: keep it with the ban and compare a newcomer's with
+            <see cref="M:KcdMp.Api.HardwareId.Matches(System.String,System.String)"/> (two or more shared parts is the same PC with a part changed). Their game's word - see HardwareId.
+            </summary>
+        </member>
         <member name="P:KcdMp.Api.IPlayer.IsInWorld">
             <summary>Spawned and replicated; false while the level loads or after a despawn.</summary>
         </member>
@@ -1751,6 +1968,23 @@
         </member>
         <member name="P:KcdMp.Api.IPlayer.IsCrouching">
             <summary>2026-10-06: the player is crouching (<see cref="P:KcdMp.Api.IPlayer.Stance"/> is <see cref="F:KcdMp.Api.PlayerStance.Crouching"/>).</summary>
+        </member>
+        <member name="P:KcdMp.Api.IPlayer.IsVisorDown">
+            <summary>2026-10-20: the player's helmet visor is down, as their game last reported it; <see cref="M:KcdMp.Api.IGameMode.OnPlayerVisorChange(KcdMp.Api.IPlayer,System.Boolean)"/> follows each change.</summary>
+        </member>
+        <member name="P:KcdMp.Api.IPlayer.IsWeaponDrawn">
+            <summary>
+            2026-10-16: the player has a weapon drawn (their game's combat-ready state; a sword out, a bow ready, raised fists do not count).
+            </summary>
+        </member>
+        <member name="P:KcdMp.Api.IPlayer.RightHandItem">
+            <summary>
+            2026-10-16: the item class (GUID) in the player's right hand right now as their game last said - the drawn weapon, a hammer at
+            the anvil; "" for an empty hand. Unlike <see cref="P:KcdMp.Api.IPlayer.Equipment"/> (what they wear and carry in their slots), this is what they hold.
+            </summary>
+        </member>
+        <member name="P:KcdMp.Api.IPlayer.LeftHandItem">
+            <summary>2026-10-16: the item class (GUID) in the player's left hand - a shield, a torch, the bow of a drawn bow; "" for an empty hand.</summary>
         </member>
         <member name="P:KcdMp.Api.IPlayer.Party">
             <summary>The party the player is in (v38), null in none.</summary>
@@ -1989,6 +2223,18 @@
         <member name="P:KcdMp.Api.HitInfo.Exhausted">
             <summary>the swing came with less stamina than it cost and landed weakly.</summary>
         </member>
+        <member name="P:KcdMp.Api.HitInfo.ArmourStopped">
+            <summary>The share of the blow the target's armour on that part took (0 no armour .. 0.85).</summary>
+        </member>
+        <member name="P:KcdMp.Api.HitInfo.Ranged">
+            <summary>An arrow, a bolt or a bullet (a player's or an actor's shot) rather than a blow in reach.</summary>
+        </member>
+        <member name="P:KcdMp.Api.HitInfo.Bleeds">
+            <summary>
+            Whether the blow opens a bleeding wound when it lands, by the bleeding's rules (BleedRules: a cut, through the armour's gate or
+            the ArmouredCuts-th cut it held; a shot only while BleedRules.Ranged allows); IGameMode.OnPlayerBleed / OnActorBleed have the last word.
+            </summary>
+        </member>
         <member name="T:KcdMp.Api.PlayerMod">
             <summary>A mod the player's game loaded (v53, <see cref="P:KcdMp.Api.IPlayer.Mods"/>).</summary>
             <param name="Id">its mod.manifest's modid (the folder's name when it has none) - what [mods] allowed / refused name.</param>
@@ -2179,14 +2425,26 @@
             one looking crouches (the pickpocket), no prompt shows. False for a non-player.
             </summary>
         </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerPrompt(KcdMp.Api.IPlayer,System.String,System.Boolean)">
+            <summary>
+            2026-10-12: SetPlayerPrompt with no "[E] text" line over the head when <paramref name="hidden"/> - the use key on the player
+            still reaches IGameMode.OnPlayerInteractPlayer and the game's own hint in the corner still shows the text. False for a non-player.
+            </summary>
+        </member>
         <member name="M:KcdMp.Api.IServerApi.GetPlayerPrompt(KcdMp.Api.IPlayer)">
             <summary>2026-10-03: the prompt over the player that everyone sees (SetPlayerPrompt); "" = none.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.IsPlayerPromptHidden(KcdMp.Api.IPlayer)">
+            <summary>2026-10-12: whether everyone's prompt over the player is hidden (SetPlayerPrompt's hidden).</summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.SetPlayerPromptFor(KcdMp.Api.IPlayer,KcdMp.Api.IPlayer,System.String)">
             <summary>
             2026-10-03: the prompt `viewer` alone sees over `target` ("" = none for them), in place of everyone's; null takes the viewer's own
             away. Gone when either leaves. False for a player and themself.
             </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerPromptFor(KcdMp.Api.IPlayer,KcdMp.Api.IPlayer,System.String,System.Boolean)">
+            <summary>2026-10-12: SetPlayerPromptFor with no "[E] text" line over the head when <paramref name="hidden"/> (SetPlayerPrompt's hidden).</summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.GetPlayerPromptFor(KcdMp.Api.IPlayer,KcdMp.Api.IPlayer)">
             <summary>2026-10-03: the prompt `viewer` alone sees over `target`; null = none of their own (they see everyone's).</summary>
@@ -2401,24 +2659,37 @@
             Where the level's objects stand (2026-09-22, from the tables export: every door, chest and takeable item slot with its place;
             null / -1 for a key the export does not know or a level without one). Metres in the level's space. The nearest-object
             functions answer "the door the player stands at" within the radius (0 = no limit): a mode's command on the nearest chest,
-            a rule set by standing next to it, with no key in sight. /objectinfo shows the keys in the game.
+            a rule set by standing next to it, with no key in sight. /objectinfo shows the keys in the game. The doors of the map editor
+            (CreateMapDoor, "KcdMp_map_" + id) count as doors here too, at the map object's place.
             </summary>
         </member>
         <member name="P:KcdMp.Api.IServerApi.LevelDoors">
             <summary>
             v57: every door of the level in the tables export, touched or not (the keys GetDoorPosition answers for) - where a
             mode finds the level's houses and settlements: a street to put someone in, a village to spread people over. Empty
-            without the export. <see cref="P:KcdMp.Api.IServerApi.Doors"/> lists only those anyone touched.
+            without the export. The map's doors follow the level's. <see cref="P:KcdMp.Api.IServerApi.Doors"/> lists only those anyone touched.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetDoorState(System.String,System.Int32,System.Boolean@,System.Boolean@)">
+            <summary>
+            v101: the door's state as the players of a virtual world see it: the world's own doors (SetVirtualWorldOwnDoors), else the shared ones
+            (the other overload). false = nothing touched it there, the level's own state.
             </summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.SetDoorState(System.String,System.Boolean,System.Boolean)">
-            <summary>Puts the door in that state on every client (and in the record).</summary>
+            <summary>Puts the door in that state on every client (and in the record) - v101: every client but those of a world with doors of its own.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetDoorState(System.String,System.Boolean,System.Boolean,System.Int32)">
+            <summary>
+            v101: puts the door in that state for the players of a virtual world - in the world's own doors (SetVirtualWorldOwnDoors, kept for the
+            server's run), else in the shared ones, as the other overload.
+            </summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.SetDoorCheck(System.String,System.Boolean)">
             <summary>
             v79: a door's use waits for the mode (key "*" = every door): the player's game holds the swing and asks, OnPlayerUseDoor decides
-            before the door moves. on = false takes it back. False for an empty or too long key, or past 512 doors or (v85) about 60 KB of
-            keys with the SetDoorPrompt rows. v85: the changes go out once, at the end of the tick, only what changed.
+            before the door moves. on = false takes it back. False for an empty or too long key, or (v101) past 4096 doors, however long their
+            names. v85: the changes go out once, at the end of the tick, only what changed.
             </summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.IsDoorChecked(System.String)">
@@ -2428,7 +2699,7 @@
             <summary>
             v79: a row of the mode's own on a door ("Knock", "View the house"): the use key held, beside the door's own open / close; its use
             reaches OnPlayerInteractDoor and moves nothing. Shown as written (48 characters at most); null or "" takes it off. False for an
-            empty or too long key, or past 512 doors or (v85) about 60 KB with the SetDoorCheck keys.
+            empty or too long key, or (v101) past 4096 doors or about 64 KB of the rows' different texts (a text many doors show counts once).
             </summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.GetDoorPrompt(System.String)">
@@ -2438,7 +2709,8 @@
             <summary>
             v86: the sides a locked door holds from (key "*" = every door). "both": its bolt's side - the inside - asks for the key or a pick like
             the keyhole's side and shows the door locked, so nobody unbolts it from within without the key; "game" (the default): the level's own
-            lock, a keyhole outside and a bolt inside that opens it for anyone. False for another word, an empty or too long key, or past 512 doors.
+            lock, a keyhole outside and a bolt inside that opens it for anyone. False for another word, an empty or too long key, or (v101) past
+            4096 doors.
             </summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.GetDoorLockSides(System.String)">
@@ -2448,11 +2720,31 @@
             <summary>
             v86: one of the mode's tagged items (its id - GivePlayerTaggedItem) is the door's key: a player who holds it in the bag gets the game's own
             "Unlock and open" on the locked door, from wherever the door's lock opens with a key, as with the level's own key (which still works).
-            null or "" takes it off. False for an empty or too long door key or id, or past 512 doors.
+            null or "" takes it off. False for an empty or too long door key or id, or (v101) past 4096 doors.
             </summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.GetDoorKey(System.String)">
             <summary>v86: the id of the tagged item that is the door's key (SetDoorKey), "" for none.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetDoorKey(System.String,System.String,System.Int32)">
+            <summary>
+            v101: the door's key for the players of one virtual world alone (a flat's copy of a house): there it stands for the key every world
+            shares (the other overload), which still opens the door in every other world. null or "" takes it off (the shared key again).
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetDoorKey(System.String,System.Int32)">
+            <summary>v101: the id of the tagged item that opens the door for the players of a world - its own there, else the shared one ("" for none).</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetVirtualWorldOwnDoors(System.Int32,System.Boolean)">
+            <summary>
+            v101: whether a virtual world keeps doors of its own. By default every world shares world 0's doors (a door used anywhere moves for
+            everyone). Given its own, a world starts from the level's own doors - shut, the level's lock - and what its players do to them, or the
+            mode's SetDoorState for that world, stays in it; kept for the server's run. false takes its own doors away (they are forgotten) and its
+            players see world 0's again. World 0's doors are the shared ones: false for own = true there.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.HasVirtualWorldOwnDoors(System.Int32)">
+            <summary>v101: whether the world keeps doors of its own (SetVirtualWorldOwnDoors).</summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.SetContainerKey(System.String,System.String)">
             <summary>
@@ -2542,6 +2834,17 @@
             v75: the level's item slots (from the tables export) within <paramref name="radius"/> metres of a point, nearest first, at most
             <paramref name="max"/> (up to 1000): what each holds, where, and whether its item is taken now. Empty without the export.
             </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetWorldItemInteractable(System.String,System.Boolean,System.String@)">
+            <summary>
+            v109: switches one of the level's loose items off (<paramref name="interactable"/> false) or back on, by its slot's key (as
+            <see cref="M:KcdMp.Api.IServerApi.WorldItemsNear(System.Numerics.Vector3,System.Single,System.Int32)"/> lists it). A switched-off item stays where the level placed it, on every player's screen, with no pickup
+            prompt, no pickup and no physics - that one slot, never its class. It is kept across restarts with <c>[containers] persist</c>, and a
+            taken item switched off comes back switched off. False with the reason for a key the level export does not know.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.IsWorldItemInteractable(System.String)">
+            <summary>v109: false for a loose item a game mode switched off (<see cref="M:KcdMp.Api.IServerApi.SetWorldItemInteractable(System.String,System.Boolean,System.String@)"/>), true otherwise.</summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.SetHerbRegrowTime(System.String,System.Double)">
             <summary>
@@ -2803,12 +3106,20 @@
             a part will not do (the log says which).
             </summary>
         </member>
+        <member name="M:KcdMp.Api.IServerApi.AddEmote(System.String,System.String,System.String,System.String,System.String,System.Boolean,KcdMp.Api.EmoteOptions)">
+            <summary>
+            v98: an emote with more to it (<see cref="T:KcdMp.Api.EmoteOptions"/>): an in played once before the loop and an out at the stop (sitting
+            down and standing up), an upper-body gesture that walks along (looped with `loop`: hands tied behind the back), or a locked
+            one only the mode ends. False when a part will not do (the log says which).
+            </summary>
+        </member>
         <member name="M:KcdMp.Api.IServerApi.PlayPlayerEmote(KcdMp.Api.IPlayer,System.String,System.String@)">
             <summary>
             Makes the player perform an emote as if they had picked it on the wheel - the server's own rules still apply (in the
             world and alive, standing still on foot, no weapon out, not fighting, not knocked out, carried or carrying), OnPlayerEmote
             is not asked. False when it cannot, with the reason as the player reads it ("Stand still first.", "Not while knocked out.",
-            "There is no emote 'x' here." ...) - what a mode's own command tells the player (the shipped modes' /anim).
+            "There is no emote 'x' here." ...) - what a mode's own command tells the player (the shipped modes' /anim). A locked emote
+            (<see cref="P:KcdMp.Api.EmoteOptions.Locked"/>) asks only that the player is in the world, alive, on foot, not knocked out and not carried.
             </summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.StopPlayerEmote(KcdMp.Api.IPlayer)">
@@ -2978,8 +3289,94 @@
         <member name="M:KcdMp.Api.IServerApi.IsPlayerCameraSet(KcdMp.Api.IPlayer)">
             <summary>2026-10-07: whether the mode's camera holds the player's view (<see cref="M:KcdMp.Api.IServerApi.SetPlayerCamera(KcdMp.Api.IPlayer,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Int32,System.Single)"/> without a reset since).</summary>
         </member>
+        <member name="M:KcdMp.Api.IServerApi.SetTextOverride(System.String,System.String,System.String)">
+            <summary>
+            v108: the game's own text for a localisation key (the world map's "location_opatovice", a Codex entry's "ui_codex_name_..." and
+            "ui_codex_cont_...", the fast travel's question - any key of the game's text tables, without its '@') shown as <paramref name="text"/>
+            on every player's screen while they are on this server: for players whose game runs in <paramref name="language"/> (a code - "en",
+            "de", "zh-cn" - or the game's name - "german"), or for every language when it is "" (a language's own text wins). "" or null as the
+            text takes the override away. A text that starts with '@' names another of the game's keys. The texts are the mode's: a reload
+            clears them. False for a key that cannot be one, an unknown language, a text over 16 KB or past the server's 8 MB of texts.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetTextOverride(System.String,System.String)">
+            <summary>v108: the text <see cref="M:KcdMp.Api.IServerApi.SetTextOverride(System.String,System.String,System.String)"/> gave a key for a language ("" = every language), null when none - not the game's own.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.ClearTextOverrides(System.String)">
+            <summary>v108: every text override of one language (null = all of them) taken away; the count.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.LoadTextOverrides(System.String,System.String,System.String@)">
+            <summary>
+            v108: a file of texts for <see cref="M:KcdMp.Api.IServerApi.SetTextOverride(System.String,System.String,System.String)"/>, for one language or every language ("") - the game's own localisation
+            table (a translation's <c>text_ui_*.xml</c>: each row's first cell the key, its last the text) or a JSON object of key to text. A
+            relative path is the game mode's folder's. The count of texts taken, or -1 with the reason in <paramref name="error"/>.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerTextOverride(KcdMp.Api.IPlayer,System.String,System.String)">
+            <summary>
+            v108: one player's own text for a key - over the server's (<see cref="M:KcdMp.Api.IServerApi.SetTextOverride(System.String,System.String,System.String)"/>) for that player alone, whatever their
+            language ("" or null takes it away). For their visit: it goes when they leave.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetPlayerTextOverride(KcdMp.Api.IPlayer,System.String)">
+            <summary>v108: the player's own text for a key (<see cref="M:KcdMp.Api.IServerApi.SetPlayerTextOverride(KcdMp.Api.IPlayer,System.String,System.String)"/>), null when none.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetPlayerLanguage(KcdMp.Api.IPlayer)">
+            <summary>v108: the player's game's text language as a code ("en", "de", "ru", "zh-cn" ...), "" before their Ready (<see cref="P:KcdMp.Api.IPlayer.Language"/>).</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerCodexEntry(KcdMp.Api.IPlayer,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            v108: a Codex entry (the entry's perk - its GUID or the game's perk name, scripting/reference/codex) unlocked for the player or
+            locked again. <paramref name="silent"/> unlocks it without the game's "new Codex entry" notice. It is a perk of the player's
+            progress (<see cref="M:KcdMp.Api.IServerApi.GetPlayerPerks(KcdMp.Api.IPlayer)"/>) like any other. False for a name the server's tables do not know.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.HasPlayerCodexEntry(KcdMp.Api.IPlayer,System.String)">
+            <summary>v108: whether the player has the Codex entry unlocked (as their game last reported it, or the mode set it).</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetCodexEntryHidden(System.String,System.Boolean)">
+            <summary>
+            v108: a Codex entry the game no longer unlocks by itself on this server - a discovered place, the start's entries, a story event
+            (true), or does again (false). A player's client takes a hidden entry out of their Codex unless the mode gave it to them
+            (<see cref="M:KcdMp.Api.IServerApi.SetPlayerCodexEntry(KcdMp.Api.IPlayer,System.String,System.Boolean,System.Boolean)"/>), which still unlocks it. The list is the mode's: a reload clears it. At most 1024 entries.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.IsCodexEntryHidden(System.String)">
+            <summary>v108: whether <see cref="M:KcdMp.Api.IServerApi.SetCodexEntryHidden(System.String,System.Boolean)"/> hides the entry.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetHiddenCodexEntries">
+            <summary>v108: the hidden Codex entries' perk GUIDs.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.OpenPlayerScreen(KcdMp.Api.IPlayer,KcdMp.Api.GameScreen)">
+            <summary>
+            v108: one of the game's player screens opened on the player's screen - the inventory, the character screen, the map, the Codex or
+            the journal (switched to it when one of them is open). False before they are in the world, for a screen refused to them
+            (<see cref="M:KcdMp.Api.IServerApi.SetPlayerScreenBlocked(KcdMp.Api.IPlayer,KcdMp.Api.GameScreen,System.Boolean)"/>) or when their game cannot (an unknown game build).
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.ClosePlayerScreens(KcdMp.Api.IPlayer)">
+            <summary>v108: the game's player screens closed on the player's screen, with the loot and trade screens (a player knocked down, carried, cuffed).</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerScreenBlocked(KcdMp.Api.IPlayer,KcdMp.Api.GameScreen,System.Boolean)">
+            <summary>
+            v108: one of the game's player screens refused to the player (true) or allowed again: their key and the screens' tabs do not open
+            it, and one open now closes. For the visit; a reload clears it.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.IsPlayerScreenBlocked(KcdMp.Api.IPlayer,KcdMp.Api.GameScreen)">
+            <summary>v108: whether <see cref="M:KcdMp.Api.IServerApi.SetPlayerScreenBlocked(KcdMp.Api.IPlayer,KcdMp.Api.GameScreen,System.Boolean)"/> refuses the screen to the player.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetPlayerScreen(KcdMp.Api.IPlayer)">
+            <summary>v108: which of the game's player screens the player has open, as their game last reported it (<see cref="M:KcdMp.Api.IGameMode.OnPlayerScreenChange(KcdMp.Api.IPlayer,KcdMp.Api.GameScreen,KcdMp.Api.GameScreen)"/>).</summary>
+        </member>
         <member name="M:KcdMp.Api.IServerApi.GetPlayerByUid(System.String)">
             <summary>2026-10-07: the player online with this id (<see cref="P:KcdMp.Api.IPlayer.Uid"/>), null when none.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetPlayersByHwid(System.String,System.Int32)">
+            <summary>
+            2026-10-13 (v98): the players online whose PC shares at least <paramref name="minMatches"/> parts (1-4) with this hwid
+            (<see cref="P:KcdMp.Api.IPlayer.Hwid"/>, <see cref="M:KcdMp.Api.HardwareId.Matches(System.String,System.String)"/>), in join order - a banned PC's other names online now. Empty for a malformed hwid.
+            </summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.SpawnPlayer(KcdMp.Api.IPlayer,KcdMp.Api.SpawnPoint)">
             <summary>Puts a Ready player into the world (or moves one who already is).</summary>
@@ -3292,6 +3689,21 @@
         <member name="M:KcdMp.Api.IServerApi.SetPlayerVoiceDeaf(KcdMp.Api.IPlayer,System.Boolean)">
             <summary>The player hears nobody while deaf (nothing is relayed to them).</summary>
         </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerVoiceMutedFor(KcdMp.Api.IPlayer,KcdMp.Api.IPlayer,System.Boolean)">
+            <summary>
+            v97: <paramref name="listener"/> no longer hears <paramref name="talker"/> (false: hears them again) - for the listener alone,
+            as their own /mute does; everyone else still hears the talker. The listener's scoreboard marks the talker muted and the player may
+            lift it with /unmute or the scoreboard's button (which asks <see cref="M:KcdMp.Api.IGameMode.OnPlayerVoiceMute(KcdMp.Api.IPlayer,KcdMp.Api.IPlayer,System.Boolean)"/>). Not asked of the mode itself.
+            Lasts while both are in the game: a mode that keeps mutes across visits saves <see cref="M:KcdMp.Api.IServerApi.GetPlayerVoiceMutes(KcdMp.Api.IPlayer)"/> and sets them again
+            at the next join. False for a player not in the game or the same player twice.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.IsPlayerVoiceMutedFor(KcdMp.Api.IPlayer,KcdMp.Api.IPlayer)">
+            <summary>v97: whether <paramref name="listener"/> muted <paramref name="talker"/> for themselves (their own /mute or the mode's).</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetPlayerVoiceMutes(KcdMp.Api.IPlayer)">
+            <summary>v97: the players <paramref name="listener"/> muted for themselves, lowest id first.</summary>
+        </member>
         <member name="M:KcdMp.Api.IServerApi.SetVoiceLevels(System.Collections.Generic.IReadOnlyList{KcdMp.Api.VoiceLevel},System.Int32)">
             <summary>
             v69: the voice levels players switch between with the voice level key (left Ctrl unless they changed it): a whisper, the normal
@@ -3307,6 +3719,12 @@
             v71: how strongly walls muffle the voices: 0 = never, 1 = the default, up to 2. Each player's own game measures what stands
             between them and every talker they hear (rays, each surface weighted as the game weighs it for its own sounds - stone,
             plaster, wood, a door, the ground) and muffles that voice; the range itself is unchanged. Setting it tells every client.
+            </summary>
+        </member>
+        <member name="P:KcdMp.Api.IServerApi.VoiceVisorMuffle">
+            <summary>
+            v103: how much a closed helmet visor muffles its wearer's voice for everyone who hears it: 0 = never, 1 = the default (a low-pass
+            and a little volume, as through the visor's slits), 0..1. Setting it tells every client.
             </summary>
         </member>
         <member name="P:KcdMp.Api.IServerApi.VoiceLevels">
@@ -3337,6 +3755,23 @@
             rain is its own lever on top. The property is the profile name; false for a key that is no profile name.
             </summary>
         </member>
+        <member name="M:KcdMp.Api.IServerApi.SetWeatherChances(System.Collections.Generic.IReadOnlyDictionary{System.String,System.Double},System.Double,System.Double,System.String@)">
+            <summary>
+            The server's rotation (weather ""): each weather kind's weight at every roll - "clear", "fair", "cloudy", "overcast",
+            "showers", "drizzle", "storm", "dry_storm" (the other preset names are aliases; two names of one kind add up) or one of the
+            level's own profiles (the _B / _C variants of a kind's sky, the weather reference). The weights are relative: { clear = 70,
+            storm = 5, ... } of 100 is a storm about one sky in twenty; a kind left out never comes up. Null or empty = the server's own
+            mix. The hold is how long a rolled sky stays, in game hours (minHours below 0 = 3 to 5, maxHours below 0 = minHours). The
+            sky up now goes at once when the new mix leaves it out. Every client follows the rolled sky; a joiner gets it at the spawn.
+            False, with the reason, for an unknown kind, a weight below 0, every weight 0, or a hold outside 0..168 hours.
+            </summary>
+        </member>
+        <member name="P:KcdMp.Api.IServerApi.WeatherChances">
+            <summary>The rotation's mix: the weight of each kind (by its first name) or profile it rolls; the kinds at 0 are left out.</summary>
+        </member>
+        <member name="P:KcdMp.Api.IServerApi.WeatherHold">
+            <summary>How long a rolled sky holds, in game hours (3 to 5 unless SetWeatherChances set it).</summary>
+        </member>
         <member name="M:KcdMp.Api.IServerApi.TerrainHeight(System.Single,System.Single)">
             <summary>The terrain height in metres at (x, y) from the level's heightmap ([validation] heightmap); null without one or outside it.</summary>
         </member>
@@ -3344,10 +3779,13 @@
             <summary>A navmesh is loaded: FindPath answers, MoveActor walks around walls.</summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.FindPath(System.Numerics.Vector3,System.Numerics.Vector3)">
-            <summary>The corners of the walk from one point to the other (the first on the mesh at the start, the last at the end); null off the mesh, unreachable, or without a navmesh.</summary>
+            <summary>
+            The corners of the walk from one point to the other (the first on the mesh at the start, the last at the end); null off the mesh, unreachable,
+            past the search's budget ([validation] navmesh_search_nodes / navmesh_search_ms - logged with the two points), or without a navmesh.
+            </summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.IsReachable(System.Numerics.Vector3,System.Numerics.Vector3)">
-            <summary>Whether a walk joins the two points (FindPath would answer).</summary>
+            <summary>Whether a walk joins the two points (FindPath would answer; false past the search's budget too).</summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.NavmeshHeight(System.Numerics.Vector3)">
             <summary>The mesh's floor at a point (within 2 m sideways, 4 m up or down) - the true floor indoors, where the heightmap has the terrain; null off the mesh.</summary>
@@ -3400,6 +3838,16 @@
             calls OnPlayerInteract. null or "" takes a prop's off (a point keeps one: destroy it instead). 48 characters at most, shown as
             written. False for anything else.
             </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPropCollision(KcdMp.Api.IWorldEntity,System.Boolean)">
+            <summary>
+            2026-10-16: whether players walk into a static prop (true, the default) or through it (false) - every client follows at once. A solid
+            prop of a mesh the game would make no collision for (several collision pieces: a crate, a shrine) gets one made for it. A rigid prop is
+            always solid. False for anything that is not a static prop.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.IsPropSolid(KcdMp.Api.IWorldEntity)">
+            <summary>Whether a prop is solid (<see cref="M:KcdMp.Api.IServerApi.SetPropCollision(KcdMp.Api.IWorldEntity,System.Boolean)"/>); false for anything that is not a prop.</summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.GetEntityPrompt(KcdMp.Api.IWorldEntity)">
             <summary>v79: the entity's use prompt ("" = none).</summary>
@@ -3624,6 +4072,12 @@
             <summary>
             v4: the actor whole again - full health, every injury gone, the bleeding stopped (HealPlayer for an actor); the
             body straightens on every screen. Refused on a corpse.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetActorBleeding(KcdMp.Api.IWorldEntity,System.Single,System.Single)">
+            <summary>
+            The actor's bleeding in place of every open wound (SetPlayerBleeding for an actor or an animal): ratePerSecond health a second
+            for seconds (0 = the rules' Seconds); 0 stops it. A bleed-out is the last player's kill who struck it. Refused on a corpse.
             </summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.SetActorHostile(KcdMp.Api.IPlayer,KcdMp.Api.IWorldEntity,System.Boolean)">
@@ -3955,6 +4409,33 @@
         <member name="M:KcdMp.Api.IServerApi.SetActorKnockedOut(KcdMp.Api.IWorldEntity,System.Boolean,System.Single)">
             <summary>v62: the same for an NPC actor (its walk stops, its fight ends, its AI stays still while it is down). False when it is not a living NPC actor.</summary>
         </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerCanAttack(KcdMp.Api.IPlayer,System.Boolean)">
+            <summary>
+            Whether the player may attack at all: false keeps their game from starting a swing, a punch, a kick, a shot or a draw (the game's
+            own controls for those do nothing, a drawn weapon is put away) and the server refuses their swings, shots and blows. They can
+            still block, walk and be hit. It lasts through deaths and respawns until the mode sets it back (a new join starts allowed).
+            False when the player is not in the world.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.CanPlayerAttack(KcdMp.Api.IPlayer)">
+            <summary>Whether the player may attack (<see cref="M:KcdMp.Api.IServerApi.SetPlayerCanAttack(KcdMp.Api.IPlayer,System.Boolean)"/>); true unless a mode said otherwise.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetActorBlockRules(KcdMp.Api.ActorBlockRules)">
+            <summary>
+            What a player's block costs an NPC actor (<see cref="T:KcdMp.Api.ActorBlockRules"/>: its stagger after a perfect and after a plain block of its
+            swing). Null fields - or null - keep the server's own (1.5 s and none).
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetActorBlockRules">
+            <summary>The actor block rules in force, every field set.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.StaggerActor(KcdMp.Api.IWorldEntity,System.Single)">
+            <summary>
+            Staggers an NPC actor (a person, not an animal) for <paramref name="seconds"/> (0.2..5): it loses its next swing for that long,
+            lowers its guard and shows the game's own hit reaction on every screen. A stagger while one lasts lengthens it. False for a dead,
+            knocked-out or carried actor, an animal or anything else.
+            </summary>
+        </member>
         <member name="M:KcdMp.Api.IServerApi.SetItemCarrying(System.Boolean,KcdMp.Api.ItemCarryRules)">
             <summary>
             v74: switches the players' own pickup of carry items on or off (the prompt on a carry item; off by default - the mode's orders work
@@ -4000,6 +4481,18 @@
         </member>
         <member name="M:KcdMp.Api.IServerApi.GetCarryItemHolder(KcdMp.Api.IWorldEntity)">
             <summary>v74: the player holding the carry item <paramref name="item"/>, or null when it lies in the world.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetCarryItemDrink(KcdMp.Api.IWorldEntity,System.String,System.Int32)">
+            <summary>
+            2026-10-15: what a carry item holds to drink. A tankard or a stein can be drunk from while held (the left mouse button):
+            a sip is a use of <paramref name="itemClass"/> as the inventory's would be - OnPlayerUseItem decides (false refuses the sip), its
+            alcohol and health apply, the game's drinking animation plays on every screen. <paramref name="sips"/> -1 = it never empties, 0
+            = empty ("It is empty."). By default a tankard or a stein holds 4 sips of beer; any other carry item none and cannot be filled (an
+            item class "" takes its drink away). False for an entity that is no tankard or stein or a class the catalogue does not know.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetCarryItemDrink(KcdMp.Api.IWorldEntity)">
+            <summary>2026-10-15: what the carry item holds to drink (<see cref="M:KcdMp.Api.IServerApi.SetCarryItemDrink(KcdMp.Api.IWorldEntity,System.String,System.Int32)"/>); ("", 0) for nothing.</summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.SetPickpocketing(System.Boolean,KcdMp.Api.PocketRules)">
             <summary>
@@ -4360,6 +4853,26 @@
         <member name="M:KcdMp.Api.IServerApi.GivePlayerItem(KcdMp.Api.IPlayer,System.String,System.Int32,System.Int32)">
             <summary>v76: GivePlayerItem with the condition the items are made at, 0..100 percent (100 = new).</summary>
         </member>
+        <member name="M:KcdMp.Api.IServerApi.GivePlayerItem(KcdMp.Api.IPlayer,System.String,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            v111: GivePlayerItem with the condition and the quality the items are made at - the quality 1 to 4 (I to IV, a forged masterwork the
+            top), 0 = the class's own.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetPlayerItemQuality(KcdMp.Api.IPlayer,System.String)">
+            <summary>
+            v111: the quality of the player's item of a class, 1 to 4 (I to IV) - the worn one when they wear one, else the best they carry; 0 when
+            their game has not said it yet; null when they carry none. The id of one of the player's tagged items in place of the class names that
+            item alone.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerItemQuality(KcdMp.Api.IPlayer,System.String,System.Int32)">
+            <summary>
+            v111: sets the quality (1 to 4) of every item of a class the player carries - a smith's work, a reward; their game sets it, and each
+            item's condition keeps its percent of the new quality's best. Returns how many items were set. The id of one of the player's tagged
+            items in place of the class sets that item alone.
+            </summary>
+        </member>
         <member name="M:KcdMp.Api.IServerApi.GetPlayerItemHealth(KcdMp.Api.IPlayer,System.String)">
             <summary>
             v76: the condition of the player's item of a class, 0..100 - the worn one when they wear one; null when they carry none. The
@@ -4415,6 +4928,9 @@
             dropped and picked up. False for an unknown class, an empty id, or an id the player holds already.
             </summary>
         </member>
+        <member name="M:KcdMp.Api.IServerApi.GivePlayerTaggedItem(KcdMp.Api.IPlayer,System.String,KcdMp.Api.ItemTag,System.Int32,System.Int32)">
+            <summary>v111: GivePlayerTaggedItem with the item's quality, 1 to 4 (I to IV); 0 = the class's own.</summary>
+        </member>
         <member name="M:KcdMp.Api.IServerApi.SetPlayerItemTag(KcdMp.Api.IPlayer,System.String,System.String,System.String)">
             <summary>v76: renames a tagged item the player holds (a contract signed, a letter opened); false when they hold none with that id.</summary>
         </member>
@@ -4438,6 +4954,28 @@
             is called <paramref name="modelClass"/>.
             </summary>
         </member>
+        <member name="M:KcdMp.Api.IServerApi.SetItemClassWeight(System.String,System.Nullable{System.Single})">
+            <summary>
+            v111: every item of a class weighs <paramref name="weight"/> kilograms per piece, for every player: the game's inventory, the horses'
+            saddlebags, the carried weight (and so what makes a player overloaded) and the server's weight checks. A tagged item with a weight of
+            its own (SetPlayerItemWeight) keeps it. null gives the class its own back. False for an unknown class, a weight under 0 or over 1000,
+            or more than 1024 classes with a rule.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetItemClassPrice(System.String,System.Nullable{System.Single})">
+            <summary>
+            v111: every item of a class costs <paramref name="price"/> Groschen per piece at the best quality and condition, for every player: the
+            game's item panel and its traders (a lower quality or a worn item is worth less, by the game's own scaling), and what the server's
+            shops pay for it (their sell factor of it). A tagged item with a price of its own keeps
+            it. null gives the class its own back. False for an unknown class, a price under 0 or over 1,000,000, or more than 1024 classes with a rule.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetItemClassWeight(System.String)">
+            <summary>v111: a class's weight in kilograms per piece - the mode's (SetItemClassWeight), else the game's; null for a class the tables export does not list.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetItemClassPrice(System.String)">
+            <summary>v111: a class's price in Groschen per piece at the best quality and condition - the mode's (SetItemClassPrice), else the game's; null for a class the tables export does not list.</summary>
+        </member>
         <member name="M:KcdMp.Api.IServerApi.FindPlayerItem(KcdMp.Api.IPlayer,System.String)">
             <summary>v76: the tagged item with that id the player holds (its class, condition, worn state and tag), null when they hold none.</summary>
         </member>
@@ -4451,6 +4989,16 @@
         <member name="M:KcdMp.Api.IServerApi.GetPickupHealth(KcdMp.Api.IWorldEntity)">
             <summary>v76: a pickup's condition, 1..100; null for an entity that is no item pickup.</summary>
         </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPickupQuality(KcdMp.Api.IWorldEntity,System.Int32)">
+            <summary>
+            The quality (1..4 = I..IV, a forged masterwork the top; 0 = the class's own) a pickup's item is made at on every screen - and kept by
+            whoever takes it. A player's drop has the dropped item's already. Set it before the pickup is shown (right after CreateEntity), as
+            SetPickupHealth: a screen that shows it already keeps its own. False for an entity that is no item pickup.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetPickupQuality(KcdMp.Api.IWorldEntity)">
+            <summary>A pickup's quality, 1..4 (0 = the class's own); null for an entity that is no item pickup.</summary>
+        </member>
         <member name="M:KcdMp.Api.IServerApi.SetPlayerHealth(KcdMp.Api.IPlayer,System.Single)">
             <summary>
             Sets the player's health (clamped to 0..max); their client shows it. 0 kills: the player
@@ -4462,6 +5010,33 @@
         </member>
         <member name="M:KcdMp.Api.IServerApi.HealPlayer(KcdMp.Api.IPlayer)">
             <summary>Full health and stamina, every injury healed, the bleeding stopped, every server-given buff removed, sober; the client shows it.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerBleeding(KcdMp.Api.IPlayer,System.Single,System.Single)">
+            <summary>
+            The player's bleeding in place of every open wound: one wound of ratePerSecond health a second for seconds (0 = the rules'
+            Seconds), capped by the rules' MaxRate; a rate of 0 stops the bleeding (a bandage's effect). Refused (false) for a player who
+            is dead or not in the world.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetBleedRules(KcdMp.Api.BleedRules)">
+            <summary>
+            How cuts bleed on this server, players and actors alike (BleedRules: the rate per point of damage, the cap, how long a wound
+            bleeds, the armour's gate); null fields - or null - leave the server's own ([combat] bleed_per_damage, max_bleed,
+            bleed_seconds, and the armour gate's defaults 0.5 / 3). Open wounds keep their rate and time.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetBleedRules">
+            <summary>The bleeding's rules in force (every field set: the mode's where it gave one, else the server's own).</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPerkEffects(KcdMp.Api.PerkEffects)">
+            <summary>
+            The game's health perks the server plays (PerkEffects: Revenant's regen and its caps, Diehard's save from a killing blow and its
+            cooldown, the prayer's Guardian Angel) with the game's own numbers - Revenant and Diehard on by default, GuardianAngel off until
+            the mode sets it true; null fields - or null - leave the server's own. Revenant = false or Diehard = false switches that effect off.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetPerkEffects">
+            <summary>The health perks' rules in force (every field set: the mode's where it gave one, else the server's own).</summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.GetPlayerAlcohol(KcdMp.Api.IPlayer)">
             <summary>
@@ -4533,6 +5108,44 @@
         </member>
         <member name="M:KcdMp.Api.IServerApi.GetPerkName(System.String)">
             <summary>The perk's English name from the perk catalogue (a GUID, or the game's name); null when the catalogue knows none.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetRecipes(System.String)">
+            <summary>
+            v106: every recipe the game has - the keys ("alchemy:1", "smithing:r_axework02"), the alchemy ones first; <paramref name="kind"/>
+            "alchemy" or "smithing" for one kind, null or "" for both. The server knows them without the tables export.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetRecipeInfo(System.String)">
+            <summary>
+            v106: a recipe by its key, its English name (any case; "alchemy:" / "smithing:" in front picks between two of one name), the class
+            name or GUID of the document that teaches it, or one of its perks' GUIDs; null for none.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetPlayerRecipes(KcdMp.Api.IPlayer,System.String)">
+            <summary>
+            v106: the recipes the player's character knows (keys): an alchemy one from the book their game reported (the game keeps it for the
+            whole process - a document read, a perk given), a blacksmithing one from its perk; with the mode's own gives at once.
+            <paramref name="kind"/> narrows it to "alchemy" or "smithing". Empty until the first report after the join for what the game knew.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.HasPlayerRecipe(KcdMp.Api.IPlayer,System.String)">
+            <summary>v106: whether the player's character knows the recipe (any of <see cref="M:KcdMp.Api.IServerApi.GetRecipeInfo(System.String)"/>'s keys); false for an unknown one.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GivePlayerRecipe(KcdMp.Api.IPlayer,System.String)">
+            <summary>
+            v106: the recipe taught to the player's character, silently - the alchemy table's or the anvil's book shows it from now on. False for
+            an unknown recipe. Giving one the character knows is fine. Called before the player is in the world, it is taught after the spawn.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.RemovePlayerRecipe(KcdMp.Api.IPlayer,System.String)">
+            <summary>v106: the recipe taken from the player's character (the book forgets it). False for an unknown recipe; one the character lacks is fine.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerRecipes(KcdMp.Api.IPlayer,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            v106: exactly these recipes, for a character's restore: the ones listed are taught, every other one is taken away - also what the
+            game process still holds from an earlier character (a recipe document's reading stays with the game until it closes). An unknown
+            recipe in the list is skipped with a line in the log. False for a null list.
+            </summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.GetPlayerNourishment(KcdMp.Api.IPlayer)">
             <summary>
@@ -4682,6 +5295,19 @@
         </member>
         <member name="M:KcdMp.Api.IServerApi.GetHorseCoats">
             <summary>The coats a horse can wear ("black", "bay_dun", "chestnut", ...) - the same as a cart's horses.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetDogCoat(KcdMp.Api.IWorldEntity,System.String)">
+            <summary>
+            2026-10-16: a dog's coat on every screen - a player's dog (<see cref="F:KcdMp.Api.EntityKind.Dog"/>) or a server animal of the Dog class -, one of
+            <see cref="M:KcdMp.Api.IServerApi.GetDogCoats"/> (case-insensitive); null or "" = the default pick again (which changes each time a dog is made). False for
+            anything else or an unknown coat. Set right after the dog is made, it is on from its first moment.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetDogCoat(KcdMp.Api.IWorldEntity)">
+            <summary>The coat the dog shows: the one a mode set, else the default pick for this dog. Null for anything that is no dog.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetDogCoats">
+            <summary>The coats a dog can wear ("backyard_brown", "alaunt_white", "wardog_black", ...).</summary>
         </member>
         <member name="M:KcdMp.Api.IServerApi.GivePlayerBuff(KcdMp.Api.IPlayer,System.String,System.Single)">
             <summary>
@@ -4879,6 +5505,21 @@
             layer given ("" = base); persist false keeps them for this run of the mode only. The new objects' ids, in the prefab's order.
             </summary>
         </member>
+        <member name="M:KcdMp.Api.IServerApi.CreateMapPrefab(System.String,System.Single,System.Single,System.Single,System.Single,System.String,System.Boolean)">
+            <summary>
+            v104: a prefab placed as one unit - one map object (Mesh "prefab:&lt;name&gt;") that every game and the server draw as the prefab's objects at its
+            place and turn, sent, saved and undone as one record. It follows its prefab: saving the prefab again changes every unit of it. Its pivot at
+            x, y, z (z below 0 = the ground there), turned by yaw (degrees), on the layer given ("" = base); persist false keeps it for this run of the mode
+            only. Id is the unit's; CreateMapObject and SetMapObject with Mesh "prefab:&lt;name&gt;" place and change one too (a uniform Scale, Solid, the
+            view distance and LOD ratio over its objects' own).
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetMapPrefabParts(System.UInt32)">
+            <summary>v104: a prefab unit's objects as they stand on the level, in the prefab's order (each with PartOf = the unit; empty for no unit).</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.UnpackMapPrefab(System.UInt32)">
+            <summary>v104: a prefab unit turned into the prefab's objects, each a map object of its own (one edit); what sat on the unit stays where it is. Their ids, in the prefab's order.</summary>
+        </member>
         <member name="M:KcdMp.Api.IServerApi.RemoveLevelObject(KcdMp.Api.LevelRemovalSpec)">
             <summary>
             v80: takes a thing of the level out on every player's game (LevelRemovalSpec says how it is named) - a house, a wall, a tree,
@@ -4954,6 +5595,90 @@
         <member name="M:KcdMp.Api.IServerApi.GetAreaProperty(System.String,System.String)">
             <summary>v83: the JSON text of one of an area's values, null when it has none.</summary>
         </member>
+        <member name="M:KcdMp.Api.IServerApi.SetAreaTrespass(System.String,System.Nullable{KcdMp.Api.TrespassLevel})">
+            <summary>v107: an area's trespass level alone (MapAreaSpec.Trespass; null: the area says nothing) - kept in the map like the rest of it.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetAreaRain(System.String,System.Nullable{System.Single})">
+            <summary>v107: an area's rain alone (MapAreaSpec.Rain: the most rain inside, 0 .. 1; null: the world's) - kept in the map.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerAreaTrespass(KcdMp.Api.IPlayer,System.String,System.Nullable{KcdMp.Api.TrespassLevel})">
+            <summary>
+            v107: the trespass level one player's game takes for one of the map's areas, over the area's own (MapAreaSpec.Trespass) - Public
+            in a house the player owns, Prohibited in a room only they may not enter; null gives them the area's own again. Kept while they are
+            connected (a rejoin starts without it). False when the area does not exist.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerTrespass(KcdMp.Api.IPlayer,System.Nullable{KcdMp.Api.TrespassLevel})">
+            <summary>
+            v107: one player's trespass level wherever they stand, over every area and the level's own (a prisoner shown the red icon, an
+            event's guest shown nothing); null hands it back to the areas.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetLevelTrespass(System.Boolean)">
+            <summary>
+            v107: the level's own trespass areas (its houses, keeps and camps: the game's blue and red icons) for everyone - on by default.
+            Off, a place is trespass only where one of the map's areas says so.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.IsLevelTrespassOn">
+            <summary>v107: whether the level's own trespass areas are on (SetLevelTrespass).</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerLevelTrespass(KcdMp.Api.IPlayer,System.Nullable{System.Boolean})">
+            <summary>v107: the level's own trespass areas for one player, over SetLevelTrespass; null follows it again.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetPlayerTrespass(KcdMp.Api.IPlayer)">
+            <summary>
+            v107: the trespass level the player's game shows now and what set it. The level's own areas are their game's word (TrespassReport):
+            Public until it has said otherwise.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetPlayerRain(KcdMp.Api.IPlayer,System.Nullable{System.Single})">
+            <summary>
+            v107: the most rain one player's game shows, 0 .. 1 (0 = dry), wherever they stand - over the map's areas (MapAreaSpec.Rain); null
+            hands it back to them. The world's rain (SetRain) stays everyone else's.
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetPlayerRain(KcdMp.Api.IPlayer)">
+            <summary>v107: the rain the player's game shows now: the world's, capped by their own (SetPlayerRain) or their areas' (0 .. 1).</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.CreateMapIcon(KcdMp.Api.MapIconSpec,System.String@)">
+            <summary>
+            v107: an icon of the game's own kind on the players' world map and compass - a custom shop, a guild hall, a quest giver - with the
+            type's icon and name or its own (MapIconSpec). It lasts for the server's run; a player who joins gets every icon they may see. Its
+            id (1 ..), or 0 with the reason (an unknown type, no icon at all, more than 1024 icons).
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetMapIcon(System.UInt32,KcdMp.Api.MapIconSpec,System.String@)">
+            <summary>v107: an icon anew (moved, renamed, another type); false with the reason.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.DeleteMapIcon(System.UInt32)">
+            <summary>v107: takes an icon off every map; false when there is none of that id.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetMapIcon(System.UInt32)">
+            <summary>v107: an icon as it stands, null when there is none.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetMapIcons">
+            <summary>v107: every icon of the mode's, by id.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.SetMapIconVisibleFor(KcdMp.Api.IPlayer,System.UInt32,System.Nullable{System.Boolean})">
+            <summary>v107: one player sees an icon or not, over its Visible; null follows Visible again. False when there is no such icon.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.HideLevelMapIcons(KcdMp.Api.LevelIconRule,KcdMp.Api.IPlayer,System.String@)">
+            <summary>
+            v107: hides the level's own map icons (a shop's, a service's - the reference's map-icons page lists them with their ids): one by its
+            id, or a type's around a place (LevelIconRule), for everyone or for one player. The icon goes from the map and the compass; the
+            place stays the game's. The rule's id (1 ..), or 0 with the reason (no mark and no type, an unknown type, more than 256 rules).
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.ShowLevelMapIcons(System.UInt32)">
+            <summary>v107: a hiding rule gone - the icons it hid come back (unless another rule hides them). False when there is no such rule.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetLevelIconRules">
+            <summary>v107: every hiding rule, by id.</summary>
+        </member>
+        <member name="M:KcdMp.Api.IServerApi.GetMapIconTypes">
+            <summary>v107: the game's map icon types, by name.</summary>
+        </member>
         <member name="M:KcdMp.Api.IServerApi.CreateNavLink(KcdMp.Api.NavLinkSpec)">
             <summary>
             v83: a link the server's actors may take between two points of the navmesh their walk could not join (a jump down, a gap, a ladder,
@@ -4983,6 +5708,13 @@
             v76: the game mode's own identity of one item (a letter, a signed contract): its id, and the name and text the game's item tooltip
             shows for it. A tagged entry is one item (Amount 1). GetPlayerInventory lists the player's tagged items one by one with theirs;
             SetPlayerInventory keeps a tagged item the player holds by its id and makes a missing one with its tag.
+            </summary>
+        </member>
+        <member name="P:KcdMp.Api.ContainerItem.Quality">
+            <summary>
+            v111: the items' quality as the game shows it - 1 to 4 (I to IV), a forged masterwork the top; 0 = the class's own (what the game
+            makes when nothing asks for another). GetPlayerInventory lists each quality in a stack of its own; SetPlayerInventory and a container's
+            or a horse's saddlebags' list make the items at it.
             </summary>
         </member>
         <member name="T:KcdMp.Api.ItemTag">
@@ -5061,10 +5793,16 @@
             </summary>
         </member>
         <member name="T:KcdMp.Api.WorldItemSlot">
-            <summary>v75: one of the level's item slots (<see cref="M:KcdMp.Api.IServerApi.WorldItemsNear(System.Numerics.Vector3,System.Single,System.Int32)"/>): its key, the item class it holds, its place (metres), whether its item is taken now.</summary>
+            <summary>
+            v75: one of the level's item slots (<see cref="M:KcdMp.Api.IServerApi.WorldItemsNear(System.Numerics.Vector3,System.Single,System.Int32)"/>): its key, the item class it holds, its place (metres), whether
+            its item is taken now - and (v109) whether players may use it (<see cref="M:KcdMp.Api.IServerApi.SetWorldItemInteractable(System.String,System.Boolean,System.String@)"/>).
+            </summary>
         </member>
-        <member name="M:KcdMp.Api.WorldItemSlot.#ctor(System.String,System.String,System.Single,System.Single,System.Single,System.Boolean)">
-            <summary>v75: one of the level's item slots (<see cref="M:KcdMp.Api.IServerApi.WorldItemsNear(System.Numerics.Vector3,System.Single,System.Int32)"/>): its key, the item class it holds, its place (metres), whether its item is taken now.</summary>
+        <member name="M:KcdMp.Api.WorldItemSlot.#ctor(System.String,System.String,System.Single,System.Single,System.Single,System.Boolean,System.Boolean)">
+            <summary>
+            v75: one of the level's item slots (<see cref="M:KcdMp.Api.IServerApi.WorldItemsNear(System.Numerics.Vector3,System.Single,System.Int32)"/>): its key, the item class it holds, its place (metres), whether
+            its item is taken now - and (v109) whether players may use it (<see cref="M:KcdMp.Api.IServerApi.SetWorldItemInteractable(System.String,System.Boolean,System.String@)"/>).
+            </summary>
         </member>
         <member name="T:KcdMp.Api.HerbResult">
             <summary>v95: the answer of a herb function - Accepted, else Reason says why not; Key names the spot or herb it made ("" otherwise).</summary>
@@ -5393,6 +6131,12 @@
         <member name="P:KcdMp.Api.ShopDealLine.ItemId">
             <summary>v86: the line's tagged item - a tagged row of the shop's bought, or the player's own tagged item sold; "" for a plain line.</summary>
         </member>
+        <member name="P:KcdMp.Api.ShopDealLine.Health">
+            <summary>
+            The condition of the line's pieces, 0-100 percent: 100 for a purchase (made whole); for a sale, the average of the pieces it
+            takes - the very items the trade screen named first - weighted by how many of each.
+            </summary>
+        </member>
         <member name="T:KcdMp.Api.ShopDeal">
             <summary>
             v49: a deal on a shop (<see cref="M:KcdMp.Api.IGameMode.OnPlayerShopDeal(KcdMp.Api.IPlayer,KcdMp.Api.IShop,KcdMp.Api.ShopDeal)"/>): every line, the sales first; `Cost` is what the player
@@ -5578,6 +6322,10 @@
         <member name="P:KcdMp.Api.MapObjectSpec.ScaleY">
             <summary>Phase 7: stretched - the scale along the mesh's own Y and Z (Scale is then its X one, each 0.05-20); 0 = Scale. Meshes only.</summary>
         </member>
+        <member name="P:KcdMp.Api.MapObjectSpec.OccludeRain">
+            <summary>v107: it keeps the rain out like the level's own roofs (true by default; false lets the rain fall through it - a canopy,
+            a fence). The game lets only big objects block the rain (about 10 m across or more).</summary>
+        </member>
         <member name="P:KcdMp.Api.MapObjectSpec.Nav">
             <summary>v83: what it does to the server's navmesh (Auto: in the way).</summary>
         </member>
@@ -5590,8 +6338,18 @@
             style": the colour 0..1, metres, a multiplier, the game's light style 0 = steady), "entity:effect" ("name [scale]": a particle effect,
             "WH_Particels.fires.candle"), "entity:sound" ("trigger": an audio trigger, "a_l_hot_wood_loop"), "entity:marker" ("tag": a place only
             the editor and the mode know - a spawn point), "entity:door" ("model [locked]": one of the game's doors,
-            "objects/characters/assets/doors/....cdf"). A door's key in the door functions (SetDoorState, SetDoorCheck ...) is "KcdMp_map_" +
-            its id; it takes no use prompt (the game's own open and close).
+            "objects/characters/assets/doors/....cdf"), "entity:seat" ("pose": a place to sit or a bed - bench_low, bench_high, table_left,
+            table_right, chair_table, chair_table_low, ground, bed_high, bed_low, bed_ground, bed_bench, bed_left, bed_right; the turn is where
+            the sitter looks). A door's key in the door functions (SetDoorState, SetDoorCheck ...) is "KcdMp_map_" + its id; a door and a seat
+            take no use prompt (the game's own use). The game's chairs, benches and beds placed as meshes get their seats by themselves; a chair
+            mesh's one setting is "table" (its seat at a table - the game's at-a-table pose; none = sitting on its own).
+            </summary>
+        </member>
+        <member name="P:KcdMp.Api.MapObjectSpec.LodRatio">
+            <summary>
+            v104: the engine's LOD ratio for it - how soon the game swaps in the mesh's simpler models as the viewer moves away (1-255: 100 is
+            the engine's normal; higher swaps sooner - lighter to draw, 255 the soonest; lower keeps the detailed model farther); 0 = the
+            engine's own. Meshes only.
             </summary>
         </member>
         <member name="P:KcdMp.Api.MapObjectSpec.Attach">
@@ -5627,6 +6385,12 @@
         <member name="M:KcdMp.Api.MapObjectInfo.#ctor(System.UInt32,KcdMp.Api.MapObjectSpec,System.String,System.UInt32)">
             <summary>v80: an object of the server's map as it stands (IServerApi.GetMapObject): its id, the spec it has, who last changed it ("" for the
             mode itself, else the admin's name) and the map revision of that change.</summary>
+        </member>
+        <member name="P:KcdMp.Api.MapObjectInfo.PartOf">
+            <summary>
+            v104: the prefab unit (IServerApi.CreateMapPrefab) this object is a part of, 0 for an object of its own. A part is changed through its unit
+            (SetMapObject, DeleteMapObject on the unit's id) or after UnpackMapPrefab; its id is the same on every start and in every game.
+            </summary>
         </member>
         <member name="T:KcdMp.Api.NavEffect">
             <summary>
@@ -5726,6 +6490,32 @@
         <member name="P:KcdMp.Api.MapAreaSpec.Nav">
             <summary>v83: what it does to the server's navmesh (Auto: nothing; Block: no actor walks in it; Walkable: a floor at its bottom).</summary>
         </member>
+        <member name="P:KcdMp.Api.MapAreaSpec.Trespass">
+            <summary>v107: the game's trespass level inside (the HUD's blue icon for Personal, the red one for Prohibited; Public = no trespass,
+            over the level's own - a house a player owns). Null: the area says nothing and the level's own areas decide. Where areas overlap, the
+            highest level counts.</summary>
+        </member>
+        <member name="P:KcdMp.Api.MapAreaSpec.Rain">
+            <summary>v107: the most rain a player inside sees, 0 .. 1 (0 = dry: under a roof the map editor built). Null: the world's rain.</summary>
+        </member>
+        <member name="T:KcdMp.Api.TrespassLevel">
+            <summary>
+            v107: the game's trespass levels (its own names). Public is no trespass; Semipublic and Semipersonal are trespass the HUD does not
+            show (the game's own people would watch); Personal shows the blue icon (someone's home, a private room), Prohibited the red one (no
+            entry: a castle's keep, a guarded camp). In multiplayer nobody reacts on their own - what follows is the mode's (OnPlayerTrespassChange).
+            </summary>
+        </member>
+        <member name="T:KcdMp.Api.PlayerTrespass">
+            <summary>v107: the trespass level a player's game shows (IServerApi.GetPlayerTrespass) and what set it: Level (the level's own areas -
+            the player's game's word), Area (one of the map's areas; Area names it) or Player (SetPlayerTrespass).</summary>
+        </member>
+        <member name="M:KcdMp.Api.PlayerTrespass.#ctor(KcdMp.Api.TrespassLevel,KcdMp.Api.TrespassSource,System.String)">
+            <summary>v107: the trespass level a player's game shows (IServerApi.GetPlayerTrespass) and what set it: Level (the level's own areas -
+            the player's game's word), Area (one of the map's areas; Area names it) or Player (SetPlayerTrespass).</summary>
+        </member>
+        <member name="T:KcdMp.Api.TrespassSource">
+            <summary>v107: where a player's trespass level comes from.</summary>
+        </member>
         <member name="T:KcdMp.Api.MapAreaInfo">
             <summary>v83: an area of the map as it stands (IServerApi.GetArea): its id, its spec, the mode's values on it (key -> JSON text), who last
             changed it and the map revision of that change.</summary>
@@ -5733,6 +6523,61 @@
         <member name="M:KcdMp.Api.MapAreaInfo.#ctor(System.UInt32,KcdMp.Api.MapAreaSpec,System.Collections.Generic.IReadOnlyDictionary{System.String,System.String},System.String,System.UInt32)">
             <summary>v83: an area of the map as it stands (IServerApi.GetArea): its id, its spec, the mode's values on it (key -> JSON text), who last
             changed it and the map revision of that change.</summary>
+        </member>
+        <member name="T:KcdMp.Api.MapIconSpec">
+            <summary>
+            v107: one of the mode's icons on the players' world map and compass (IServerApi.CreateMapIcon) - an icon of the game's own kind at a
+            place. Type: a map icon type's name ("tailor", "blacksmith" - the reference's map-icons page lists them) or its GUID; the icon and
+            the legend's name come with it. Icon: the legend's icon number instead of the type's (-1 = the type's). Name: the name on the map
+            ("" = the type's legend name). Visible: shown to everyone (SetMapIconVisibleFor for one player).
+            </summary>
+        </member>
+        <member name="T:KcdMp.Api.MapIconInfo">
+            <summary>v107: an icon of the mode's as it stands (IServerApi.GetMapIcon).</summary>
+        </member>
+        <member name="M:KcdMp.Api.MapIconInfo.#ctor(System.UInt32,KcdMp.Api.MapIconSpec)">
+            <summary>v107: an icon of the mode's as it stands (IServerApi.GetMapIcon).</summary>
+        </member>
+        <member name="T:KcdMp.Api.LevelIconRule">
+            <summary>
+            v107: which of the level's own map icons a rule hides (IServerApi.HideLevelMapIcons): one icon by its id (Mark - the GUID the
+            reference's map-icons page lists, the same on every game), or the icons of a Type (a name or a GUID; "" = every type) within Radius
+            metres of Position (Radius 0 = the whole level, with a Type).
+            </summary>
+        </member>
+        <member name="T:KcdMp.Api.LevelIconRuleInfo">
+            <summary>v107: a rule as it stands (IServerApi.GetLevelIconRules): its id, the rule, and the player it is for (null = everyone).</summary>
+        </member>
+        <member name="M:KcdMp.Api.LevelIconRuleInfo.#ctor(System.UInt32,KcdMp.Api.LevelIconRule,KcdMp.Api.IPlayer)">
+            <summary>v107: a rule as it stands (IServerApi.GetLevelIconRules): its id, the rule, and the player it is for (null = everyone).</summary>
+        </member>
+        <member name="T:KcdMp.Api.MapIconType">
+            <summary>v107: one of the game's map icon types: its name, its GUID, its icon (the legend's number, -1 = none), its English legend
+            name, and whether it is a shop or a service.</summary>
+        </member>
+        <member name="M:KcdMp.Api.MapIconType.#ctor(System.String,System.String,System.Int32,System.String,System.Boolean)">
+            <summary>v107: one of the game's map icon types: its name, its GUID, its icon (the legend's number, -1 = none), its English legend
+            name, and whether it is a shop or a service.</summary>
+        </member>
+        <member name="T:KcdMp.Api.PerkEffects">
+            <summary>
+            The game's health perks the server plays (IServerApi.SetPerkEffects); null leaves the server's own. The server owns every player's
+            health, so a perk whose effect is a health change in the player's own game would do nothing online - the server gives it instead,
+            to whoever holds the perk (the player's reported perks and the mode's SetPlayerProgress / AddPlayerPerk).
+            Revenant: health comes back RevenantRate a second up to RevenantCap of the player's maximum (RevenantIICap with Revenant II) -
+            never while bleeding, knocked out or in a fight (a fight between players, an actor's or an animal's, or the game's own combat
+            mode), nor for RevenantPause seconds after a blow taken. A potion's regen adds to it. The game's numbers: 0.125 a second, 0.5 and
+            0.75 (50 and 75 health of 100), measured in the game.
+            Diehard (the game's "Hard to kill"): a blow from a player, an actor or an animal that would kill the player leaves 1 health and
+            heals DiehardHeal over DiehardSeconds; another killing blow while that heal runs is survived the same way, and once it ends the
+            perk rests DiehardCooldown seconds before it saves again (a fall, a bleed-out or a mode's SetPlayerHealth is never saved). The
+            game's numbers: 25 over 2 s, then 3000 s.
+            GuardianAngel - OFF by default, a mode turns it on (true; best in OnGameModeInit: the players already in the game report their prayer
+            from their next join): Fundamentals of Divinity's prayer at a shrine, or the buff given with GivePlayerBuff, saves once the same way -
+            the same heal, killing blows inside it survived too - and then the buff is spent and taken off the player's game. The player's game
+            tells the server when its prayer gave it (a player who also holds Diehard: Diehard's own save comes first, the prayer's is not
+            seen).
+            </summary>
         </member>
         <member name="T:KcdMp.Api.PocketRules">
             <summary>
@@ -6179,6 +7024,24 @@
         </member>
         <member name="M:KcdMp.Api.PlayerQuestInfo.#ctor(System.Int32,KcdMp.Api.QuestState,System.Collections.Generic.IReadOnlyList{KcdMp.Api.QuestObjectiveState},System.String)">
             <summary>v81: a quest as one player has it; <paramref name="Key"/> is the quest's key ("" none) - what a mode saves.</summary>
+        </member>
+        <member name="T:KcdMp.Api.RecipeInfo">
+            <summary>
+            v106: one recipe of the game's - an alchemy recipe (the alchemy table's book) or a blacksmithing one (the anvil's book). <see cref="P:KcdMp.Api.RecipeInfo.Key"/>
+            is what the recipe functions give back and take ("alchemy:1", "smithing:r_axework02"); they also take the <see cref="P:KcdMp.Api.RecipeInfo.Name"/> and the
+            <see cref="P:KcdMp.Api.RecipeInfo.Document"/>'s class name. <see cref="P:KcdMp.Api.RecipeInfo.Kind"/> is "alchemy" or "smithing", <see cref="P:KcdMp.Api.RecipeInfo.Id"/> the game's own recipe id,
+            <see cref="P:KcdMp.Api.RecipeInfo.Document"/> the class name of the item that teaches it when read ("" for a recipe no document teaches), <see cref="P:KcdMp.Api.RecipeInfo.Perks"/>
+            the perk GUIDs that teach it, <see cref="P:KcdMp.Api.RecipeInfo.Products"/> the item class GUIDs it makes (an alchemy recipe's by quality, the weakest first).
+            </summary>
+        </member>
+        <member name="M:KcdMp.Api.RecipeInfo.#ctor(System.String,System.String,System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{System.String},System.Collections.Generic.IReadOnlyList{System.String})">
+            <summary>
+            v106: one recipe of the game's - an alchemy recipe (the alchemy table's book) or a blacksmithing one (the anvil's book). <see cref="P:KcdMp.Api.RecipeInfo.Key"/>
+            is what the recipe functions give back and take ("alchemy:1", "smithing:r_axework02"); they also take the <see cref="P:KcdMp.Api.RecipeInfo.Name"/> and the
+            <see cref="P:KcdMp.Api.RecipeInfo.Document"/>'s class name. <see cref="P:KcdMp.Api.RecipeInfo.Kind"/> is "alchemy" or "smithing", <see cref="P:KcdMp.Api.RecipeInfo.Id"/> the game's own recipe id,
+            <see cref="P:KcdMp.Api.RecipeInfo.Document"/> the class name of the item that teaches it when read ("" for a recipe no document teaches), <see cref="P:KcdMp.Api.RecipeInfo.Perks"/>
+            the perk GUIDs that teach it, <see cref="P:KcdMp.Api.RecipeInfo.Products"/> the item class GUIDs it makes (an alchemy recipe's by quality, the weakest first).
+            </summary>
         </member>
         <member name="T:KcdMp.Api.SceneryKind">
             <summary>v93: what a melee blow struck when it met the level itself (IGameMode.OnPlayerHitScenery).</summary>

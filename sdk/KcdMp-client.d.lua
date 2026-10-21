@@ -950,6 +950,36 @@ function JsonEncode(value) end
 ---@return string|nil
 function JsonDecode(text) end
 
+-- ======== The game's screens ====================================================
+-- The game's own player screens - the inventory, the character screen, the world map, the Codex and the journal - opened and
+-- closed from a script: `OpenScreen` with `"inventory"`, `"character"`, `"map"`, `"codex"` or `"journal"`, `CloseScreens`,
+-- and `GetOpenScreen` / `OnScreenChange` for the one open. A screen the server refuses the player stays shut. A mode that
+-- opens and refuses the screens itself does it from the server (its `OpenPlayerScreen`, `SetPlayerScreenBlocked`).
+
+---**Called by the server** - One of the game's player screens opened, the player switched to another, or they closed.
+---
+---The player's own key or tab, `OpenScreen`, `CloseScreens` or the server's word. `"other"` is another of the game's
+---screens of that kind (crafting, a horse's saddlebags).
+---@param screen string|nil `"inventory"`, `"character"`, `"map"`, `"codex"`, `"journal"` or `"other"`; `nil` = closed
+---@param previous string|nil the one before (`nil` = none was open)
+function OnScreenChange(screen, previous) end
+
+---Opens one of the game's player screens.
+---
+---Switches to it when one of them is open already. Nothing opens while another screen of the game's own is up (a
+---dialogue, a minigame, the Esc menu), or for a screen the server refuses the player. `true` says the request was made -
+---`OnScreenChange` says what came of it.
+---@param screen string `"inventory"`, `"character"`, `"map"`, `"codex"` or `"journal"`
+function OpenScreen(screen) end
+
+---Closes the game's player screens - and the loot and trade screens.
+---@return boolean `true`
+function CloseScreens() end
+
+---Which of the game's player screens is open.
+---@return string `"inventory"`, `"character"`, `"map"`, `"codex"`, `"journal"` or `"other"`; `nil` = none
+function GetOpenScreen() end
+
 -- ======== Constants =============================================================
 
 -- Colors

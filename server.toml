@@ -23,12 +23,15 @@ build_hash = ""              # require one game build; "" = any
 stale_session_seconds = 5.0  # a player's rejoin under their name replaces their own old connection silent this long; 0 = never
 log_file = "server.log"      # the console's lines, written next to the server (the previous run in server.log.1); "" = console only
 http_status = true           # a JSON status at http://<host>:<port>/ (the port's number over TCP) for panels and server lists
+join_rate = 20               # players let in a second at most; when many come at once (a restart: everyone's game rejoins by itself) the rest wait their turn at "handshaking" instead of all loading the server at once. 0 = no limit
 stall_exit = 30              # seconds: a server that cannot send or receive this long ends itself (exit code 3) for the host to start it again; 0 = never
+network_threads = 1          # 1 = one network thread on `port`. For 1,000+ players, 2-4: each listens on its own UDP port (the ports after `port`, or network_ports) - open every one
+network_ports = []           # the other network threads' UDP ports when they are not the ones after `port` (a game panel's extra ports): [7790, 7791]
 
 # The game mode: one Lua script or one C# plugin (see gamemodes/README.md).
 # https://docs.kcd-mp.com/getting-started/server-config/#gamemode
 [gamemode]
-script = "gamemodes/kcd2mp-tournament/gamemode.lua"   # "" = the built-in freeroam
+script = "gamemodes/freeroam.lua"   # "" = the built-in freeroam
 watch = false                       # true = reload the script (or the plugin's DLL) when its file changes (development)
 
 # The game mode's own database, for whatever it wants to keep - accounts, factions, scores. Optional: without a
@@ -54,7 +57,7 @@ slow_query_ms = 500                 # a query taking longer gets a log line
 [client]
 scripts = ""                        # a folder of .lua files; "" = the client/ folder next to the game mode's script or plugin
 console = false                     # true = players may open the F9 console window on this server
-ui = "gamemodes/kcd2mp-tournament/ui" # a folder (or .zip) of web interface files; "" = the ui/ folder next to the game mode's client/ folder
+ui = ""                             # a folder (or .zip) of web interface files; "" = the ui/ folder next to the game mode's client/ folder
 ui_cdn = ""                         # https://... - big media files come from here (upload what --pack-ui writes); "" = none
 ui_max_mb = 8                       # the most the web interface may send over the game connection (MB, up to 64)
 ui_report_errors = false            # true = the players' games tell the game mode about script errors in its pages (OnPlayerWebError; a few a minute each)
@@ -72,6 +75,10 @@ adapt = true                 # a player whose connection falls behind gets fewer
 nearest_full_rate = 32       # in a crowd, the nearest this many moving players, horses, characters, dogs and carts go in every snapshot whatever snapshot_budget says
 snapshot_budget = 1600       # bytes of movement a snapshot carries; in a crowd the nearer, faster and fighting ones go first and the others a little less often (about 7 times a second at the least); 0 = no limit
 reliable_rate = 24           # MB a second at most of the messages that must arrive (everything but movement, voice and hit effects); a flood beyond it - hundreds of items restocked at once, a wave of joins - waits its turn per player instead of choking the connection; pick it for your upload speed: 100 Mbit = 5, 500 Mbit = 20, 1 Gbit = 24 to 48, 2 Gbit and more = 48 (at least 1; the server-config page has the table)
+grime_rate = 10              # the other players' dirt, blood and armour wear: at most this many updates a second to each player, the nearest bodies first (a newer one replaces one that waits); a big battle sent them to everyone after every blow. 0 = no limit
+grime_range = 50.0           # ... only for bodies this near (metres); farther ones are brought up to date when they come this near. 0 = everyone in view
+crowd_report_hz = 15         # when the server is too busy to send everyone every movement update, the players who are not fighting send their own movement this many times a second instead of 30, until the crowd thins. 0 = always 30
+socket_buffer = 16           # MB the system may hold for the server's connection each way; when it fills during a busy moment, players' movements and actions are lost. On Linux net.core.rmem_max / wmem_max cap it (about 0.2 MB unless raised - the server's log says what it got; the server-config page says how). 0 = the network library's own 1 MB
 
 # Area of interest: how far a player sees the others.
 # https://docs.kcd-mp.com/getting-started/server-config/#aoi
@@ -110,6 +117,8 @@ max_speed_on_foot = 8.0      # m/s (a sprint is ~5)
 max_speed_crouched = 5.0     # m/s
 heightmap = "data/heightmaps/{level}.hmap"   # the terrain check, on while the file is there (tools/KcdMp.ExportHeightmap.exe writes it, see data/README.md); "" = never
 navmesh = "data/navmesh/{level}.knav"       # actors walk around walls, on while the file is there (tools/KcdMp.ExportNavmesh.exe writes it); "" = never
+navmesh_search_nodes = 16384 # one path search (FindPath, IsReachable, an actor's walk or chase) stops here and answers nil, logged
+navmesh_search_ms = 100.0    # ... or after this many milliseconds, whichever comes first
 collision = "data/collision/{level}.kcol"   # RayCast, the floor as the ground, on while the file is there (tools/KcdMp.ExportCollision.exe writes it); "" = never
 line_of_sight = false        # with collision: a hit or shot claimed, a rider pulled down, a body grabbed or a pocket picked through a wall is refused (off = only logged)
 no_clip = false              # with collision: a step through a wall is pulled back (off = only logged)
@@ -192,8 +201,19 @@ counter_parry_window_ms = 700 # the same for a counter after a perfect block (it
 perfect_block_stamina = 15.0 # taken from the attacker whose swing was perfect-blocked
 victim_blocks = true         # the victim's own game judges each blow: a hit lands, a block does no harm, whatever the attacker saw
 verdict_window_ms = 1500     # how long a blow the attacker saw land waits for the victim's game to judge it; 0 = no wait
-unanswered_blow = "miss"     # a blow the victim's game never judged in that time: "miss" or "land" (the attacker's word)
-unshown_blow = "miss"        # a blow whose swing the victim's game says it never showed: "miss" or "land"
+hit_rule = "contact"         # "contact": a blow counts when it touched on either player's screen, unless the defender blocked or
+                             # parried it in time; "victim": only when it touched on the defender's screen
+defense_grace_ms = 200       # the most latency a block or parry is credited for (with "contact"); 0 = no limit
+trades = "first"             # two players swinging at each other: "first" = as in single player, the first blow to land stops the
+                             # other's swing that had not landed yet; "both" = every blow that touched counts
+trade_tolerance_ms = 60      # two blows this close together both land (single player's "same moment")
+dodge_check = true           # a blow that touched only on the attacker's screen misses when the defender had already stepped clear
+dodge_margin_m = 1.5         # ... farther than this from the blade (metres, along the ground)
+dodge_allowance_ms = 150     # the most a high-ping defender is credited for their reaction to a swing (0 at ordinary pings)
+fair_ping_ms = 200           # the most ping the fights make up for: a player's ping past it counts against them (their blows,
+                             # dodges and blocks count a little later); 0 = no limit
+unanswered_blow = "miss"     # with hit_rule "victim": a blow the victim's game never judged in that time: "miss" or "land"
+unshown_blow = "miss"        # with hit_rule "victim": a blow whose swing the victim's game says it never showed: "miss" or "land"
 attacker_preview = false     # true = the attacker sees a hit at once (a guess); false = the victim's verdict, a moment later
 master_strike_scale = 1.5    # a master strike against a plain swing of the same weapon
 master_strike = true         # players may master-strike (and disarm); false = only the plain perfect block
@@ -203,9 +223,9 @@ clinch_parry_window_ms = 1300 # at most this long a clinch blow waits for its vi
 sprint_stamina_cost = 5.0    # per second (the game's own)
 jump_stamina_cost = 9.0      # the game's own
 injury_threshold = 15.0
-bleed_per_damage = 0.015
-max_bleed = 1.0              # health per second
-bleed_seconds = 40.0
+bleed_per_damage = 0.015     # a cut through the armour opens a wound bleeding this x the damage a second (heavy armour holds most cuts)
+max_bleed = 1.0              # health per second, all wounds together
+bleed_seconds = 40.0         # each wound bleeds this long (the game mode's SetBleedRules can change all three)
 
 # What the players' screens show of each other, drawn in the game's own UI.
 # https://docs.kcd-mp.com/getting-started/server-config/#ui
@@ -242,8 +262,8 @@ friendly_fire = false               # true = members can hurt each other
 # https://docs.kcd-mp.com/getting-started/server-config/#emotes
 [emotes]
 enabled = true               # false = no wheel and no point on T (a mode's /anim still plays them)
-wheel = ["wave", "bow", "cheer", "clap", "dance", "come"]    # at most 8, clockwise from the top; [] = no wheel (also: salute, nod, point - T holds it)
-# Your own: name = "Label | the body's clip | the player's own fragment | its tags | loop or once" (see the link above).
+wheel = ["wave", "bow", "cheer", "clap", "dance", "come"]    # at most 8, clockwise from the top; [] = no wheel (also: salute, nod, sit, armscrossed, drink, point - T holds it)
+# Your own: name = "Label | the body's clip | the player's own fragment | its tags | loop or once [upper] [locked] | in | out" (see the link above).
 # [emotes.custom]
 # kneel = "Kneel | pray_kneel_loop | PrayKneeling | | loop"
 
