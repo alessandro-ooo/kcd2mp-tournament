@@ -217,6 +217,21 @@ end
 ---@param winner number
 ---@param loser number
 function duel.processRound(duelData, winner, loser)
+  if (winner == duelData.playerOne and loser == duelData.playerTwo)
+      or (winner == duelData.playerTwo and loser == duelData.playerOne) then
+    local playerOneOutcome = winner == duelData.playerOne and "won" or "lost"
+    local playerTwoOutcome = winner == duelData.playerTwo and "won" or "lost"
+
+    SendClientEvent(duelData.playerOne, "panel.frontend.duel.round.result", {
+      outcome = playerOneOutcome,
+      round = duelData.currentRound,
+    })
+    SendClientEvent(duelData.playerTwo, "panel.frontend.duel.round.result", {
+      outcome = playerTwoOutcome,
+      round = duelData.currentRound,
+    })
+  end
+
   if duelData.currentRound ~= duelData.settings.numberOfRounds then 
     GameText(loser, "You lost this round!", 5000)
     GameText(winner, "You won this round!", 5000)
