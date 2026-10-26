@@ -72,7 +72,7 @@ const DuelSettingsForm = ({ player, nearbyPlayers }: DuelSettingsForm) => {
           {...register("numberOfRounds", {
             valueAsNumber: true,
             min: 1,
-            max: 3,
+            max: 4,
           })}
           onLeftArrowClick={() => {}}
           onRightArrowClick={() => {}}
