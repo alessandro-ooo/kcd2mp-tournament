@@ -16,13 +16,6 @@ const DuelSettingsPage = () => {
     nearbyPlayers: [],
   });
 
-  // KcdMp.emitServer("panel.frontend.fetch.duel", {});
-
-  // KcdMp.onServer("panel.frontend.fetch.duel.response", (value) => {
-  //   const data = value as DuelData;
-  //   setDuelData(data);
-  // });
-
   useEffect(() => {
     const unsubscribe = KcdMp.onServer(
       "panel.frontend.duel.fetch.sendresponse",

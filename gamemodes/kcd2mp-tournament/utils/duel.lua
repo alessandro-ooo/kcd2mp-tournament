@@ -1,6 +1,5 @@
 local data = require("data")
 local utils = require("utils.utils")
-
 local duel = {}
 
 ---This function checks the type of the data received from the frontend.
@@ -98,6 +97,8 @@ end
 ---For now, it does not stop anything.
 ---@param duelToRemove Duel
 function duel.remove(duelToRemove)
+  TogglePlayerControllable(duelToRemove.playerOne, true)
+  TogglePlayerControllable(duelToRemove.playerTwo, true)
   for i, currentDuel in ipairs(data.duels) do
     if currentDuel == duelToRemove then
       table.remove(data.duels, i)
@@ -182,6 +183,12 @@ end
 ---@param duelData Duel
 function duel.initiate(duelData) 
   duel.changeStatus(duelData, "fighting")
+  local ui = require("utils.ui")
+  local player = require("utils.players")
+  player.setRequestingUI(duelData.playerOne, ui.UI_LIST.timer)
+  player.setRequestingUI(duelData.playerTwo, ui.UI_LIST.timer)
+  ui.show(duelData.playerOne, false, false, false)
+  ui.show(duelData.playerTwo, false, false, false)
   SetSpawnInfo(duelData.playerOne, 876.9, 799.2, 66, 325)
   SetSpawnInfo(duelData.playerTwo, 2884.6, 810, 66, 144)
   duel.beginRound(duelData)
@@ -189,7 +196,8 @@ end
 
 ---@param duelData Duel
 function duel.beginRound(duelData)
-  duelData.currentRound = duelData.currentRound +1;
+  duelData.currentRound = duelData.currentRound + 1
+  duelData.status = "fighting"
   SetPlayerPos(duelData.playerOne, 2876.9, 799.2, 66, 325)
   SetPlayerPos(duelData.playerTwo, 2884.6, 810, 66, 144)
   duel.giveEquipment(duelData.playerOne, duelData.settings.weaponId, duelData.settings.shieldId)
@@ -208,8 +216,15 @@ function duel.beginRound(duelData)
   SetTimer(function() 
     GameText(duelData.playerOne, "Fight!" , 1500)
     GameText(duelData.playerTwo, "Fight!", 1500)
-  TogglePlayerControllable(duelData.playerOne, true)
-  TogglePlayerControllable(duelData.playerTwo, true)
+    TogglePlayerControllable(duelData.playerOne, true)
+    TogglePlayerControllable(duelData.playerTwo, true)
+    SendClientEvent(duelData.playerOne, "panel.frontend.timer.send", {
+        settings = duelData.settings,
+    })
+
+    SendClientEvent(duelData.playerTwo, "panel.frontend.timer.send", {
+        settings = duelData.settings,
+    })
    end, 5500)
 end
 
@@ -217,24 +232,55 @@ end
 ---@param winner number
 ---@param loser number
 function duel.processRound(duelData, winner, loser)
-  if (winner == duelData.playerOne and loser == duelData.playerTwo)
-      or (winner == duelData.playerTwo and loser == duelData.playerOne) then
-    local playerOneOutcome = winner == duelData.playerOne and "won" or "lost"
-    local playerTwoOutcome = winner == duelData.playerTwo and "won" or "lost"
-
-    SendClientEvent(duelData.playerOne, "panel.frontend.duel.round.result", {
-      outcome = playerOneOutcome,
-      round = duelData.currentRound,
-    })
-    SendClientEvent(duelData.playerTwo, "panel.frontend.duel.round.result", {
-      outcome = playerTwoOutcome,
-      round = duelData.currentRound,
-    })
+  local ui = require("utils.ui")
+  if duelData.status ~= "fighting" then
+    return false
   end
 
+  local isTie = winner == -1 and loser == -1
+  local isValidResult = (winner == duelData.playerOne and loser == duelData.playerTwo)
+      or (winner == duelData.playerTwo and loser == duelData.playerOne)
+  if not isTie and not isValidResult then
+    return false
+  end
+
+  duelData.status = "roundResolved"
+
+  if isTie then
+    TogglePlayerControllable(duelData.playerOne, false)
+    TogglePlayerControllable(duelData.playerTwo, false)
+    SendClientMessageToAll(COLOR_RED, "TIE")
+
+    if duelData.currentRound >= duelData.settings.numberOfRounds then
+      local drawResult = {
+        outcome = "matchDraw",
+        round = duelData.currentRound,
+      }
+      SendClientEvent(duelData.playerOne, ui.EMITS_NAMES.roundResult, drawResult)
+      SendClientEvent(duelData.playerTwo, ui.EMITS_NAMES.roundResult, drawResult)
+      SetTimer(function()
+        ui.hide(duelData.playerOne)
+        ui.hide(duelData.playerTwo)
+        duel.remove(duelData)
+      end, 5000)
+      return true
+    end
+
+    SetTimer(function()
+      duel.beginRound(duelData)
+    end, 5000)
+    return true
+  end
   if duelData.currentRound ~= duelData.settings.numberOfRounds then 
-    GameText(loser, "You lost this round!", 5000)
-    GameText(winner, "You won this round!", 5000)
+    SendClientEvent(winner, ui.EMITS_NAMES.roundResult, {
+      outcome = "roundWon",
+      round = duelData.currentRound,
+    })
+
+    SendClientEvent(loser, ui.EMITS_NAMES.roundResult, {
+      outcome = "roundLost",
+      round = duelData.currentRound,
+    })
   end
   if duelData.currentRound == duelData.settings.numberOfRounds then
     local roundsWonField
@@ -254,20 +300,23 @@ function duel.processRound(duelData, winner, loser)
     local matchWinner = playerOneWon > playerTwoWon and duelData.playerOne or duelData.playerTwo
     local matchLoser = matchWinner == duelData.playerOne and duelData.playerTwo or duelData.playerOne
 
-    GameText(matchLoser, "You lost this round!", 5000)
+    SendClientEvent(matchLoser, ui.EMITS_NAMES.roundResult, {
+      outcome = "matchLost",
+      round = duelData.currentRound,
+    })
     if matchWinner then 
-      GameText(matchWinner, "You won this duel!", 5000) end
-    -- local winnerData = player.get(matchWinner)
-    -- local loserData = player.get(matchLoser)
-    -- if winnerData then
-    --   winnerData.playerDuels.won = winnerData.playerDuels.won + 1
-    -- end
+      SendClientEvent(matchWinner, ui.EMITS_NAMES.roundResult, {
+        outcome = "matchWon",
+        round = duelData.currentRound,
+    })
+    
+    end
 
-    -- if loserData then
-    --   loserData.playerDuels.lost = loserData.playerDuels.lost + 1
-    -- end
-
-    duel.remove(duelData)
+    SetTimer(function()
+      ui.hide(duelData.playerOne)
+      ui.hide(duelData.playerTwo)
+      duel.remove(duelData)
+    end, 5000)
     return true
   end
 end

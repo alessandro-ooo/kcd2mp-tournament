@@ -10,16 +10,20 @@ type KcdMpRouter = { router: string };
 const App = () => {
   const [, navigate] = useLocation();
 
-  // KcdMp.onServer("panel.frontend", (value) => {
-  //   const { router } = value as KcdMpRouter;
-  //   if (router === "duelsettings") {
-  //     navigate("/duel-settings-page");
-  //   }
+  KcdMp.onServer("panel.frontend", (value) => {
+    const { router } = value as KcdMpRouter;
+    if (router === "duelsettings") {
+      navigate("/duel-settings-page");
+    }
 
-  //   if (router === "duelinvite") {
-  //     navigate("/duel-invite-page");
-  //   }
-  // });
+    if (router === "duelinvite") {
+      navigate("/duel-invite-page");
+    }
+
+    if (router === "dueltimer") {
+      navigate("/duel-timer-page");
+    }
+  });
 
   return (
     <Switch>

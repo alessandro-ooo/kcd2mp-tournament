@@ -1,6 +1,6 @@
+local ui = {};
 local duel = require("utils.duel")
 local player = require("utils.players")
-local ui = {};
 
 -- Custom function to show the ui, to keep things clean with the error handling.
 ---@param pid number
@@ -141,13 +141,24 @@ function OnClientEvent(pid, name, payload, source)
       ui.hide(duelInfo.playerTwo)
       duel.initiate(duelInfo)
     end
+
+    if name == ui.EMITS_NAMES.roundTie then
+      local duelInfo = duel.findByPlayer(pid);
+
+      if duelInfo == nil or duelInfo.status ~= "fighting" then
+        return;
+      end
+
+      duel.processRound(duelInfo, -1, -1);
+    end
   end
 end
 
 ui.UI_LIST = {
   NO_UI = "",
   duelSettings = "duelsettings",
-  invite = "duelinvite"
+  invite = "duelinvite",
+  timer = "dueltimer"
 }
 
 ui.EMITS_NAMES = {
@@ -155,7 +166,10 @@ ui.EMITS_NAMES = {
   fetchInvite = "panel.frontend.invite.fetch",
   sendInviteReponse = "panel.frontend.invite.fetch.sendresponse",
   acceptInvite = "panel.frontend.invite.accept",
-  declineInvite = "panel.frontend.invite.decline"
+  declineInvite = "panel.frontend.invite.decline",
+  sendTimerData = "panel.frontend.timer.send",
+  roundResult = "panel.frontend.duel.round.result",
+  roundTie = "panel.frontend.duel.result.tie"
 }
 
 return ui;
