@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from "react";
 
 const DuelTimerPage = () => {
   type RoundType = {
-    outcome: "matchWon" | "matchLost" | "matchDraw" | "roundWon" | "roundLost";
+    outcome:
+      | "matchWon"
+      | "matchLost"
+      | "matchDraw"
+      | "roundWon"
+      | "roundLost"
+      | "roundTie";
     round: number;
   };
 
@@ -23,13 +29,11 @@ const DuelTimerPage = () => {
   const [isResultVisible, setIsResultVisible] = useState(false);
   const resultTimeout = useRef<number | undefined>(undefined);
   const tieSent = useRef(false);
-  const [isTie, setIsTie] = useState(false);
 
   useEffect(() => {
     const unsubscribe = KcdMp.onServer("panel.frontend.timer.send", (value) => {
       const data = value as TimerData;
       tieSent.current = false;
-      setIsTie(false);
       setRoundResult(undefined);
       setIsResultVisible(false);
       if (resultTimeout.current !== undefined) {
@@ -58,7 +62,6 @@ const DuelTimerPage = () => {
 
     tieSent.current = true;
     setOngoing(false);
-    setIsTie(true);
     void KcdMp.emitServer("panel.frontend.duel.result.tie", {});
   }, [ongoing, roundResult, timer]);
 
@@ -115,9 +118,7 @@ const DuelTimerPage = () => {
               role="timer"
               aria-live="off"
             >
-              {isTie && <>TIE!</>}
-              {!isTie && timer === 0 && <>TIME!</>}
-              {timer > 0 && <>{timer}</>}
+              {ongoing && timer > 0 ? timer : "AWAITING"}
             </time>
           </div>
           <div aria-hidden="true" className="h-9 w-px bg-[#842326]" />
@@ -137,8 +138,10 @@ const DuelTimerPage = () => {
             } ${isResultVisible ? "translate-y-0" : "-translate-y-full"}`}
           >
             {roundResult?.outcome === "matchLost" && "You lost this duel."}
-            {roundResult?.outcome === "matchDraw" && "The duel ended in a draw."}
+            {roundResult?.outcome === "matchDraw" &&
+              "The duel ended in a draw."}
             {roundResult?.outcome === "roundLost" && "You lost this round."}
+            {roundResult?.outcome === "roundTie" && "This round was a tie."}
             {roundResult?.outcome === "matchWon" && "You won this duel."}
             {roundResult?.outcome === "roundWon" && "You won this round."}
           </div>

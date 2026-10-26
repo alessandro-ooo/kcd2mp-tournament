@@ -249,7 +249,12 @@ function duel.processRound(duelData, winner, loser)
   if isTie then
     TogglePlayerControllable(duelData.playerOne, false)
     TogglePlayerControllable(duelData.playerTwo, false)
-    SendClientMessageToAll(COLOR_RED, "TIE")
+    local tieResult = {
+      outcome = "roundTie",
+      round = duelData.currentRound,
+    }
+    SendClientEvent(duelData.playerOne, ui.EMITS_NAMES.roundResult, tieResult)
+    SendClientEvent(duelData.playerTwo, ui.EMITS_NAMES.roundResult, tieResult)
     duelData.currentRound = duelData.currentRound - 1
     SetTimer(function()
       duel.beginRound(duelData)
