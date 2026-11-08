@@ -7,9 +7,9 @@
   "targets": {
     ".NETCoreApp,Version=v10.0": {},
     ".NETCoreApp,Version=v10.0/win-x64": {
-      "KcdMp.ExportTables/0.43.0": {
+      "KcdMp.ExportTables/0.46.0": {
         "dependencies": {
-          "KcdMp.Tools": "0.43.0"
+          "KcdMp.Tools": "0.46.0"
         },
         "runtime": {
           "KcdMp.ExportTables.dll": {}
@@ -34,21 +34,21 @@
           }
         }
       },
-      "KcdMp.Tools/0.43.0": {
+      "KcdMp.Tools/0.46.0": {
         "dependencies": {
           "DotRecast.Detour": "2026.3.1"
         },
         "runtime": {
           "KcdMp.Tools.dll": {
-            "assemblyVersion": "0.43.0.0",
-            "fileVersion": "0.43.0.0"
+            "assemblyVersion": "0.46.0.0",
+            "fileVersion": "0.46.0.0"
           }
         }
       }
     }
   },
   "libraries": {
-    "KcdMp.ExportTables/0.43.0": {
+    "KcdMp.ExportTables/0.46.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -67,7 +67,7 @@
       "path": "dotrecast.detour/2026.3.1",
       "hashPath": "dotrecast.detour.2026.3.1.nupkg.sha512"
     },
-    "KcdMp.Tools/0.43.0": {
+    "KcdMp.Tools/0.46.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

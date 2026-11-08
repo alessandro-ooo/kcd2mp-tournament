@@ -72,7 +72,7 @@ const DuelSettingsForm = ({ player, nearbyPlayers }: DuelSettingsForm) => {
           {...register("numberOfRounds", {
             valueAsNumber: true,
             min: 1,
-            max: 3,
+            max: 4,
           })}
           onLeftArrowClick={() => {}}
           onRightArrowClick={() => {}}
@@ -80,7 +80,7 @@ const DuelSettingsForm = ({ player, nearbyPlayers }: DuelSettingsForm) => {
 
         <div className="flex flex-col gap-2">
           <Checkbox label="Use own weapons" {...register("useOwnWeapons")} />
-          <Checkbox label="Ranked duel" {...register("isRanked")} />
+          {/* <Checkbox label="Ranked duel" {...register("isRanked")} /> */}
         </div>
 
         {!watchIsOwnWeapons && (
@@ -126,7 +126,8 @@ const DuelSettingsForm = ({ player, nearbyPlayers }: DuelSettingsForm) => {
         ></DialogPlayers>
 
         {watchisRanked && !!watchSelectedPlayer && (
-          <>
+          <div className="hidden">
+            {/* TODO: ELO */}
             <DialogElo
               playerOne={player}
               playerTwo={{
@@ -134,7 +135,7 @@ const DuelSettingsForm = ({ player, nearbyPlayers }: DuelSettingsForm) => {
                 elo: watchSelectedPlayer.elo,
               }}
             />
-          </>
+          </div>
         )}
         <Button
           disabled={!isInviteValid}

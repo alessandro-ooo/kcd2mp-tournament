@@ -3,6 +3,7 @@ import { lazy } from "react";
 
 const DuelSettingsPage = lazy(() => import("./wouter/duel-settings-page"));
 const DuelInvitePage = lazy(() => import("./wouter/duel-invite-page"));
+const DuelTimerPage = lazy(() => import("./wouter/duel-timer-page"));
 
 type KcdMpRouter = { router: string };
 
@@ -18,6 +19,10 @@ const App = () => {
     if (router === "duelinvite") {
       navigate("/duel-invite-page");
     }
+
+    if (router === "dueltimer") {
+      navigate("/duel-timer-page");
+    }
   });
 
   return (
@@ -27,6 +32,9 @@ const App = () => {
       </Route>
       <Route path="/duel-invite-page">
         <DuelInvitePage />
+      </Route>
+      <Route path="/duel-timer-page">
+        <DuelTimerPage />
       </Route>
     </Switch>
   );
