@@ -1,0 +1,34 @@
+@import url("https://fonts.bunny.net/css?family=alegreya-sans:400,400i,500,700|im-fell-english:400,400i&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans:
+    "Alegreya Sans", "Gill Sans", "Segoe UI", ui-sans-serif, sans-serif;
+  --font-display:
+    "IM Fell English", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  /* background: #f7f1e3; */
+  color: #24201d;
+  font-family: var(--font-sans);
+}
+
+/* Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}

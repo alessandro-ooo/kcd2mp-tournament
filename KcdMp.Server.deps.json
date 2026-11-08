@@ -7,13 +7,13 @@
   "targets": {
     ".NETCoreApp,Version=v10.0": {},
     ".NETCoreApp,Version=v10.0/win-x64": {
-      "KcdMp.Server/0.43.0": {
+      "KcdMp.Server/0.46.0": {
         "dependencies": {
           "DotRecast.Detour": "2026.3.1",
           "DotRecast.Recast": "2026.3.1",
           "ENet-CSharp": "2.4.8",
-          "KcdMp.Api": "0.43.0",
-          "KcdMp.Protocol": "0.43.0",
+          "KcdMp.Api": "0.46.0",
+          "KcdMp.Protocol": "0.46.0",
           "KeraLua": "1.4.10",
           "Microsoft.Data.Sqlite": "10.0.12",
           "MySqlConnector": "2.6.2",
@@ -198,26 +198,26 @@
           }
         }
       },
-      "KcdMp.Api/0.43.0": {
+      "KcdMp.Api/0.46.0": {
         "runtime": {
           "KcdMp.Api.dll": {
-            "assemblyVersion": "0.43.0.0",
-            "fileVersion": "0.43.0.0"
+            "assemblyVersion": "0.46.0.0",
+            "fileVersion": "0.46.0.0"
           }
         }
       },
-      "KcdMp.Protocol/0.43.0": {
+      "KcdMp.Protocol/0.46.0": {
         "runtime": {
           "KcdMp.Protocol.dll": {
-            "assemblyVersion": "0.43.0.0",
-            "fileVersion": "0.43.0.0"
+            "assemblyVersion": "0.46.0.0",
+            "fileVersion": "0.46.0.0"
           }
         }
       }
     }
   },
   "libraries": {
-    "KcdMp.Server/0.43.0": {
+    "KcdMp.Server/0.46.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -341,12 +341,12 @@
       "path": "tomlyn/2.10.1",
       "hashPath": "tomlyn.2.10.1.nupkg.sha512"
     },
-    "KcdMp.Api/0.43.0": {
+    "KcdMp.Api/0.46.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "KcdMp.Protocol/0.43.0": {
+    "KcdMp.Protocol/0.46.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

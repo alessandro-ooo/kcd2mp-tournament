@@ -123,6 +123,15 @@ function ReloadGameMode(reason) end
 ---@param previous number the stance before
 function OnPlayerStanceChange(pid, stance, previous) end
 
+---**Called by the server** - A player closed or opened their helmet's visor.
+---
+---`down` is `true` when the visor went down, `false` when it came up. A player starts with it up: one who spawns with the
+---visor already down calls it once with `true`, one with it up does not call it. `IsPlayerVisorDown` reads it at any
+---time.
+---@param pid number the player
+---@param down boolean `true` = the visor is down now, `false` = up
+function OnPlayerVisorChange(pid, down) end
+
 ---**Called by the server** - The handshake is done and the client is loading the level.
 ---
 ---The player has a name and an address and no position yet; they are not in the world until `OnPlayerSpawn`. The server
@@ -157,7 +166,8 @@ function OnPlayerSpawn(pid) end
 ---`reason` is `"disconnected"` (they left), `"timed out"` (nothing heard for a while) or `"kicked: <reason>"` with the text
 ---given to `Kick` or `Ban`. Their pid may be given to the next player who joins; their `SetPlayerData` goes with them once
 ---this returns. The server keeps nothing of a player: this is the moment to save what the mode keeps. A horse they controlled stays in the world (a nearby player takes it over); their dog leaves
----with them; every fight of theirs ends.
+---with them; every fight of theirs ends. The server announces no kick or ban to the other players: a mode that wants one
+---says it here, as the example does.
 ---@param pid number the player
 ---@param reason string why, as above
 function OnPlayerDisconnect(pid, reason) end
@@ -165,8 +175,9 @@ function OnPlayerDisconnect(pid, reason) end
 ---**Called by the server** - The player pressed the use key on another player whose prompt they see.
 ---
 ---Fires when a player within 3.5 m, facing `target`, presses the use key while the prompt over
----`target` shows on their screen (everyone's, or their own from `SetPlayerPromptFor`). What the prompt offered - a talk,
----a search, a trade, an arrest - is the mode's to do here. The game's own use key on a player goes first: while `target`
+---`target` shows on their screen (everyone's, or their own from `SetPlayerPromptFor`) - a hidden prompt counts too, so a
+---mode can pick the action itself when the key is pressed. What the prompt offered - a talk, a search, a trade, an arrest - is
+---the mode's to do here. The game's own use key on a player goes first: while `target`
 ---lies knocked out or is carried (the carry), and while the player crouches (the pickpocket), no prompt shows and this
 ---does not fire.
 ---@param pid number the player who pressed the key
@@ -243,6 +254,54 @@ function GetPlayerByUid(uid) end
 ---@param pid number the player
 ---@return string the SteamID64; `""` when none
 function GetPlayerSteamId(pid) end
+
+---The player's PC on this server - for bans a new name, address or reinstall does not get around.
+---
+---Four parts of 16 hex digits joined by dashes, always in this order: `system-board-disk-machine` - the PC's system id, its
+---main board's serial, the serial of the disk Windows runs from, and Windows' own install id. A part the PC has no real value
+---for is `0000000000000000`. The same PC gives the same parts at every join to this server, whatever name the player types,
+---whatever address they come from, after a reinstall of the game. Unlike `GetPlayerUid` it survives a wiped app-data folder,
+---and a new Windows changes only the last part.
+---
+---Every part is made with this server's own key, so the parts of one PC on two servers have nothing in common, and the PC's
+---serials themselves never reach the server. A player who swaps their disk changes one part - so compare with
+---`CompareHwid` and treat **two or more shared parts** as the same PC, rather than comparing the whole string.
+---
+---It is there from `OnPlayerConnect` on. `""` when their game sent none (a join without the launcher, an older game) - a
+---strict server turns such players away. **Their game's word**: a modified game can send other parts, so this makes ban
+---evasion hard, not impossible.
+---@param pid number the player
+---@return string `system-board-disk-machine`, 67 characters; `""` when none
+function GetPlayerHwid(pid) end
+
+---The parts of the player's PC by name - for a database with a column per part.
+---
+---The parts of `GetPlayerHwid` in a table: `system`, `board`, `disk` and `machine`, each 16 hex digits. A part the PC has
+---no value for is left out (`nil`). With a column per part a ban list is searched by the database itself
+---(`WHERE system = @s OR disk = @d ...`) instead of a loop over every ban.
+---@param pid number the player
+---@return table|nil `{ system = ..., board = ..., disk = ..., machine = ... }` (the parts the PC has); `nil` when their game sent none
+function GetPlayerHardware(pid) end
+
+---How many parts two PCs share - 0 to 4.
+---
+---Counts the parts of two hwids that both have and that are equal (a part of zeros never counts). 4 is the
+---same PC unchanged; 2 or 3 the same PC with a part changed (a new disk, a new Windows); 1 can be chance (two PCs from one
+---shop image share Windows' id). Case and spaces around the strings do not matter; a malformed or empty string shares
+---nothing.
+---@param a string an hwid
+---@param b string another hwid
+---@return number the shared parts, `0`-`4`
+function CompareHwid(a, b) end
+
+---The players online on one PC - a banned PC's other names.
+---
+---Every player online whose PC shares at least `minMatches` parts with `hwid` (see `CompareHwid`), in
+---join order. Ban a player and their other names on the server go too; or warn an admin when two players play from one PC.
+---@param hwid string an hwid
+---@param minMatches? number the parts that must be shared, `1`-`4`; `2` when left out
+---@return table a list of pids; empty for a malformed hwid
+function GetPlayersByHwid(hwid, minMatches) end
 
 ---The player a command names - a pid, a name or a fragment of one - or `nil` and why.
 ---
@@ -510,8 +569,10 @@ function IsPlayerControllable(pid) end
 
 ---Disconnects the player with a reason.
 ---
----The player's client shows the reason and leaves; `OnPlayerDisconnect` follows with `"kicked: <reason>"`. Nothing keeps
----them from rejoining - for that, `Ban`.
+---The player's client shows the reason and leaves; `OnPlayerDisconnect` follows with `"kicked: <reason>"`. The server tells
+---nobody else - not for a kick, a `Ban`, the built-in `/kick` and `/kickban` or the audit's kicks: a mode that wants the
+---others to know says it, in `OnPlayerDisconnect` (its example) or right after the call. Nothing keeps them from rejoining -
+---for that, `Ban`.
 ---@param pid number the player
 ---@param reason? string shown to the player (`"kicked"` without one)
 ---@return boolean `false` when not connected
@@ -622,6 +683,15 @@ function GetPlayerStance(pid) end
 ---@return boolean `true` while their stance is `STANCE_CROUCHING`; `false` when not connected
 function IsPlayerCrouching(pid) end
 
+---Whether a player's helmet visor is down.
+---
+---As their game last reported it - the game's own key that closes and opens a helmet's visor. `OnPlayerVisorChange`
+---follows every change.
+---@param pid number the player
+---@return boolean|nil `true` while the visor is down, `false` while it is up; `nil` and `"not connected"` for a player who is not connected
+---@return string
+function IsPlayerVisorDown(pid) end
+
 ---A use prompt over a player - "[E] Talk" under their name, and the use key on them reaches the mode.
 ---
 ---Everyone else within 3.5 m of the player sees `[E] text` under their name, and pressing the use key on them fires
@@ -629,25 +699,37 @@ function IsPlayerCrouching(pid) end
 ---`@` is a text key of the game's own, shown in the player's language). One viewer can be shown their own prompt
 ---over the player instead (`SetPlayerPromptFor`). The game's own use key on a player goes first: no prompt shows over a
 ---player who lies knocked out or is carried, or to a player who crouches (the game's pickpocket).
+---
+---With `hidden` set, nothing is drawn over the player's head: the use key on them still fires `OnPlayerInteractPlayer`,
+---and the game's own key hint in the corner of the screen still shows `text`, as it does for a person in single player.
+---Each call sets both the text and whether it is hidden.
 ---@param pid number the player the prompt hangs over
 ---@param text string|nil the word; `""` / `nil` = none
+---@param hidden boolean|nil `true` = no `[E] text` line over the head, the use key still works; `false` / `nil` = shown (default)
 ---@return boolean `false` when not connected
-function SetPlayerPrompt(pid, text) end
+function SetPlayerPrompt(pid, text, hidden) end
 
 ---The use prompt everyone sees over a player (SetPlayerPrompt).
 ---@param pid number the player
 ---@return string the word; `""` when there is none
 function GetPlayerPrompt(pid) end
 
+---Whether the use prompt everyone sees over a player is hidden (SetPlayerPrompt's `hidden`).
+---@param pid number the player
+---@return boolean `true` when the prompt is armed with nothing drawn over the head; `false` when shown, none or not connected
+function IsPlayerPromptHidden(pid) end
+
 ---The use prompt one viewer alone sees over a player.
 ---
 ---`viewer` sees `text` over `pid` instead of everyone's prompt; `""` shows them none, `nil` gives them everyone's again.
 ---`OnPlayerInteractPlayer` fires for the viewer's use key while their prompt shows. Gone when either player leaves.
+---`hidden` works as in `SetPlayerPrompt`: the viewer's use key is armed with nothing drawn over the player's head.
 ---@param viewer number the player who sees the prompt
 ---@param pid number the player it hangs over
 ---@param text string|nil the word; `""` = none for them; `nil` = everyone's again
+---@param hidden boolean|nil `true` = no `[E] text` line over the head for this viewer, the use key still works
 ---@return boolean `false` when either is not connected, or they are one player
-function SetPlayerPromptFor(viewer, pid, text) end
+function SetPlayerPromptFor(viewer, pid, text, hidden) end
 
 ---The use prompt one viewer alone sees over a player (SetPlayerPromptFor).
 ---@param viewer number the player who sees it
@@ -696,7 +778,8 @@ function GetPlayerVirtualWorld(pid) end
 ---
 ---From the next snapshot on the player sees, and is seen by, the players and entities of `world` only; the others part with
 ---them as if they had left and meet them again when they come back. Their mount comes along; a loose horse they controlled
----stays behind for whoever is nearest. Chat, the roster, the scoreboard, doors and containers stay global. Fights and hits
+---stays behind for whoever is nearest. Chat, the roster, the scoreboard, doors and containers stay global - unless
+---`SetVirtualWorldOwnDoors` gave the world doors of its own: then the player sees that world's doors at once. Fights and hits
 ---stay inside a world. The client never learns its world - nothing changes on the player's screen but who is around.
 ---Instanced duels, private lobbies, a hidden staging area for the next round.
 ---@param pid number the player
@@ -709,7 +792,7 @@ function SetPlayerVirtualWorld(pid, world) end
 -- line through `OnPlayerCommandText`. A `/` line the mode does not answer goes to the server's own
 -- built-in commands (`/help`, `/pos`, `/give`, `/tp`, `/horse` ...), then to `Unknown command`; a mode
 -- overrides a built-in by handling its name. `/fight` and `/peace` are the server's and are answered before the mode sees
--- them. The mode's own lines go out with `SendClientMessage`, `SendClientMessageInRange` and `SendClientMessageToAll`.
+-- them; `/mute` and `/unmute` are every player's whatever `[commands]` says, unless the mode handles them itself. The mode's own lines go out with `SendClientMessage`, `SendClientMessageInRange` and `SendClientMessageToAll`.
 -- 
 -- What a player types is **cleaned and rationed by the server** before the mode sees it - no invisible or direction-changing
 -- characters, no stacks of accents, no flood of lines - so a mode's own filters start from a tidy line; `OnPlayerText` has
@@ -1162,8 +1245,9 @@ function GetBodyPartName(part) end
 
 ---How fast the player is bleeding, in health per second.
 ---
----A stab or a slash opens a bleed for `[combat] bleed_seconds`; `0` means not bleeding. A bleed-out is a death by the last
----attacker. A bandage stops it, so do `HealPlayer` and the respawn.
+---A stab or a slash the armour let enough of through opens a wound (`SetBleedRules`); each wound bleeds on its own for the
+---rules' seconds and stops by itself, and the open ones add up (at most the rules' `maxRate`). `0` means not bleeding. A
+---bleed-out is a death by the last attacker. A bandage stops it, so do `HealPlayer` and the respawn.
 ---@param pid number the player
 ---@return number health lost per second; `0` = not bleeding
 function GetPlayerBleeding(pid) end
@@ -1172,6 +1256,70 @@ function GetPlayerBleeding(pid) end
 ---@param pid number the player
 ---@return boolean
 function IsPlayerBleeding(pid) end
+
+---Sets how fast the player bleeds, in place of their open wounds.
+---
+---One wound of `rate` health a second for `seconds` (left out = the rules' seconds, `SetBleedRules`) replaces every open
+---wound, capped by the rules' `maxRate`; `0` stops the bleeding, as a bandage does. The player's client shows it. A bleed-out
+---is a death by the last attacker.
+---@param pid number the player
+---@param rate number health lost per second; `0` stops the bleeding
+---@param seconds? number how long it bleeds; left out = the rules' seconds
+---@return boolean `false` when the player is dead or not in the world
+function SetPlayerBleeding(pid, rate, seconds) end
+
+---How cuts bleed on this server - the rate, how long, and how much armour holds.
+---
+---A stab or a slash that lands opens a wound that bleeds `perDamage` health a second per point of the blow's damage for
+---`seconds`, then stops by itself; a later cut opens a wound of its own (it does not restart the others), and together they
+---bleed at most `maxRate` a second. **Armour**: a cut bleeds only when the armour on the struck part let at least
+---`minThrough` of it through (`0` .. `1`) - plate, or mail over a gambeson, holds more than half - else the `armouredCuts`-th
+---cut the armour held since the last wound opens one all the same (a gap found; `0` = never through the armour). A smash
+---never bleeds. **Shots**: `ranged = false` keeps arrows, bolts and bullets from ever opening a wound (players' and actors'
+---alike); by default they bleed as any stab. A key left out keeps the server's own: `perDamage`, `maxRate` and `seconds` are
+---`[combat] bleed_per_damage`, `max_bleed` and `bleed_seconds`, `minThrough` is `0.5`, `armouredCuts` `3`, `ranged` `true`;
+---`SetBleedRules(nil)` goes back to them all.
+---The rules cover players and actors alike; open wounds keep their rate and time. A single blow's bleeding is the hit
+---callback's to decide (`OnPlayerDamage`'s second return value).
+---@param rules table `{perDamage=, maxRate=, seconds=, minThrough=, armouredCuts=, ranged=}`; `nil` = the server's own
+function SetBleedRules(rules) end
+
+---The bleeding's rules in force.
+---
+---Every key set: the mode's where `SetBleedRules` gave one, else the server's own.
+---@return table `{perDamage=, maxRate=, seconds=, minThrough=, armouredCuts=, ranged=}`
+function GetBleedRules() end
+
+---The game's health perks on this server - Revenant's regeneration, Diehard's save from a killing blow and the prayer's Guardian Angel.
+---
+---The server owns every player's health, so a perk whose effect is a health change cannot work in the player's own game online:
+---the server plays it instead, to every player who holds the perk (their game reports it, and so do `SetPlayerProgress` and
+---`AddPlayerPerk`). Revenant and Diehard are **on by default**, with the game's own numbers; the Guardian Angel is **off** until
+---the mode sets `guardianAngel = true`.
+---**Revenant**: health comes back `revenantRate` a second (`0.125`) up to `revenantCap` of the maximum (`0.5` = 50 of 100),
+---`revenantIICap` with Revenant II (`0.75`) - never in a fight (with a player, an NPC actor or an animal), in the game's own
+---combat mode, while bleeding or knocked out, nor for `revenantPause` seconds (`5`) after a blow taken. A potion's healing adds
+---to it.
+---**Diehard** (the game's "Hard to kill"): a blow from a player, an NPC actor or an animal that would kill the player leaves them
+---at 1 health and heals `diehardHeal` (`25`) over `diehardSeconds` (`2`); another killing blow while that heal runs is survived
+---the same way, and once it ends the perk rests `diehardCooldown` seconds (`3000`) before it saves again. A fall, a bleed-out or
+---`SetPlayerHealth` is never saved, and the player's death callback does not run for a save.
+---**Guardian Angel**: a player with Fundamentals of Divinity who prays at a shrine gets the game's Guardian Angel; it saves them
+---from one killing blow the way Diehard does (1 health, the same heal, killing blows inside it survived too), and then it is
+---spent and gone from their game. The game's own limit of 12 game hours (24 with Fundamentals of Divinity II) still applies. A
+---player who also holds Diehard is saved by Diehard first; their prayer adds no second save. A mode can give the angel itself
+---with `GivePlayerBuff` (`"perk_basic_theology"`) - it saves the same way, Fundamentals of Divinity or not, while the angel is
+---on. Turn it on in `OnGameModeInit`: a player already in the game when it is turned on counts their prayer from their next join.
+---`revenant = false` or `diehard = false` switches that effect off. A key left out keeps the game's number;
+---`SetPerkEffects(nil)` goes back to them all (the angel off).
+---@param rules table `{revenant=, revenantRate=, revenantCap=, revenantIICap=, revenantPause=, diehard=, diehardHeal=, diehardSeconds=, diehardCooldown=, guardianAngel=}`; `nil` = the game's own
+function SetPerkEffects(rules) end
+
+---The health perks' rules in force.
+---
+---Every key set: the mode's where `SetPerkEffects` gave one, else the game's own numbers.
+---@return table `{revenant=, revenantRate=, revenantCap=, revenantIICap=, revenantPause=, diehard=, diehardHeal=, diehardSeconds=, diehardCooldown=, guardianAngel=}`
+function GetPerkEffects() end
 
 ---Makes the player whole - health, stamina, injuries, bleeding, buffs, drink.
 ---
@@ -1192,8 +1340,11 @@ function HealPlayer(pid) end
 ---actor's blow when the mode has no `OnActorAttack`, `SetPlayerHealth`). `zone` is the attack zone the attacker's game
 ---recorded; `part` the body part struck, `1` .. `6` (`0` unknown; `GetBodyPartName`); `weapon` the attacker's weapon by its
 ---table name (`shortswordBroad`, `bow_c + arrow_normal`; `""` bare-handed or without the tables); `dtype` `"stab"`, `"slash"`,
----`"smash"` or `""`. **Return a number** to change the damage (`0` cancels the hit, so do a stamina cost, an injury and a
----bleed), **`false`** to cancel it, nothing to keep it. Hits between teammates never get here, nor a swing the victim met
+---`"smash"` or `""`; `bleeds` whether the blow opens a bleeding wound by the server's rules (`SetBleedRules`: a cut the
+---armour let enough of through) and `armour` the share of it the armour on that part took (`0` .. `0.85`). **Return a
+---number** to change the damage (`0` cancels the hit, so do a stamina cost, an injury and a bleed), **`false`** to cancel it,
+---nothing to keep it - and a **second value** `true` / `false` to decide the bleeding yourself (`return nil, false` keeps the
+---damage and opens no wound). Hits between teammates never get here, nor a swing the victim met
 ---with a perfect block or blocked on their own screen; a master strike's counter does, with the defender as `attacker`
 ---(the torso, × `[combat] master_strike_scale`), and so does a blow inside a clinch (the torso, × `[combat] clinch_scale`)
 ---unless the victim countered it. Two players clinch only while `[combat] clinch` and `[combat] pvp` are on, in the same virtual
@@ -1205,7 +1356,7 @@ function HealPlayer(pid) end
 ---(`counter_parry_window_ms` for a counter); a clinch blow waits up to `clinch_parry_window_ms` for the victim's counter (the
 ---Combat guide).
 ---
----Return value: a number replaces the damage (`0` cancels); `false` cancels the hit; nothing keeps it
+---Return value: a number replaces the damage (`0` cancels); `false` cancels the hit; nothing keeps it. A second value `true` / `false` decides the bleeding
 ---@param pid number the victim
 ---@param attacker number who struck; `-1` = nobody
 ---@param damage number what the victim is about to lose
@@ -1213,7 +1364,9 @@ function HealPlayer(pid) end
 ---@param part number the body part struck, `1` .. `6`; `0` unknown
 ---@param weapon string the weapon's table name; `""` bare-handed
 ---@param dtype string `"stab"`, `"slash"`, `"smash"` or `""`
-function OnPlayerDamage(pid, attacker, damage, zone, part, weapon, dtype) end
+---@param bleeds boolean whether the blow opens a bleeding wound by the server's rules (`SetBleedRules`)
+---@param armour number the share of the blow the armour on the struck part took, `0` .. `0.85`
+function OnPlayerDamage(pid, attacker, damage, zone, part, weapon, dtype, bleeds, armour) end
 
 ---**Called by the server** - A hit injured one of the player's body parts.
 ---
@@ -1302,6 +1455,26 @@ function OnFightEnd(a, b, reason) end
 ---@param hit table `{kind, x, y, z, normal, surface, weapon, mesh, bbox, center, name, class}`
 function OnPlayerHitScenery(pid, hit) end
 
+---Keeps a player from attacking at all, or lets them again.
+---
+---With `false` the player's game starts no swing, punch, kick, clinch, stealth attack, shot or weapon draw - its own controls
+---for them do nothing - and a weapon in their hands is put away (again whenever one comes out). The server refuses whatever
+---swing, shot or blow still arrives, and a master strike of theirs counts as a plain perfect block. They can still block,
+---parry, dodge, walk and talk, and they can be hit. It lasts through deaths and respawns until the mode sets it back; a player
+---who joins starts allowed. For handcuffs, a jail, a safe zone or a tavern where nobody draws. `false` when the player is not
+---in the world yet.
+---@param pid number the player
+---@param canAttack? boolean `false` keeps them from attacking, `true` (the default) lets them
+---@return boolean
+function SetPlayerCanAttack(pid, canAttack) end
+
+---Whether the player may attack.
+---
+---`true` unless `SetPlayerCanAttack` said otherwise.
+---@param pid number the player
+---@return boolean
+function CanPlayerAttack(pid) end
+
 ---Puts two players in a fight so their games can lock on to each other.
 ---
 ---From here either one's game may pick the other's body as the opponent - the direction indicators, the combat stance. The
@@ -1343,13 +1516,30 @@ function GetPlayerOpponents(pid) end
 ---@return string the weapon's name; `""` when none
 function GetPlayerWeapon(pid) end
 
+---What a player holds in their hands right now.
+---
+---The item classes (GUIDs) in the player's right and left hand as their game last said - a drawn sword and a shield, a bow
+---and its arrow, a hammer and tongs at the anvil; `""` for an empty hand. This is what they **hold**, where
+---`GetPlayerEquipment` is everything they wear and carry in their slots, sheathed or not. It follows a draw, a switch or a
+---holster within a fraction of a second. A lit torch is not counted. `GetItemInfo` turns a class into its catalogue entry.
+---@param pid number the player
+---@return string , `string` - the right hand's item class and the left hand's; `""` for an empty hand or a player not connected
+function GetPlayerHandItems(pid) end
+
+---Whether a player has a weapon drawn.
+---
+---`true` while the player's game says a weapon is out and ready - a sword drawn, a bow readied; raised fists do not count.
+---@param pid number the player
+---@return boolean `true` with a weapon drawn; `false` sheathed or not connected
+function IsPlayerWeaponDrawn(pid) end
+
 ---What a corpse holds.
 ---
 ---A corpse is a dead player's body left after the respawn (`[combat] corpse_seconds`; its id comes with
 ---`OnPlayerCorpse`). It holds what the mode put on it with `SetCorpseItems`, less what searches have taken since. One of
 ---the mode's tagged items (`GivePlayerTaggedItem`) on it is an entry of its own, and goes to whoever takes it with its tag.
 ---@param corpse number the corpse's id
----@return table a list of `{class=, amount=, health=}` (a tagged item also `id=, name=, text=`); `nil` when there is no such corpse (it is gone)
+---@return table a list of `{class=, amount=, health=, quality=}` (`quality` when known; a tagged item also `id=, name=, text=`); `nil` when there is no such corpse (it is gone)
 function GetCorpseItems(corpse) end
 
 ---What a corpse holds from now on - the list anyone who searches it takes from.
@@ -1371,6 +1561,104 @@ function SetCorpseItems(corpse, items) end
 ---@param corpse number the corpse's id
 ---@return boolean `false` when there is no such corpse or someone is searching it
 function RemoveCorpse(corpse) end
+
+-- ======== Recipes ===============================================================
+-- The **recipes** a character knows are the ones the alchemy table's book and the anvil's book show - the recipes
+-- list has all of them, 31 alchemy recipes and 61 blacksmithing ones. In the game a character learns one by reading a recipe
+-- document; a game mode can also teach one itself (`GivePlayerRecipe`) - a recipe bought from the mode's own shop, found in its own
+-- inventory system, earned in a quest - and take one away (`RemovePlayerRecipe`).
+-- 
+-- **A recipe is named** by its key (`"alchemy:1"`, `"smithing:r_axework02"` - the first column of the list), by its English name
+-- (`"Hair o' the Dog"`, any case; `alchemy:` or `smithing:` in front picks between two of one name) or by the class name of the
+-- document that teaches it (`"recipe_hairodogPotion"`). Every function that gives a recipe back gives its key; `GetRecipeInfo`
+-- says the rest. The server knows the recipes without the game's tables export.
+-- 
+-- **Saving them.** Nothing is kept between visits unless the mode keeps it. `OnPlayerLearnRecipe` is the moment a player's game
+-- taught them one - save it then - and `SetPlayerRecipes` puts the saved list back at the next login, **exactly**: every other
+-- recipe is taken away, also the ones the player's game still holds from an earlier character (the game keeps the alchemy book for as
+-- long as it runs). `GetPlayerRecipes` lists what a character knows. A mode that teaches recipes its own way can refuse the game's:
+-- return `false` from `OnPlayerLearnRecipe` and the recipe is taken away again (or hold the document's reading before it happens
+-- with `SetItemUseCheck`).
+-- 
+-- A blacksmithing recipe is a perk of the character in the game, so it is in `GetPlayerPerks` too; an alchemy recipe learned from a
+-- document is not. Keep recipes with the recipe functions, not the perk ones.
+
+---**Called by the server** - The player's game taught them a recipe - save it, or return `false` to take it away again.
+---
+---Called when a player's character learned an alchemy or blacksmithing recipe in their game - they read a recipe document, or
+---the game taught one its own way - a moment after it happened. `recipe` is the recipe's key, `kind` is `"alchemy"` or
+---`"smithing"`.
+---
+---Return `false` and the recipe is taken away again: the book forgets it (the document stays read). Anything else keeps it.
+---
+---Not called for the mode's own `GivePlayerRecipe` and `SetPlayerRecipes`, nor for the recipes the character already knew
+---when the player joined.
+---
+---Return value: `false` takes the recipe away again; anything else keeps it
+---@param pid number the player
+---@param recipe string the recipe's key, `"alchemy:1"`
+---@param kind string `"alchemy"` or `"smithing"`
+function OnPlayerLearnRecipe(pid, recipe, kind) end
+
+---Every recipe of the game - their keys, the alchemy ones first.
+---@param kind? string `"alchemy"` or `"smithing"` for one kind; nothing for both
+---@return table `{key, ...}`
+function GetRecipes(kind) end
+
+---A recipe's key, kind, name, document and what it makes.
+---
+---`recipe` is its key, its English name, the class name of the document that teaches it or one of its perks' GUIDs. The table
+---holds `key`, `kind` (`"alchemy"` or `"smithing"`), `id` (the game's own recipe id), `name` (English), `document` (the class
+---name of the recipe document; `""` for a recipe no document teaches), `perks` (the GUIDs of the perks that teach it) and
+---`products` (the item class GUIDs it makes - an alchemy recipe's by quality, the weakest first).
+---@param recipe string a recipe's key, name or document
+---@return table or `nil` - `{key, kind, id, name, document, perks = {guid, ...}, products = {guid, ...}}`; `nil` for no such recipe
+function GetRecipeInfo(recipe) end
+
+---The recipes the player's character knows.
+---
+---The keys of every recipe the character knows - from what their game reported, with the mode's own gives and takes at once.
+---Right after the join it holds only what the mode gave: what the character knew already comes with their game's first report,
+---a few seconds after the spawn.
+---@param pid number the player
+---@param kind? string `"alchemy"` or `"smithing"` for one kind; nothing for both
+---@return table `{key, ...}`; empty for a player who is not there
+function GetPlayerRecipes(pid, kind) end
+
+---Whether the player's character knows a recipe.
+---@param pid number the player
+---@param recipe string a recipe's key, name or document
+---@return boolean `false` for a recipe the character does not know, no such recipe, or a player not connected
+function HasPlayerRecipe(pid, recipe) end
+
+---Teaches the player's character a recipe - the book shows it from now on.
+---
+---Silently, with no notice: the alchemy table's or the anvil's book shows the recipe the next time the player opens it. Giving a
+---recipe the character knows is fine. Called before the player is in the world, the recipe is taught right after their spawn.
+---`OnPlayerLearnRecipe` is not called for it.
+---@param pid number the player
+---@param recipe string a recipe's key, name or document
+---@return boolean `false` for no such recipe or a player not connected
+function GivePlayerRecipe(pid, recipe) end
+
+---Takes a recipe from the player's character - the book forgets it.
+---
+---The book leaves it out the next time the player opens it (a book open at the moment keeps the list it opened with).
+---@param pid number the player
+---@param recipe string a recipe's key, name or document
+---@return boolean `false` for no such recipe or a player not connected; a recipe the character does not know is fine
+function RemovePlayerRecipe(pid, recipe) end
+
+---Exactly these recipes - the saved ones back at a login, every other one taken away.
+---
+---For a character's restore: the recipes listed are taught and every other one is taken away - also what the player's game still
+---holds from an earlier character, which goes once their game has reported (a few seconds after the spawn). A recipe the list
+---names that does not exist is skipped with a line in the server's log. Called before the player is in the world, the recipes
+---are taught right after their spawn.
+---@param pid number the player
+---@param recipes table a list of recipe keys, names or documents - `{"alchemy:1", "smithing:r_axework02"}`
+---@return boolean `false` when `recipes` is no table, or for a player not connected
+function SetPlayerRecipes(pid, recipes) end
 
 -- ======== Stats, skills, XP and perks ===========================================
 -- A player's **progression** is what the game's character screen shows: the **stats** - `strength`, `agility`, `vitality` and
@@ -2059,7 +2347,8 @@ function SetPlayerAlcohol(pid, level) end
 ---What the server's records hold of the player's bag or purse changed: an item picked up, dropped, put in a chest, bought,
 ---eaten or sold, a Groschen spent, what they wear, an item the mode gave or took (`GivePlayerItem`, `SetPlayerInventory` -
 ---the gives and takes still on their way count, so this runs when the mode orders the change, not when the player's game has
----done it), an item's condition, a tagged item's name, text, weight or price (`SetPlayerItemTag`, `SetPlayerItemWeight`,
+---done it), an item's condition or quality (a sword forged at the anvil comes with its quality a moment after it is made), a
+---tagged item's name, text, weight or price (`SetPlayerItemTag`, `SetPlayerItemWeight`,
 ---`SetPlayerItemPrice`) - at most once a second for one player. Read the new state with `GetPlayerInventory` and `GetPlayerMoney`. A mode
 ---that keeps what players carry saves here: what a player hands to a chest, the ground or a shop is the server's at once, so
 ---saving on a timer alone leaves a window in which a crash gives the item back twice. Their horse's saddlebags are
@@ -2084,7 +2373,8 @@ function OnPlayerOutfitChange(pid) end
 ---may have taken it first - a claim that fails any of these (or that the mode refuses here) has its item taken out of
 ---the player's game at once, in every `[audit]` mode. Return `false` and the item goes back the same way and the pickup stays in
 ---the world for everyone. Otherwise the pickup is gone for everyone and the item is the player's - the item check counts it as
----explained.
+---explained. A mode that refuses the pickup to give the item itself reads `GetPickupHealth` and `GetPickupQuality` first and
+---passes both to `GivePlayerItem`, or the item comes new and at its class's own quality.
 ---
 ---Return value: `false` refuses the pickup; anything else lets them keep it
 ---@param pid number the player
@@ -2139,8 +2429,9 @@ function OnPlayerItemWear(pid, class, before, after) end
 ---ingredient and no time. Without `SetCraftCheck` it comes after the start and its answer changes nothing.
 ---
 ---What a station makes is the game's own work: a potion, a sword, a horseshoe reach `OnPlayerNativeItem` as the player's game
----makes them (`craft` for the alchemy table, `unmapped` for the anvil), where the mode adopts them or has them removed; the
----grindstone's sharpening is a mend (`OnPlayerItemWear`). The repair kits (the sewing kit too) are no station: a kit's repair
+---makes them (`craft` for the alchemy table, `unmapped` for the anvil), where the mode adopts them or has them removed; a forged
+---item's quality is in `GetPlayerInventory` (`quality`) once the player's game has said it, and `OnPlayerInventoryChange`
+---follows - save it there; the grindstone's sharpening is a mend (`OnPlayerItemWear`). The repair kits (the sewing kit too) are no station: a kit's repair
 ---comes to `OnPlayerItemWear` as the item's mend and the kit's spent charge.
 ---
 ---Return value: `false` keeps a checked station from starting; anything else lets it start
@@ -2175,8 +2466,13 @@ function GetPlayerEquipment(pid) end
 ---`GetHorseItems`'s. Each of the mode's **tagged items** (`GivePlayerTaggedItem`) comes as an entry of its own with
 ---`amount = 1` and its `id`, `name` and `text` - and its own `weight` and `price` when it has them (`SetPlayerItemWeight`,
 ---`SetPlayerItemPrice`) - save them with the rest and `SetPlayerInventory` gives the same items back.
+---
+---An entry's **`quality`** is its items' quality as the game shows it: `1` to `4` (I to IV; a masterwork forged at the anvil is
+---the best its class can be). Items of one class at different qualities come as one entry per quality. It is left out (`nil`)
+---while the player's game has not said it - a moment after an item arrives - and for an item the game keeps at its class's own
+---quality. Save it with the rest: `SetPlayerInventory` makes the items at it again.
 ---@param pid number the player
----@return table a list of `{class=, amount=, health=, worn=}` (`worn` only on what they wear; `id`, `name`, `text`, `weight`, `price`, `model` on a tagged item)
+---@return table a list of `{class=, amount=, health=, quality=, worn=}` (`quality` when known; `worn` only on what they wear; `id`, `name`, `text`, `weight`, `price`, `model` on a tagged item)
 function GetPlayerInventory(pid) end
 
 ---Makes the player's inventory exactly this list - taking what they hold beyond it and giving what they miss.
@@ -2189,7 +2485,8 @@ function GetPlayerInventory(pid) end
 ---this moment and counts as the character's the moment it is given, though the player's game makes it a moment later (an
 ---item that was saved but is no longer in the game is dropped from the records after half an hour, never reported made), and
 ---what is taken is an exact order the game carries out. An entry's `health` is the condition its items should have (0..100,
----`100` when left out): a missing item is made at it, and an item they already hold is set to it. An entry with `worn = true` is
+---`100` when left out): a missing item is made at it, and an item they already hold is set to it. Its `quality` (1..4, left out =
+---the class's own) is the same: a missing item is made at that quality, one they hold is set to it. An entry with `worn = true` is
 ---put on (given first when they miss it; nothing happens when they wear one of the class already). Nothing is taken off: what they
 ---wear and the list keeps stays on, and what the list leaves out goes (the game takes it off them). Called twice before the
 ---first call's orders are done, it orders nothing twice, so it is safe at any moment - a spawn, a death, a login - and the
@@ -2198,7 +2495,7 @@ function GetPlayerInventory(pid) end
 ---(`GivePlayerTaggedItem`): one they hold with that id is kept (its `name` and `text` updated), a missing one is made with
 ---its tag, and a tagged item they hold whose id the list does not name is taken - that exact item.
 ---@param pid number the player
----@param items table a list of `{class=, amount=, health=, worn=}` (`amount` 1 and `health` 100 when left out, `worn` to put it on; `id`, `name`, `text` for a tagged item), as `GetPlayerInventory` returns it
+---@param items table a list of `{class=, amount=, health=, quality=, worn=}` (`amount` 1 and `health` 100 when left out, `quality` the class's own, `worn` to put it on; `id`, `name`, `text` for a tagged item), as `GetPlayerInventory` returns it
 ---@return boolean `false` when not connected
 function SetPlayerInventory(pid, items) end
 
@@ -2248,8 +2545,9 @@ function SetPlayerOutfits(pid, outfits) end
 ---@param item string|number the item's name, id, English name or GUID
 ---@param amount? number how many (`1`); negative takes
 ---@param health? number the condition the items are made at, 0..100 (`100`, new)
+---@param quality? number the quality the items are made at, 1..4 (I..IV; left out = the class's own - a quality past what the class can be is its best)
 ---@return boolean `false` when not connected
-function GivePlayerItem(pid, item, amount, health) end
+function GivePlayerItem(pid, item, amount, health, quality) end
 
 ---The condition of the player's item of a class.
 ---
@@ -2281,6 +2579,33 @@ function GetPlayerItemHealth(pid, item) end
 ---@param health number the condition, 0..100
 ---@return number how many items were set (0 when they carry none, or the item is not in the catalogue)
 function SetPlayerItemHealth(pid, item, health) end
+
+---The quality of the player's item of a class - I to IV.
+---
+---`1` to `4` (the game's I to IV; a masterwork forged at the anvil is the best its class can be). When they carry several items of
+---the class, the one they wear answers, else the best they carry. The quality is the server's record: the player's game says each
+---item's quality when it arrives (a give, a pickup, a chest, the anvil), and a `GivePlayerItem` still on its way already answers
+---with the quality it was given at. `0` while their game has not said it yet, or for an item the game keeps at its class's own.
+---
+---The id of one of the player's tagged items (`GivePlayerTaggedItem`) in place of the class answers for that one item.
+---@param pid number the player
+---@param item string|number the item's name, id, English name or GUID - or a tagged item's id
+---@return number 0..4; `nil` when they carry none of it
+function GetPlayerItemQuality(pid, item) end
+
+---Sets the quality of every item of a class the player carries.
+---
+---A reward, a smith's work, a restore: every item of the class in the player's bag - worn or not - takes `quality` (1..4, I..IV) in
+---the server's records at once, and their game sets it a moment later. Each item keeps its condition's percent of the new quality's
+---best. A quality past what the class can be is its best; the player's game then says the quality it holds. A `GivePlayerItem` of
+---the class still on its way is made at it too.
+---
+---The id of one of the player's tagged items (`GivePlayerTaggedItem`) in place of the class sets that one item alone. It answers `1`.
+---@param pid number the player
+---@param item string|number the item's name, id, English name or GUID - or a tagged item's id
+---@param quality number the quality, 1..4
+---@return number how many items were set (0 when they carry none, the item is not in the catalogue, or the quality is 0)
+function SetPlayerItemQuality(pid, item, quality) end
 
 ---How fast items wear on this server.
 ---
@@ -2349,8 +2674,9 @@ function IsItemUseChecked(item) end
 ---@param name string the name the game's item panel shows (`""` = the class's)
 ---@param text string the description the item panel shows (`""` = the class's)
 ---@param health? number its condition, 0..100
+---@param quality? number its quality, 1..4 (left out = the class's own)
 ---@return boolean `false` for an unknown class, an empty id, or an id the player holds already
-function GivePlayerTaggedItem(pid, item, id, name, text, health) end
+function GivePlayerTaggedItem(pid, item, id, name, text, health, quality) end
 
 ---Renames one of the player's tagged items - a contract signed, a letter opened.
 ---
@@ -2394,6 +2720,41 @@ function SetPlayerItemWeight(pid, id, weight) end
 ---@param price number|nil Groschen; `nil` = the class's own (not for sale)
 ---@return boolean `false` when the player holds no item with that id, or for a price outside 0..1,000,000
 function SetPlayerItemPrice(pid, id, price) end
+
+---Sets what every item of a kind weighs, for every player - lighter rocks, heavier armour.
+---
+---`weight` is in kilograms per piece, 0 to 1000, in place of the game's own (`GetItemInfo` `weight`). It holds for every player at
+---once and for every item of the class wherever it is: the game's inventory, a horse's saddlebags, the item panel and what a player
+---carries - an overloaded player cannot sprint or mount, as with the game's own weights - and the server's carry-weight check weighs
+---it the same way. A tagged item with a weight of its own (`SetPlayerItemWeight`) keeps it. `nil` gives the class its own back. Set
+---it in `OnGameModeInit` for a rule of the server; players who join later get it as they spawn. At most 1024 classes have a rule.
+---@param item string|number the item class - its name, id, English name or GUID (the item catalogue)
+---@param weight number|nil kilograms per piece; `nil` = the class's own
+---@return boolean `false` for an unknown item, a weight outside 0..1000, or a 1025th class
+function SetItemClassWeight(item, weight) end
+
+---What an item of a kind weighs now - the mode's rule, else the game's own.
+---@param item string|number the item class - its name, id, English name or GUID
+---@return number kilograms per piece: the weight `SetItemClassWeight` set, else the game's; `nil` for an item the catalogue does not list
+function GetItemClassWeight(item) end
+
+---Sets what every item of a kind is worth, for every player.
+---
+---`price` is in Groschen per piece at the best quality and condition, 0 to 1,000,000, in place of the game's own (`GetItemInfo`
+---`price`, which is in tenths). It holds for every player and every item of the class: the game's item panel and its own traders work
+---from it - an item of a lower quality or a worn one is worth less, by the game's own scaling, as with the game's own price - and the
+---server's shops pay their sell factor of it (`CreateShop`; a shop's own price for the class, `SetShopBuyPrice`, still comes first).
+---A tagged item with a price of its own (`SetPlayerItemPrice`) keeps it. `nil` gives the class its own back. At most 1024 classes
+---have a rule.
+---@param item string|number the item class - its name, id, English name or GUID
+---@param price number|nil Groschen per piece; `nil` = the class's own
+---@return boolean `false` for an unknown item, a price outside 0..1,000,000, or a 1025th class
+function SetItemClassPrice(item, price) end
+
+---What an item of a kind is worth now - the mode's rule, else the game's own.
+---@param item string|number the item class - its name, id, English name or GUID
+---@return number Groschen per piece at the best quality and condition: the price `SetItemClassPrice` set, else the game's; `nil` for an item the catalogue does not list
+function GetItemClassPrice(item) end
 
 ---Gives one of the player's tagged items the look of another item.
 ---
@@ -2459,7 +2820,8 @@ function GivePlayerMoney(pid, groschen) end
 ---`world` is the virtual world (`nil` = the shared one), `health` the condition the item is made at on every screen and
 ---that whoever takes it keeps (1..100, new without). `nil` when the key is unknown or the world is full
 ---(`[world] max_entities`). The `/item` built-in places one in front of an admin. A player's drop keeps the dropped item's
----condition by itself (`GetPickupHealth` reads it).
+---condition and quality by itself (`GetPickupHealth` and `GetPickupQuality` read them) - a mode that keeps dropped items
+---in its own database and lays them again passes both back here, or the item comes back new and at its class's own quality.
 ---@param item string|number the item's name, id, English name or GUID
 ---@param x number metres
 ---@param y number metres
@@ -2467,8 +2829,9 @@ function GivePlayerMoney(pid, groschen) end
 ---@param yaw? number degrees (`0` without)
 ---@param world? number the virtual world; `nil` = the shared one
 ---@param health? number the item's condition, 1..100 (`100`, new)
+---@param quality? number the item's quality, 1..4 (I..IV, a forged masterwork the top); `nil` = the class's own
 ---@return number the pickup's entity id; `nil` when it could not be made
-function CreatePickup(item, x, y, z, yaw, world, health) end
+function CreatePickup(item, x, y, z, yaw, world, health, quality) end
 
 ---Sets the condition a pickup's item has.
 ---
@@ -2484,6 +2847,24 @@ function SetPickupHealth(id, health) end
 ---@param id number the pickup
 ---@return number 1..100; `nil` for an entity that is no item pickup
 function GetPickupHealth(id) end
+
+---Sets the quality a pickup's item has.
+---
+---1..4 (I..IV; `0` = the class's own): every screen makes the item lying there at that quality, and whoever takes it keeps it.
+---Set it right after the pickup is made (`CreatePickup` takes it as an argument too): a screen that shows the pickup already
+---keeps the one it made. A player's drop has the dropped item's quality already.
+---@param id number the pickup
+---@param quality number the quality, 1..4; `0` = the class's own
+---@return boolean `false` for an entity that is no item pickup
+function SetPickupQuality(id, quality) end
+
+---The quality of a pickup's item.
+---
+---What a mode that handles drops or pickups itself reads to keep the item's quality - pass it to `CreatePickup` when it lays the
+---item again, or to `GivePlayerItem` when it gives the item itself.
+---@param id number the pickup
+---@return number 1..4, `0` = the class's own; `nil` for an entity that is no item pickup
+function GetPickupQuality(id) end
 
 -- ======== GameText and HUD ======================================================
 -- Two ways to put text on a player's screen besides the chat: a **GameText** - one big line for a moment ("Round 3", "You win",
@@ -2897,6 +3278,97 @@ function SpawnDecal(material, x, y, z, size, seconds, normal, world) end
 ---@param world? number the virtual world (`0`)
 ---@return number how many players heard it
 function PlaySound(trigger, x, y, z, seconds, world) end
+
+-- ======== Map icons =============================================================
+-- The **world map** and the compass show the game's own icons: towns, shops, services, camps. A mode puts icons of the same kind
+-- there - a player's shop, a guild hall, a quest giver - with a type's icon and legend name (`CreateMapIcon`), and takes the level's
+-- own away where they mean nothing on its server - the tailor who no longer sells, a smithy that is a player's house now
+-- (`HideLevelMapIcons`). Both are for everyone or for one player, and a player who joins later gets them at the spawn. They last for
+-- the server's run: a mode makes them again in `OnGameModeInit`.
+-- 
+-- The types and every level's own shop and service icons, with their ids and places, are on the
+-- map icons reference page. For a blip on the compass alone, see the compass markers.
+
+---An icon of the game's own kind on the world map and the compass.
+---
+---`opts`:
+---
+---- `type` - a map icon type's name (`"tailor"`, `"blacksmith"`, `"pub"` ...) or its GUID: its icon and its legend name;
+---- `icon` - the legend's icon number instead of the type's;
+---- `name` - the name on the map (`""`: the type's legend name);
+---- `visible` - `false` shows it to nobody until `SetMapIconVisibleFor` (`true` by default).
+---
+---An icon needs a picture: a type with one, or an icon number. The level's map shows only the kinds its legend has (the monastery's
+---map has no shops - a pin or a camp shows anywhere). At most 1024 icons.
+---@param x number metres
+---@param y number metres
+---@param z number metres
+---@param opts table the options above
+---@return number the icon's id; `nil` and the reason
+function CreateMapIcon(x, y, z, opts) end
+
+---An icon anew - moved, renamed, another type.
+---
+---The same numbers and `opts` as `CreateMapIcon`, whole.
+---@param id number the icon
+---@param x number metres
+---@param y number metres
+---@param z number metres
+---@param opts table the options
+---@return boolean `true`; `false` and the reason
+function SetMapIcon(id, x, y, z, opts) end
+
+---Takes an icon off every map.
+---@param id number the icon
+---@return boolean `false` when there is none of that id
+function DeleteMapIcon(id) end
+
+---An icon as it stands.
+---@param id number the icon
+---@return table `{id, x, y, z, type, icon, name, visible}`; `nil` when there is none
+function GetMapIcon(id) end
+
+---Every icon of the mode's, by id.
+---@return table a list of `GetMapIcon`'s tables
+function GetMapIcons() end
+
+---Shows an icon to one player, or hides it from them.
+---
+---Over the icon's own `visible`; `nil` follows it again. Kept while they are connected.
+---@param pid number the player
+---@param id number the icon
+---@param visible boolean|nil `true`, `false` or `nil`
+---@return boolean `false` when the icon or the player is not there
+function SetMapIconVisibleFor(pid, id, visible) end
+
+---Hides some of the level's own map icons from everyone.
+---
+---`opts`: `mark` - one icon by its id (the reference page lists them; the same on every game); or `type` (a name or a GUID) with
+---`x`, `y` and `radius` - the icons of that type around a place (no `radius`: the whole level); or `x`, `y` and `radius` alone -
+---every icon around a place. The icon goes from the map and the compass, and a player cannot discover the place while it is hidden; it
+---comes back as the player had it when the rule goes. At most 256 rules.
+---@param opts table the rule
+---@return number the rule's id, for `ShowLevelMapIcons`; `nil` and the reason
+function HideLevelMapIcons(opts) end
+
+---Hides some of the level's own map icons from one player.
+---
+---The same `opts` as `HideLevelMapIcons`; the rule goes when they leave.
+---@param pid number the player
+---@param opts table the rule
+---@return number the rule's id; `nil` and the reason
+function HideLevelMapIconsFor(pid, opts) end
+
+---Takes a hiding rule away - its icons come back.
+---
+---An icon another rule still hides stays hidden.
+---@param rule number the rule's id
+---@return boolean `false` when there is no such rule
+function ShowLevelMapIcons(rule) end
+
+---The game's map icon types.
+---@return table `{{name, guid, icon, legend, service}, ...}` by name (`legend`: the English legend name; `service`: a shop or a service; `icon` `-1`: no picture)
+function GetMapIconTypes() end
 
 -- ======== Script events =========================================================
 -- A mode that needs something on the client the server cannot draw - a marker in the world, a sound, a bit of UI, a value read
@@ -4030,7 +4502,7 @@ function GetPlayerHorses(pid) end
 ---next time. One of the mode's **tagged items** (`GivePlayerTaggedItem`) in the bags is an entry of its own with its `id`,
 ---`name` and `text` - save them with it, and `SetHorseItems` puts it back with its tag.
 ---@param id number the horse
----@return table a list of `{class=, amount=, health=}` (a tagged item also `id=, name=, text=`; `{}` = empty); `nil` when it is not a horse
+---@return table a list of `{class=, amount=, health=, quality=}` (`quality` when known; a tagged item also `id=, name=, text=`; `{}` = empty); `nil` when it is not a horse
 function GetHorseItems(id) end
 
 ---Makes a horse's saddlebags hold exactly this list.
@@ -4043,7 +4515,7 @@ function GetHorseItems(id) end
 ---and 64 stacks at most, 65 535 to a stack. When a saved horse comes back, dress it first (`SetHorseGear`), then fill it. An
 ---entry with an `id` is one of the mode's **tagged items** (one item, its `name` and `text` shown in the game's item panel).
 ---@param id number the horse
----@param items table a list of `{class=, amount=, health=}` (`amount` 1 and `health` 100 when left out; `id`, `name`, `text` for a tagged item), as `GetHorseItems` returns it
+---@param items table a list of `{class=, amount=, health=, quality=}` (`amount` 1 and `health` 100 when left out, `quality` the class's own; `id`, `name`, `text` for a tagged item), as `GetHorseItems` returns it
 ---@return boolean `false` when it is not a horse
 function SetHorseItems(id, items) end
 
@@ -4244,6 +4716,22 @@ function SetEntityPrompt(id, text) end
 ---@param id number the entity
 ---@return string `""` when it has none
 function GetEntityPrompt(id) end
+
+---Whether players walk into a prop or through it.
+---
+---A static prop is solid unless you say otherwise: players, horses and arrows stop at it. `false` lets everyone walk through
+---it - a decoration in a doorway, a sign over a path; `true` makes it solid again, at once on every screen. Meshes the game
+---makes no collision for on their own (one built of several collision pieces, such as a crate or a shrine) get one made for them
+---while they are solid. A rigid prop (`CreateProp` with `rigid`) is a physics body and always solid.
+---@param id number the prop
+---@param solid? boolean `true` (the default) solid, `false` walked through
+---@return boolean `false` for anything that is not a static prop
+function SetPropCollision(id, solid) end
+
+---Whether a prop is solid.
+---@param id number the prop
+---@return boolean `true` for a solid prop (the default, and every rigid one); `false` for one made walk-through, or anything that is not a prop
+function IsPropSolid(id) end
 
 ---Places a static mesh in the world.
 ---
@@ -4560,9 +5048,10 @@ function RaiseSiegeLadder(id) end
 
 ---Gives a player a dog that follows them.
 ---
----`soul` names the look - a soul of the Dog archetype from the dog souls by name, id or GUID; `nil` = the
----plain dog. `x, y, z, yaw` is where it appears; without them, two metres in front of the master. A player who already has a
----dog gets the one they have. `nil` when the player is not in the world or the world is full.
+---`soul` is the dog's soul - one of the Dog archetype from the dog souls by name, id or GUID; `nil` = the
+---plain dog. Its colour is its coat, the same on every screen: a pick that changes with each new dog, or the one
+---`SetDogCoat` gives it. `x, y, z, yaw` is where it appears; without them, two metres in front of the master. A player who
+---already has a dog gets the one they have. `nil` when the player is not in the world or the world is full.
 ---@param pid number the master
 ---@param soul? string|number a dog soul's name, id or GUID; `nil` = the plain dog
 ---@param x? number metres; without a point the dog appears in front of the master
@@ -4593,12 +5082,40 @@ function SetDogMode(id, mode) end
 ---@return number the mode (`DOG_FOLLOW` for a dog nobody told otherwise); `false` when the id is not a dog
 function GetDogMode(id) end
 
+---Sets a dog's coat - its colour and markings - on every screen.
+---
+---`coat` is one of `GetDogCoats` (`"backyard_brown"`, `"alaunt_white"`, `"wardog_black"` ...; any case). It works on a
+---player's dog (`CreateDog`) and on an animal made with `CreateAnimal``("dog")`. The dog changes at once on every screen
+---that has it. A dog never given one wears a pick that changes with the dog's id (two dogs can share one) - so a mode that
+---keeps dogs saves the coat (`GetDogCoat`) and gives it back right after making the dog; set in the same moment, it is on
+---from the dog's first frame. `nil` or `""` goes back to the pick.
+---@param id number the dog
+---@param coat? string one of `GetDogCoats`; `nil` = the pick that goes with the dog's id again
+---@return boolean `false` when it is not a dog or the coat is no coat
+function SetDogCoat(id, coat) end
+
+---The coat a dog wears.
+---
+---The coat `SetDogCoat` gave it, else the pick it shows now - either way the name to save, so the dog comes back the same.
+---@param id number the dog
+---@return string|nil one of `GetDogCoats`; `nil` when it is not a dog
+function GetDogCoat(id) end
+
+---The coats a dog can wear.
+---@return table the coat names: the backyard dogs, the alaunts and the war dogs of the game
+function GetDogCoats() end
+
 -- ======== Voice chat ============================================================
 -- Players talk to whoever stands near them: a voice plays from where its owner stands, through the game's own 3D sound,
 -- fading with the distance. The server relays every voice frame the moment it arrives to the players within the range, and
 -- the mode steers it: how far a voice carries (`SetVoiceRange`), one player's own reach (`SetPlayerVoiceRange` - a crier,
 -- a whisperer), a mute nobody hears (`SetPlayerVoiceMuted`) and a deafening that hears nobody (`SetPlayerVoiceDeaf`);
--- `OnPlayerVoiceStart` and `OnPlayerVoiceStop` say who speaks. The server's defaults are the `[voice]` section of
+-- `OnPlayerVoiceStart` and `OnPlayerVoiceStop` say who speaks.
+-- 
+-- **A player's own mutes** silence one talker for that player alone - everyone else still hears them. Players have the
+-- server's `/mute <name|id>` and `/unmute <name|id>` and the scoreboard's mute button; `OnPlayerVoiceMute` hears (and may
+-- refuse) each one, and a mode that handles `/mute` itself, or offers a menu, sets them with `SetPlayerVoiceMutedFor`.
+-- `GetPlayerVoiceMutes` lists them to save; they last while both players are in the game. The server's defaults are the `[voice]` section of
 -- server.toml; players pick their microphone, key and mode in the launcher.
 -- 
 -- **Voice levels** let the players choose how far they are heard: a whisper, the normal voice, a shout - as many as the mode
@@ -4633,6 +5150,20 @@ function OnPlayerVoiceStop(pid) end
 ---@param previous number the level they speak at now, from 1
 function OnPlayerVoiceLevelChange(pid, level, previous) end
 
+---**Called by the server** - A player asks to stop hearing another player, or to hear them again.
+---
+---The server's `/mute` or `/unmute` (with a name or a player id) or the scoreboard's mute button. It is for `pid` alone:
+---everyone else still hears `target`. Return `false` to refuse - nothing changes (the scoreboard's mark goes back) - and tell
+---them why if you want to; nothing, `nil` or `true` lets it through. Save the change here to keep it across visits
+---(`GetPlayerVoiceMutes`, then `SetPlayerVoiceMutedFor` at the next join). A mode that answers `/mute` itself in
+---`OnPlayerCommandText` never comes here for it, and `SetPlayerVoiceMutedFor` does not either.
+---
+---Return value: `false` refuses it
+---@param pid number the player who asks
+---@param target number the player they want to stop hearing (or hear again)
+---@param muted boolean `true` = stop hearing them, `false` = hear them again
+function OnPlayerVoiceMute(pid, target, muted) end
+
 ---How far a voice carries by default, in metres.
 ---
 ---The server relays a voice to the players within this distance of the talker, and every client sets its 3D falloff
@@ -4660,7 +5191,8 @@ function GetPlayerVoiceRange(pid) end
 
 ---Nobody hears the player while muted.
 ---
----Their voice frames are dropped at the server. A moderation lever; a player mutes another for themselves alone with `/mute <name>` in the chat.
+---Their voice frames are dropped at the server: a moderation lever (a gag). For one listener alone - a player who does
+---not want to hear another - use `SetPlayerVoiceMutedFor` (the server's `/mute`).
 ---@param pid number the player
 ---@param muted boolean `true` mutes, `false` lifts it
 function SetPlayerVoiceMuted(pid, muted) end
@@ -4679,6 +5211,34 @@ function SetPlayerVoiceDeaf(pid, deaf) end
 ---Whether the mode deafened the player.
 ---@param pid number the player
 function IsPlayerVoiceDeaf(pid) end
+
+---One player no longer hears another - for that player alone.
+---
+---`listener` stops hearing `talker` (`false`: hears them again); everyone else still hears the talker. It is what the
+---server's `/mute` does, for a mode that offers its own - a command of its own name, a button on a page, a mute by the id
+---the mode shows instead of a name plate. The listener's scoreboard marks the talker muted, and they can lift it with
+---`/unmute` or the scoreboard's button (which asks `OnPlayerVoiceMute`); this call does not ask it.
+---
+---It lasts while both are in the game: a mode that keeps mutes across visits saves them (`OnPlayerVoiceMute`,
+---`GetPlayerVoiceMutes`) and sets them again when the player joins.
+---@param listener number the player who stops hearing
+---@param talker number the player they stop hearing
+---@param muted? boolean `true` (the default) mutes, `false` lifts it
+function SetPlayerVoiceMutedFor(listener, talker, muted) end
+
+---Whether one player muted another for themselves.
+---
+---Their own `/mute`, the scoreboard's button or `SetPlayerVoiceMutedFor`.
+---@param listener number the player who may have muted
+---@param talker number the player they may not hear
+function IsPlayerVoiceMutedFor(listener, talker) end
+
+---The players one player muted for themselves.
+---
+---Their pids, lowest first - to save in `OnPlayerDisconnect` (they are still listed there) and set again with
+---`SetPlayerVoiceMutedFor` at the next join. A player who left is no longer in anyone's list.
+---@param listener number the player
+function GetPlayerVoiceMutes(listener) end
 
 ---Whether the player's voice reached the server in the last 300 ms.
 ---
@@ -4728,6 +5288,17 @@ function SetVoiceOcclusion(strength) end
 
 ---How much walls muffle a voice on this server.
 function GetVoiceOcclusion() end
+
+---How much a closed helmet visor muffles its wearer's voice.
+---
+---A player who speaks with their helmet's visor down sounds as if through it to everyone who hears them - duller and a
+---little quieter. `1` is the default, `0` turns it off, anything between muffles less. It adds to what walls do
+---(`SetVoiceOcclusion`), and the change reaches every player at once.
+---@param amount number 0 = a visor never muffles, 1 = the default
+function SetVoiceVisorMuffle(amount) end
+
+---How much a closed helmet visor muffles a voice on this server.
+function GetVoiceVisorMuffle() end
 
 ---The voice level a player speaks at.
 ---@param pid number the player
@@ -4784,7 +5355,7 @@ function OnActorArrive(id) end
 ---cancels, nothing keeps it. The hit went through the same model as a hit on a player, through the armour the actor wears of the
 ---items `SetActorInventory` gave it (an actor dressed by its presets has no armour that counts).
 ---
----Return value: a number replaces the damage (`0` cancels); `false` cancels the hit; nothing keeps it
+---Return value: a number replaces the damage (`0` cancels); `false` cancels the hit; nothing keeps it. A second value `true` / `false` decides the bleeding
 ---@param id number the actor
 ---@param attacker number the player who struck
 ---@param damage number what the actor is about to lose
@@ -4792,13 +5363,15 @@ function OnActorArrive(id) end
 ---@param part number the body part struck, `1` .. `6`; `0` unknown
 ---@param weapon string the weapon's table name; `""` bare-handed
 ---@param dtype string `"stab"`, `"slash"`, `"smash"` or `""`
-function OnActorDamage(id, attacker, damage, zone, part, weapon, dtype) end
+---@param bleeds boolean whether the blow opens a bleeding wound by the server's rules (`SetBleedRules`)
+---@param armour number the share of the blow the actor's armour on that part took, `0` .. `0.85`
+function OnActorDamage(id, attacker, damage, zone, part, weapon, dtype, bleeds, armour) end
 
 ---**Called by the server** - A hit wounded one of an actor's body parts.
 ---
 ---The shape of `OnPlayerInjury`: a blow of at least `[combat] injury_threshold` injures the part it struck; every client
----shows the limp. A cut bleeds for `[combat] bleed_seconds` (`GetActorBleeding`) and drains the health - a bleed-out is the
----last attacker's kill. `HealActor` makes the actor whole.
+---shows the limp. A cut through the armour's gate bleeds (`SetBleedRules`, `GetActorBleeding`) and drains the health - a
+---bleed-out is the last attacker's kill. `HealActor` makes the actor whole.
 ---@param id number the actor
 ---@param attacker number the player who struck; `-1` = nobody
 ---@param part number the body part, `1` .. `6`
@@ -4820,7 +5393,7 @@ function OnActorDeath(id, attacker) end
 ---the blow as `OnPlayerDamage(pid, -1, ...)`. An animal's bite (`SetAnimalHostile`) comes here too: `id` is the animal, the
 ---damage is its bite's (`SetAnimalAttack`) through the player's armour, `weapon` is `"a bite"`.
 ---
----Return value: a number replaces the damage (`0` cancels); `false` cancels the blow; nothing keeps it
+---Return value: a number replaces the damage (`0` cancels); `false` cancels the blow; nothing keeps it. A second value `true` / `false` decides the bleeding
 ---@param id number the actor
 ---@param pid number the player struck
 ---@param damage number what the player is about to lose
@@ -4828,7 +5401,9 @@ function OnActorDeath(id, attacker) end
 ---@param part number the body part struck, `1` .. `6`; `0` unknown
 ---@param weapon string the actor's weapon by its table name; `""` bare-handed
 ---@param dtype string `"stab"`, `"slash"`, `"smash"` or `""`
-function OnActorAttack(id, pid, damage, zone, part, weapon, dtype) end
+---@param bleeds boolean whether the blow opens a bleeding wound by the server's rules (`SetBleedRules`)
+---@param armour number the share of the blow the player's armour on that part took, `0` .. `0.85`
+function OnActorAttack(id, pid, damage, zone, part, weapon, dtype, bleeds, armour) end
 
 ---**Called by the server** - An actor's blow landed on another actor - change the damage, cancel it, or let it through.
 ---
@@ -4837,7 +5412,7 @@ function OnActorAttack(id, pid, damage, zone, part, weapon, dtype) end
 ---most `[actors] max_damage`. A blow the target blocked, or one on an invulnerable actor, never
 ---comes here. The return rules are `OnActorAttack`'s.
 ---
----Return value: a number replaces the damage (`0` cancels); `false` cancels the blow; nothing keeps it
+---Return value: a number replaces the damage (`0` cancels); `false` cancels the blow; nothing keeps it. A second value `true` / `false` decides the bleeding
 ---@param id number the attacking actor
 ---@param target number the actor struck
 ---@param damage number what the target is about to lose
@@ -4845,7 +5420,28 @@ function OnActorAttack(id, pid, damage, zone, part, weapon, dtype) end
 ---@param part number the body part struck, `1` .. `6`
 ---@param weapon string the attacker's weapon by its table name; `"fists"` bare-handed
 ---@param dtype string `"stab"`, `"slash"`, `"smash"` or `""`
-function OnActorAttackActor(id, target, damage, zone, part, weapon, dtype) end
+---@param bleeds boolean whether the blow opens a bleeding wound by the server's rules (`SetBleedRules`)
+---@param armour number the share of the blow the target's armour on that part took, `0` .. `0.85`
+function OnActorAttackActor(id, target, damage, zone, part, weapon, dtype, bleeds, armour) end
+
+---**Called by the server** - An actor's swing met a player's block.
+---
+---The player's game blocked the actor's swing - with `perfect` `true` a perfect block or a master strike. Once per swing; a
+---blow that landed comes to `OnActorAttack` instead, a dodge or a miss to neither. The actor's stagger follows this call
+---(`SetActorBlockRules`: by default a perfect block costs the actor its next swing for 1.5 seconds and a plain block nothing);
+---a mode that keeps its own stamina for its fighters spends it here, and may stagger the actor itself with `StaggerActor`.
+---@param id number the actor
+---@param pid number the player who blocked
+---@param perfect boolean `true` for a perfect block or a master strike
+function OnActorBlocked(id, pid, perfect) end
+
+---**Called by the server** - A player's swing met an actor's raised guard.
+---
+---An armed actor raises its guard against a swing part of the time (`[actors] block_chance`); this fires when the player's blow
+---met it and did no harm. Once per swing. A blow that glanced off without a guard comes to neither this nor `OnActorDamage`.
+---@param pid number the player who swung
+---@param id number the actor
+function OnPlayerBlockedByActor(pid, id) end
 
 ---**Called by the server** - The player pressed the use key on an actor that has a prompt - return `false` to stop its shop opening.
 ---
@@ -5085,11 +5681,22 @@ function IsActorInjured(id, part) end
 
 ---How fast an actor is bleeding, in health per second.
 ---
----A cut opens a bleed for `[combat] bleed_seconds`; `0` = not bleeding. A bleed-out is the last attacker's kill
----(`OnActorDeath`); `HealActor` stops it.
+---A cut opens a wound by the players' rules (`SetBleedRules`): each bleeds on its own for the rules' seconds and they add
+---up; `0` = not bleeding. A bleed-out is the last attacker's kill (`OnActorDeath`); `HealActor` stops it.
 ---@param id number the actor
 ---@return number health lost per second; `0` = not bleeding
 function GetActorBleeding(id) end
+
+---Sets how fast an actor bleeds, in place of its open wounds.
+---
+---`SetPlayerBleeding` for an actor or an animal: one wound of `rate` health a second for `seconds` (left out = the rules'
+---seconds, `SetBleedRules`), capped by the rules' `maxRate`; `0` stops the bleeding. A bleed-out is the last player's kill
+---who struck it. Refused on a corpse.
+---@param id number the actor
+---@param rate number health lost per second; `0` stops the bleeding
+---@param seconds? number how long it bleeds; left out = the rules' seconds
+---@return boolean `false` for a dead actor or anything but an actor
+function SetActorBleeding(id, rate, seconds) end
 
 ---Whether an actor is bleeding.
 ---@param id number the actor
@@ -5132,6 +5739,28 @@ function SetActorHostileToActor(id, target, hostile) end
 ---@param id number the actor
 ---@return number|nil the other actor's id; `nil` when it fights none (or fights a player)
 function GetActorTarget(id) end
+
+---Staggers an actor - it reels and loses its next swing.
+---
+---For `seconds` (`0.2` .. `5`) the actor swings no more, lowers its guard and cannot raise one - the opening a perfect block
+---gives in the game - and its body reels with the game's own hit reaction on every screen. A stagger while one lasts lengthens
+---it. `false` for a dead, knocked-out or carried actor, an animal or anything else.
+---@param id number the actor
+---@param seconds number how long, `0.2` .. `5`
+---@return boolean
+function StaggerActor(id, seconds) end
+
+---Sets what a player's block costs an actor.
+---
+---`rules` is a table: `perfectStagger` - seconds an actor staggers after a player's perfect block (or master strike) of its
+---swing, `1.5` by default; `blockStagger` - after a plain block, `0` (none) by default. `0` .. `5` each; a key left out keeps
+---the server's own, `nil` puts both back. A staggered actor loses its next swing and its guard (`StaggerActor`).
+---@param rules table `{perfectStagger = seconds, blockStagger = seconds}`; `nil` = the server's own
+function SetActorBlockRules(rules) end
+
+---The actor block rules in force.
+---@return table `{perfectStagger = seconds, blockStagger = seconds}`, every key set
+function GetActorBlockRules() end
 
 ---Makes an actor one no blow hurts - or hittable again.
 ---
@@ -5880,7 +6509,8 @@ function GetRain() end
 ---Forces rain on every client, or hands the rain back to the weather.
 ---
 ---The rain is a lever on top of the weather profile: the profile sets the clouds, the fog and the light, and each preset
----brings its own rain (`showers` 0.5, `drizzle` 0.25, `storm` 1, the rest none) - the same amount on every client. This
+---brings its own rain (`showers` 0.5, `drizzle` 0.25, `storm` 1, the rest none; a variant its own - Weather)
+---- the same amount on every client. This
 ---forces another amount; `-1` hands the rain back to the weather. `/rain` is the built-in.
 ---@param intensity number `0` .. `1`; `-1` = the weather's own rain
 function SetRain(intensity) end
@@ -5894,9 +6524,9 @@ function GetWeather() end
 ---A **preset** is a friendly name for one of the level's time-of-day profiles: `clear` (or `sunny`), `fair`, `cloudy`, `overcast`,
 ---`showers`, `drizzle` (or `fog`), `storm`, `dry_storm` (`GetWeatherPresets` maps them; Weather lists the
 ---profiles). A profile name passes through as it is. Each client blends the new sky in over `blendSeconds` (`[world]
----weather_blend`, 10 s, without them). `""` hands the sky back to the **server's rotation**: a preset every 3 to 5 game
----hours, the fair ones most often, the same for every client. The `/weather` built-in is the same call (`/weather auto`
----for the rotation).
+---weather_blend`, 10 s, without them). `""` hands the sky back to the **server's rotation**: a sky rolled from the chances
+---every 3 to 5 game hours (`SetWeatherChances` - the fair ones most often by default), the same for every client. The
+---`/weather` built-in is the same call (`/weather auto` for the rotation).
 ---@param presetOrProfile string a preset or a profile name; `""` = the server's rotation
 ---@param blendSeconds? number seconds the change blends in over (`[world] weather_blend`)
 ---@return boolean `false` for a name that is neither a preset nor a profile
@@ -5905,6 +6535,29 @@ function SetWeather(presetOrProfile, blendSeconds) end
 ---The preset names and the profiles they stand for.
 ---@return table `{preset = profile, ...}`
 function GetWeatherPresets() end
+
+---How often each kind of weather comes up in the server's rotation, and how long a sky stays.
+---
+---The server rolls the sky for everyone (`[world] weather ""`, or after `SetWeather("")`): at every roll each kind comes up by
+---its **weight** - relative numbers, so `{clear = 70, showers = 25, storm = 5}` is a storm about one sky in twenty. The kinds
+---are `clear`, `fair`, `cloudy`, `overcast`, `showers`, `drizzle`, `storm`, `dry_storm` (the other preset names - `sunny`,
+---`rain`, `fog` - are aliases and add up); a kind left out, or at `0`, never comes up. A key may also be one of the level's own
+---profiles, such as a kind's `_B` variant (Weather lists them with the game's own chances). A rolled sky
+---holds `minHours` to `maxHours` of game time (3 to 5 by default; the same sky may come up again and simply stays), then the
+---next is rolled. Every client follows the rolled sky and its rain, and a player who joins gets the sky up now.
+---
+---A sky up now that the new chances leave out goes at once (blended in over two minutes); one they keep stays for what is left
+---of its hold. While `SetWeather` names a sky the chances wait for the rotation. `nil` (or `{}`) hands the rotation back to
+---the server's own mix. An admin's `/weather chances` shows them.
+---@param chances table `{kind = weight, ...}` - weights of `0` or more; `nil` = the server's own mix
+---@param minHours? number the shortest a rolled sky stays, in game hours (above `0`, up to `168`); `nil` = 3 to 5
+---@param maxHours? number the longest, not below `minHours`; `nil` = `minHours`
+---@return boolean ok `true`, or `false, reason` - the reason as a person reads it (an unknown kind, a weight below 0, every weight 0, a hold out of range)
+---@return string reason
+function SetWeatherChances(chances, minHours, maxHours) end
+
+---The rotation's chances and how long a sky stays.
+function GetWeatherChances() end
 
 ---The terrain height at a point, from the level's heightmap.
 ---
@@ -5929,6 +6582,13 @@ function HasNavmesh() end
 ---the end. `nil` when either point is off the mesh (more than 2 m from it sideways or 4 m up or down - a wall, a roof, the
 ---air), when no way joins them, or without a navmesh. Positions in metres, the level's world space. A path takes well
 ---under a millisecond across a village; a mode that asks every tick for every actor should not.
+---
+---Every search is bounded. An end on a part of the mesh that no way leads to (a closed room, a ledge) answers `nil` at
+---once; any other search that visits more than `navmesh_search_nodes` nodes or takes longer than `navmesh_search_ms`
+---milliseconds stops and answers `nil` too (both in `[validation]`, see the server's configuration; 16384 nodes and
+---100 ms by default - a walk of several hundred metres through a town usually needs a few thousand). The server log
+---names each such search with its two points. The same two points that ran out of budget answer `nil` at once for the
+---next five seconds.
 ---@param x1 number the start
 ---@param y1 number
 ---@param z1 number
@@ -5941,6 +6601,7 @@ function FindPath(x1, y1, z1, x2, y2, z2) end
 ---Whether a walk joins two points on the navigation mesh.
 ---
 ---The same test as `FindPath` without the corners - a spawn point that can be walked out of, a goal that can be reached.
+---Bounded the same way: a search past its budget answers `false`.
 ---@param x1 number the start
 ---@param y1 number
 ---@param z1 number
@@ -6163,29 +6824,57 @@ function OnPlayerTakeWorldItem(pid, key, class) end
 ---@return table a list of door keys
 function GetDoors() end
 
----A door's state of record.
+---A door's state of record - the shared one, or a virtual world's own.
+---
+---Every virtual world shares the doors of world `0` unless `SetVirtualWorldOwnDoors` gave it doors of its own; then `world` reads
+---that world's.
 ---@param key string the door's level name
----@return boolean open two booleans `open, locked`; `nil` when nobody ever touched the door (the level's default)
+---@param world? number the virtual world whose doors to read; `0` (the default) = the shared ones
+---@return boolean open two booleans `open, locked`; `nil` when nobody ever touched the door there (the level's default)
 ---@return boolean locked
-function GetDoorState(key) end
+function GetDoorState(key, world) end
 
----Opens, closes, locks or unlocks a door on every client.
+---Opens, closes, locks or unlocks a door on every client - or in one virtual world's own doors.
+---
+---Without `world`, or for a world that shares the doors of world `0` (every world does by default), the door changes for everyone and
+---is saved with the level. For a world given doors of its own (`SetVirtualWorldOwnDoors`) it changes in that world alone, for its
+---players alone.
 ---@param key string the door's level name
 ---@param open boolean open
 ---@param locked boolean locked
-function SetDoorState(key, open, locked) end
+---@param world? number the virtual world whose doors to set; `0` (the default) = the shared ones
+function SetDoorState(key, open, locked, world) end
+
+---Gives a virtual world doors of its own - what its players open or lock there stays in it.
+---
+---By default every virtual world (`SetPlayerVirtualWorld`) shares the doors of world `0`: a door used in any world moves for
+---everyone. A world given its own doors starts from the level's own state of each door (shut, the level's own lock): a player's use
+---there changes it for that world's players alone, and `SetDoorState` / `GetDoorState` take the world. One interior copied into
+---many worlds - the flats behind one address - then has doors of its own in each copy. A player moved into or out of such a world sees
+---its doors at once. A world's own doors are kept while the server runs (after a restart, set what your instances need again from
+---your own storage); `false` forgets them and the world shares world `0`'s again. The mode's rules on a door (`SetDoorCheck`,
+---`SetDoorPrompt`, `SetDoorLockSides`) hold in every world, and a door's key can be one world's (`SetDoorKey`); in
+---`OnPlayerUseDoor` the user's world is `GetPlayerVirtualWorld`. The chests are still shared by every world.
+---@param world number the virtual world (not `0`, whose doors are the shared ones)
+---@param own? boolean `true` (the default) for doors of its own, `false` to share world `0`'s again
+---@return boolean `false` for world `0` with `true`
+function SetVirtualWorldOwnDoors(world, own) end
+
+---Whether a virtual world keeps doors of its own (SetVirtualWorldOwnDoors).
+---@param world number the virtual world
+---@return boolean `false` for a world sharing the doors of world `0` (and for world `0`)
+function HasVirtualWorldOwnDoors(world) end
 
 ---Decide before a door moves - the player's game waits for OnPlayerUseDoor.
 ---
 ---Names a door (its key) or every door (`"*"`) whose use waits for the mode: when a player opens or closes such a door, their game
 ---holds the swing and asks, and `OnPlayerUseDoor` decides **before** the door moves - `false` keeps it still (with a text, the
 ---player is told why), anything else lets it swing as usual. `on = false` takes a door back. The use waits for the round trip to the
----server, so name the doors you mean to judge, not every door of the level. At most 512 doors by name, and the doors named here and
----the rows of `SetDoorPrompt` together about 60 KB of text. Changes go out to the players once, at the end of the tick, and only
----the doors that changed.
+---server, so name the doors you mean to judge, not every door of the level. At most 4096 doors by name (however long their names);
+---changes go out to the players once, at the end of the tick, and only the doors that changed.
 ---@param key string the door's level name, or `"*"` for every door
 ---@param on? boolean `true` (the default) to decide first, `false` to take it back
----@return boolean `false` for an empty or too long key, or past 512 doors or about 60 KB
+---@return boolean `false` for an empty or too long key, or past 4096 doors
 function SetDoorCheck(key, on) end
 
 ---Whether a use of the door waits for the mode.
@@ -6198,11 +6887,12 @@ function IsDoorChecked(key) end
 ---The door shows your row beside its own: the player **holds** the use key for yours, a press still opens or closes the door. The
 ---text is shown as written (48 characters at most; one that starts with `@` is a text key of the game's own). Using it calls
 ---`OnPlayerInteractDoor` and moves nothing. While the row is up the door's own lockpick row gives way to it. `nil` or `""` takes
----it off. At most 512 doors, and these rows and the doors of `SetDoorCheck` together about 60 KB of text. Changes go out to the
----players once, at the end of the tick, and only the doors that changed.
+---it off. At most 4096 doors, and the rows' different texts together about 64 KB (a text many doors show counts once: a thousand
+---doors with "Knock" or "View the house" is two texts). Changes go out to the players once, at the end of the tick, and only the
+---doors that changed.
 ---@param key string the door's level name
 ---@param text string|nil the row's text; `nil` = none
----@return boolean `false` for an empty or too long key, or past 512 doors or about 60 KB
+---@return boolean `false` for an empty or too long key, or past 4096 doors or about 64 KB of different texts
 function SetDoorPrompt(key, text) end
 
 ---A door's row of your own (SetDoorPrompt).
@@ -6220,7 +6910,7 @@ function GetDoorPrompt(key) end
 ---own `"both"` stays when `"*"` goes back to `"game"`). Keys of the mode's own make a door's key: `SetDoorKey`.
 ---@param key string the door's level name, or `"*"` for every door
 ---@param sides string `"both"` or `"game"` (the default)
----@return boolean `false` for another word, an empty or too long key, or past 512 doors
+---@return boolean `false` for another word, an empty or too long key, or past 4096 doors
 function SetDoorLockSides(key, sides) end
 
 ---Whether a door is locked from both sides (SetDoorLockSides).
@@ -6234,16 +6924,22 @@ function GetDoorLockSides(key) end
 ---own "Unlock and open" on the locked door, from the side its lock opens from with a key (both sides with `SetDoorLockSides`
 ---`"both"`), and the use unlocks and opens it - `OnPlayerUseDoor` hears it as any use. The level's own key of the door still works.
 ---The item is the key wherever it is: dropped, in a chest or sold, it opens nothing for the one who no longer holds it. A copy is
----another tagged item with the same id in another player's bag. `nil` or `""` takes the key away. At most 512 doors.
+---another tagged item with the same id in another player's bag. `nil` or `""` takes the key away. At most 4096 doors.
+---
+---With `world` the key is that virtual world's alone (`SetPlayerVirtualWorld` - a flat's copy of a house): for the players there it
+---takes the place of the key every world shares (set without `world`), which still opens the door in every other world. `nil` or `""`
+---with a world takes that world's key away, and the shared key is the door's key there again.
 ---@param door string the door's level name
 ---@param id string|nil the tagged item's id; `nil` = none
----@return boolean `false` for an empty or too long key or id, `"*"`, or past 512 doors
-function SetDoorKey(door, id) end
+---@param world? number a virtual world whose own key this is; none (the default) = the key of every world
+---@return boolean `false` for an empty or too long key or id, `"*"`, or past 4096 doors (each world's own keys: 4096 doors too)
+function SetDoorKey(door, id, world) end
 
----The tagged item that is a door's key (SetDoorKey).
+---The tagged item that is a door's key (SetDoorKey) - every world's, or the one for a virtual world.
 ---@param door string the door's level name
+---@param world? number the virtual world whose players' key to read: its own, else every world's; none (the default) = every world's
 ---@return string the item's id, `""` when the door has none
-function GetDoorKey(door) end
+function GetDoorKey(door, world) end
 
 ---Locks or unlocks a chest on every screen - the game's own lock, picked or opened with its key.
 ---
@@ -6308,7 +7004,7 @@ function GetContainers() end
 ---**tagged items** (`GivePlayerTaggedItem`) a player put in is an entry of its own with its `id`, `name` and `text`, and it
 ---keeps them for whoever takes it out.
 ---@param key string the container's level name
----@return table a list of `{class=, amount=, health=}` (a tagged item also `id=, name=, text=`); `nil` when never opened
+---@return table a list of `{class=, amount=, health=, quality=}` (`quality` when known: an item put in keeps its own; a tagged item also `id=, name=, text=`); `nil` when never opened
 function GetContainerItems(key) end
 
 ---Rewrites a container's contents; the next opener sees the new list.
@@ -6321,7 +7017,7 @@ function GetContainerItems(key) end
 ---its `name` and `text` - `GivePlayerTaggedItem`): a letter left in a chest for a player to find, which keeps its tag in
 ---their bag.
 ---@param key string the container's level name
----@param items table a list of `{class=, amount=, health=}` (`amount` and `health` optional; `id`, `name`, `text` for a tagged item)
+---@param items table a list of `{class=, amount=, health=, quality=}` (`amount`, `health` and `quality` optional; `id`, `name`, `text` for a tagged item)
 function SetContainerItems(key, items) end
 
 ---Who has a container open right now.
@@ -6446,8 +7142,30 @@ function ResetWorldItems(x, y, z, radius) end
 ---@param z number
 ---@param radius number metres
 ---@param max? number the most to list (100)
----@return table a list of `{key=, class=, x=, y=, z=, taken=}`
+---@return table a list of `{key=, class=, x=, y=, z=, taken=, interactable=}` (`interactable` false while `SetWorldItemInteractable` has the slot switched off)
 function GetWorldItemsNear(x, y, z, radius, max) end
+
+---Switches one loose item of the level off - it stays where it lies, and nobody can pick it up.
+---
+---With `false` the item of that one slot stays where the level placed it, on every player's screen, with no pickup prompt,
+---no pickup and no physics: a display on a merchant's table, the props of a scene, a shrine's offerings. It is the slot's, never
+---the item's class - the same bread on the next table can still be taken. `true` makes it usable again.
+---
+---Every player is told at once, and a player coming near later finds it switched off too. The switch is kept across server
+---restarts with the rest of the level's record (`[containers] persist`), and it belongs to the slot whatever happens to its
+---item: a taken item (`TakeWorldItem`) switched off comes back switched off (`ResetWorldItem`, the restock). The key is
+---one `GetWorldItemsNear` lists; `false` and the reason for a key the level's tables export does not know (or without the
+---export). Switching a slot to the state it is in already is no change and answers `true`.
+---@param key string the item slot's key, as `GetWorldItemsNear` lists it
+---@param interactable boolean `false` switches the item off, `true` back on
+function SetWorldItemInteractable(key, interactable) end
+
+---Whether a loose item of the level is switched on.
+---
+---`false` while `SetWorldItemInteractable` has the slot switched off, `true` for every other key.
+---@param key string the item slot's key
+---@return boolean
+function IsWorldItemInteractable(key) end
 
 ---Empties a loose item slot by script.
 ---
@@ -6469,15 +7187,17 @@ function GetWorldSeconds() end
 ---
 ---Metres in the level's space, the door's place as the level file gives it (the same numbers the level
 ---lists show). `nil` for a key the export does not know, and for every door when the server runs without the tables export
----or with one older than the doors (re-run the exporter). The nearest-object functions are built on it.
+---or with one older than the doors (re-run the exporter). A door of the map editor (`CreateMapDoor`, key `"KcdMp_map_" ..
+---id`) answers with the map object's place, export or not. The nearest-object functions are built on it.
 ---@param key string the door's level name
 function GetDoorPosition(key) end
 
 ---Every door of the level, touched or not.
 ---
 ---The keys of every door the tables export lists for the level - the ones `GetDoorPosition` answers for - where a mode
----finds the level's houses: a street to put someone in, a village to spread people over. Empty when the server runs without
----the tables export (or with one older than the doors). `GetDoors` lists only the doors anyone touched.
+---finds the level's houses: a street to put someone in, a village to spread people over; then the map editor's doors
+---(`CreateMapDoor`). Without the tables export (or with one older than the doors) only the map's. `GetDoors` lists only
+---the doors anyone touched.
 ---@return table a list of door keys
 function GetLevelDoors() end
 
@@ -6492,8 +7212,8 @@ function GetWorldItemPosition(key) end
 ---The door nearest to a point, within a radius.
 ---
 ---"The door I stand at": the mode's command on the nearest door, a rule set by standing next to it, with no key in sight
----(`/objectinfo` shows the keys to an admin in the game). Every door the tables export lists for the level is considered;
----`nil` when none is within the radius.
+---(`/objectinfo` shows the keys to an admin in the game). Every door the tables export lists for the level is considered,
+---and every door placed with the map editor; `nil` when none is within the radius.
 ---@param x number the point, metres
 ---@param y number
 ---@param z number
@@ -6877,7 +7597,8 @@ function OnPlayerNativeItem(pid, kind, class, amount) end
 ---  metres at a pace over the cap - a teleport - four within two minutes), `noclip` (six steps through a wall or out of the
 ---  terrain's window within a minute), `jump`, `fall` (a landing from four metres or more with no damage from the player's game),
 ---  `horse` (a horse galloping on stamina it has not got, or a loose horse moving faster than a rider could make it), `never_hit`
----  (a player whose server actors never seem to hit), `void_ratio` (a victim whose guard voids almost every blow). `[validation]
+---  (a player whose server actors never seem to hit), `void_ratio` (a victim whose guard voids almost every blow), `contact_ratio`
+---  (an attacker whose blows on players mostly land with the victim's game showing no touch - for tuning, never acted on). `[validation]
 ---  strict = false`, the default, only reports `jump`, `fall`, `horse` and the per-gait part of `speed` (a way of moving held
 ---  over its own cap); `true` also pulls the player back. `blink`, the steps the `max_speed` caps refuse, and `noclip` are
 ---  reported whatever `strict` says: the server's step checks act on their own (a wall check pulls the player back with
@@ -6914,7 +7635,7 @@ function OnPlayerNativeItem(pid, kind, class, amount) end
 ---
 ---Return value: `false` tolerates the `[audit] action` for this event; anything else lets it happen (an advisory one never acts)
 ---@param pid number the player
----@param kind string what was found - `speed`, `blink`, `noclip`, `jump`, `fall`, `horse`, `never_hit`, `void_ratio`, `code`, `integrity`, `timescale`, `state`, `removal_ignored`, `progress_write_repeat`, ...
+---@param kind string what was found - `speed`, `blink`, `noclip`, `jump`, `fall`, `horse`, `never_hit`, `void_ratio`, `contact_ratio`, `code`, `integrity`, `timescale`, `state`, `removal_ignored`, `progress_write_repeat`, ...
 ---@param proven boolean `true` = held against the client beyond doubt (the `[audit] action` follows); `false` = a signal that can be wrong
 ---@param detail string a line for the log
 ---@param count number how many of this kind the player raised this visit, this one included
@@ -6967,7 +7688,8 @@ function VerifyPassword(password, hash) end
 ---
 ---A join attempt under the name or from the address is refused with the reason until the ban runs out; `seconds` `0` or none =
 ---for good. Kept in the server's own database across restarts. A name ban is only as strong as the name (nobody proves a
----name to the server); the address ban is the one that holds.
+---name to the server); the address ban is the one that holds. Like a `Kick`, it is announced to nobody else - a mode that
+---wants it known says it (`OnPlayerDisconnect` gets `"kicked: banned: <reason>"`).
 ---@param pid number the player
 ---@param reason string shown to the player now and at every refused join
 ---@param seconds? number how long; `0` or none = for good
@@ -7260,6 +7982,13 @@ function GetLevelBarriers() end
 -- An area may carry the mode's own values (`SetAreaProperty`: an owner, a tax, `pvp = false`), kept with it. Its **label** is shown to
 -- every player who comes in when it is public ("Kuttenberg market"). An area on a map layer that is switched off holds nobody
 -- (`SetMapLayer`). Places are in metres; a box is at most 2 km across and 500 m high.
+-- 
+-- An area can also be a **trespass zone** of the game's own kind: inside it the game shows its trespass icon - blue for someone's
+-- home, red where nobody may go - and the mode hears `OnPlayerTrespassChange` (`SetAreaTrespass`, `SetPlayerAreaTrespass` for
+-- one player, `SetPlayerTrespass` anywhere). The level's own houses, keeps and camps carry the game's trespass too; a mode switches
+-- them off (`SetLevelTrespass`) or makes one public for its owner. Nobody reacts on their own in multiplayer - a fine, a warning or a
+-- guard's call are the mode's. And an area can be a **roof**: `SetAreaRain` caps the rain a player inside sees (`0` = dry), for the
+-- buildings put up with the map editor.
 
 ---**Called by the server** - A player came into one of the map's areas.
 ---
@@ -7277,6 +8006,20 @@ function OnPlayerEnterArea(pid, area) end
 ---@param area string the area's name
 function OnPlayerLeaveArea(pid, area) end
 
+---**Called by the server** - The trespass level a player's game shows changed.
+---
+---They walked into a house or a keep of the level (its own trespass areas, as their game reports them), into or out of an area with a
+---trespass level (`SetAreaTrespass`), or the mode changed one of the rules. `level` is what they see now: `"personal"` shows the
+---game's blue icon (someone's home), `"prohibited"` the red one (no entry), `"public"` none; `"semipublic"` and `"semipersonal"` are
+---trespass the game shows no icon for. Nobody reacts on their own in multiplayer - what follows is the mode's. Not when they leave the
+---server.
+---@param pid number the player
+---@param level string the level now: `"public"`, `"semipublic"`, `"semipersonal"`, `"personal"` or `"prohibited"`
+---@param was string the level before
+---@param source string what set it: `"level"` (the level's own areas), `"area"` (one of the map's areas) or `"player"` (`SetPlayerTrespass`)
+---@param area string|nil the map's area that set it (with `"area"`)
+function OnPlayerTrespassChange(pid, level, was, source, area) end
+
 ---Makes one of the map's areas.
 ---
 ---`shape` and the numbers in `opts`:
@@ -7288,7 +8031,8 @@ function OnPlayerLeaveArea(pid, area) end
 ---
 ---Any of them takes `label` (what players see), `public` (`true` shows the label to whoever comes in), `color` (`0xRRGGBB`, the
 ---editor's outline), `nav` (what the server's actors make of it: `"auto"` nothing, `"block"` they never walk into it, `"walkable"` a
----floor at its bottom they walk on), `layer` (`"base"`) and `persist` (`true`). A name is used once - letters, digits, `_ . -` and
+---floor at its bottom they walk on), `trespass` (the game's trespass level inside - `SetAreaTrespass`), `rain` (the most rain inside,
+---`0` .. `1` - `SetAreaRain`), `layer` (`"base"`) and `persist` (`true`). A name is used once - letters, digits, `_ . -` and
 ---spaces, at most 64.
 ---@param name string the area's name
 ---@param shape string `"box"`, `"cylinder"`, `"sphere"` or `"polygon"`
@@ -7313,7 +8057,7 @@ function DeleteArea(name) end
 
 ---An area as it stands.
 ---@param name string the area
----@return table `{id, name, shape, ...the shape's numbers, label, public, color, nav, layer, persist, by, revision, props}` (`props`: the mode's values on it; `by`: the admin who last changed it, `""` for the mode); `nil` when there is none
+---@return table `{id, name, shape, ...the shape's numbers, label, public, color, nav, trespass, rain, layer, persist, by, revision, props}` (`props`: the mode's values on it; `by`: the admin who last changed it, `""` for the mode; `trespass` and `rain` are `nil` when the area sets none); `nil` when there is none
 function GetArea(name) end
 
 ---Every area of the map, by name.
@@ -7355,6 +8099,88 @@ function SetAreaProperty(name, key, value) end
 ---@param key string the value's name
 ---@return string|number|boolean the value; `nil` when the area has none of that name
 function GetAreaProperty(name, key) end
+
+---Makes an area one of the game's trespass zones.
+---
+---Inside it a player's game shows its trespass icon and the mode hears `OnPlayerTrespassChange`. The levels by the game's own names:
+---`"personal"` - the blue icon (a home, a private room); `"prohibited"` - the red icon (a castle's keep, a guarded camp);
+---`"semipublic"` and `"semipersonal"` - trespass with no icon; `"public"` - no trespass, and the level's own trespass there taken
+---away (a house of the level a player owns). `nil` - the area says nothing and the level's own areas decide. Where areas overlap,
+---the highest level counts. Kept in the map with the area (the editor's area panel sets it too).
+---@param name string the area
+---@param level string|nil the trespass level, or `nil`
+---@return boolean `true`; `false` and the reason
+function SetAreaTrespass(name, level) end
+
+---An area's trespass level for one player.
+---
+---Over the area's own (`SetAreaTrespass`) - `"public"` for the owner of a house, `"prohibited"` for someone banished from a
+---guild hall; an area with no level of its own becomes a trespass zone for this player alone. `nil` gives them the area's own again.
+---Kept while they are connected.
+---@param pid number the player
+---@param name string the area
+---@param level string|nil the trespass level, or `nil`
+---@return boolean `true`; `false` and the reason (no such area, an unknown level, not connected)
+function SetPlayerAreaTrespass(pid, name, level) end
+
+---One player's trespass level wherever they stand.
+---
+---Over every area and the level's own - a prisoner shown the red icon, an event's guests shown nothing. `nil` hands it back to the areas.
+---@param pid number the player
+---@param level string|nil the trespass level, or `nil`
+---@return boolean `true`; `false` and the reason
+function SetPlayerTrespass(pid, level) end
+
+---Switches the level's own trespass areas on or off.
+---
+---The level's houses, keeps and camps show the game's trespass icon (on by default). Off, a place is trespass only where one of the
+---map's areas says so (`SetAreaTrespass`).
+---@param on boolean `true` on, `false` off
+function SetLevelTrespass(on) end
+
+---Whether the level's own trespass areas are on.
+---@return boolean
+function IsLevelTrespassOn() end
+
+---The level's own trespass areas for one player.
+---
+---Over `SetLevelTrespass`; `nil` follows it again.
+---@param pid number the player
+---@param on boolean|nil `true` on, `false` off, `nil` the server's
+---@return boolean `false` when the player is not connected
+function SetPlayerLevelTrespass(pid, on) end
+
+---The trespass level a player's game shows now.
+---
+---With what set it: `"level"` - the level's own areas (their game's word: `"public"` until it has reported), `"area"` - one of the
+---map's areas (its name third), `"player"` - `SetPlayerTrespass`.
+---@param pid number the player
+function GetPlayerTrespass(pid) end
+
+---The most rain a player inside an area sees.
+---
+---`0` keeps it dry - a roof or a ceiling built with the map editor lets no rain through on its own; `nil` gives the area the world's
+---rain again. Where areas overlap, the lowest counts. The player sees the rain capped wherever they look while they are inside (out of
+---a window too). Kept in the map with the area (the editor's area panel sets it too).
+---@param name string the area
+---@param amount number|nil `0` .. `1`, or `nil`
+---@return boolean `true`; `false` and the reason
+function SetAreaRain(name, amount) end
+
+---The most rain one player sees, wherever they stand.
+---
+---Over the areas' (`SetAreaRain`); `nil` hands it back to them. The world's rain (`SetRain`) stays everyone else's.
+---@param pid number the player
+---@param amount number|nil `0` .. `1`, or `nil`
+---@return boolean `false` when the player is not connected
+function SetPlayerRain(pid, amount) end
+
+---The rain a player's game shows now.
+---
+---The world's rain, capped by their own (`SetPlayerRain`) or their areas' (`SetAreaRain`).
+---@param pid number the player
+---@return number `0` .. `1`; `nil` when the player is not connected
+function GetPlayerRain(pid) end
 
 -- ======== The server's map ======================================================
 -- The **server's map** is what the server adds to the level and takes out of it: the game's own meshes placed anywhere - a house, a
@@ -7446,18 +8272,22 @@ function GetPlayerEditor(pid) end
 ---shape from the first admin's game that draws one, then its collision and its actors' paths (`MoveActor`, `FindPath`) know
 ---every object of that mesh (`nav` says how). With `persist = false`
 ---it lasts for this run of the mode only - make it again in `OnGameModeInit`. A new `layer` name makes the layer, switched on.
+---One of the game's own ladders (the meshes the levels climb: `ladder_rustic_225` .. `ladder_rustic_575`, `ladder_siege_10m` and
+---`ladder_siege_10m_long` in `objects/manmade/common_fixtures/ladders/`) is climbed like the level's while it is solid and not
+---stretched: lean its top against a wall or a loft's edge (a `pitch` of 5 to 15 degrees, as the level's lean) with its foot on the
+---ground, and its climb is on the open side; a `scale` makes the climb longer or shorter with it.
 ---@param mesh string the mesh's path in the game's files (the meshes list)
 ---@param x number metres
 ---@param y number metres
 ---@param z number metres; below `0` = on the ground
----@param opts? table any of `yaw`, `pitch`, `roll` (degrees), `scale` (`0.05` .. `20`, `1`; or `{x, y, z}` - a mesh stretched along its own axes, each `0.05` .. `20`), `material` (one of the game's in place of the mesh's own), `tint` (`0xRRGGBBAA`), `solid` (`true`), `nav` (what the server's actors make of it: `"auto"` / `"block"` in their way, `"walkable"` they walk on it - a bridge, a ramp -, `"ignore"` left out; `"auto"`), `view` (the view distance ratio, `0` = by its size), `layer` (`"base"`), `group` (a folder for the editor), `persist` (`true`), `use` (a use prompt players see on it - `OnPlayerUseMapObject` hears the key; `""`), `attach` (the id of the map object it sits on: it moves, turns and stretches with that one and goes when that one is deleted - a lamp on a cart, a sign on a wall; `0` = none)
+---@param opts? table any of `yaw`, `pitch`, `roll` (degrees), `scale` (`0.05` .. `20`, `1`; or `{x, y, z}` - a mesh stretched along its own axes, each `0.05` .. `20`), `material` (one of the game's in place of the mesh's own), `tint` (`0xRRGGBBAA`), `solid` (`true`; one of the game's chairs never blocks a player, as the level's do not - the server's collision still meets it), `nav` (what the server's actors make of it: `"auto"` / `"block"` in their way, `"walkable"` they walk on it - a bridge, a ramp -, `"ignore"` left out; `"auto"`), `view` (how far away it is still drawn, `1` .. `255` - `255` as far as the game draws; `0` = by its size), `lod` (how soon the game swaps in the mesh's simpler models as players move away, `1` .. `255`: `100` is the game's normal; higher swaps sooner and draws lighter - a town of many buildings - `255` the soonest; lower keeps the detailed model farther; `0` = the game's own), `layer` (`"base"`), `group` (a folder for the editor), `persist` (`true`), `use` (a use prompt players see on it - `OnPlayerUseMapObject` hears the key; `""`), `params` (a chair's: `"table"` sits the player at a table - the game's at-a-table pose; none = sitting on their own), `attach` (the id of the map object it sits on: it moves, turns and stretches with that one and goes when that one is deleted - a lamp on a cart, a sign on a wall; `0` = none), `rain` (`true`: a roof keeps the rain out under it, as the level's own roofs do; `false` lets it fall through - an awning of cloth, a pergola)
 ---@return number the object's id; `nil` and the reason when the server has no map, the map is read-only or a value is out of its bounds
 function CreateMapObject(mesh, x, y, z, opts) end
 
 ---Changes a map object - moves, turns, scales it, or anything else it has.
 ---
 ---`changes` holds the fields to change, with the names `GetMapObject` gives them (`x`, `y`, `z`, `yaw`, `pitch`, `roll`, `scale`,
----`material`, `tint`, `solid`, `nav`, `view`, `layer`, `group`, `persist`); the rest stay. Every player sees it change at once.
+---`material`, `tint`, `solid`, `nav`, `view`, `lod`, `layer`, `group`, `persist`, `rain`); the rest stay. Every player sees it change at once.
 ---@param id number the object
 ---@param changes table the fields to change
 ---@return boolean `true`; `false` and the reason when there is no such object or a value is out of its bounds
@@ -7470,7 +8300,7 @@ function DeleteMapObject(id) end
 
 ---A map object as it stands.
 ---@param id number the object
----@return table `{id, mesh, x, y, z, yaw, pitch, roll, scale, material, tint, solid, view, layer, group, persist, by, revision, nav, use, params, attach, key}` (`mesh` is `"entity:light"`, `"entity:effect"`, `"entity:sound"`, `"entity:marker"` or `"entity:door"` for what `CreateMapLight` and its kin make, `params` their settings; `"picture:<name>"` or `"surface:<page>"` for a board - `CreateMapPicture`, `CreateMapSurface`; `attach` the object it sits on, `0` none; `key` a door's key; `scale` a number, or `{x, y, z}` for a mesh stretched along its own axes) (`by`: the admin who last changed it, `""` for the mode; `revision`: the map's revision at that change); `nil` when there is none
+---@return table `{id, mesh, x, y, z, yaw, pitch, roll, scale, material, tint, solid, view, lod, layer, group, persist, by, revision, nav, use, params, attach, rain, key, prefab, part_of}` (`mesh` is `"entity:light"`, `"entity:effect"`, `"entity:sound"`, `"entity:marker"` or `"entity:door"` for what `CreateMapLight` and its kin make, `params` their settings; `"picture:<name>"` or `"surface:<page>"` for a board - `CreateMapPicture`, `CreateMapSurface`; `"prefab:<name>"` for a prefab placed as one unit - `CreateMapPrefab` -, `prefab` then its prefab's name; `part_of` the unit an object of a unit belongs to - `GetMapPrefabParts` -, `nil` for an object of its own; `attach` the object it sits on, `0` none; `key` a door's key; `scale` a number, or `{x, y, z}` for a mesh stretched along its own axes) (`by`: the admin who last changed it, `""` for the mode; `revision`: the map's revision at that change); `nil` when there is none
 function GetMapObject(id) end
 
 ---The map objects around a point, nearest first.
@@ -7478,7 +8308,7 @@ function GetMapObject(id) end
 ---@param y number metres
 ---@param z number metres
 ---@param radius number metres
----@return table a list of `GetMapObject`'s tables, nearest first, at most 256
+---@return table a list of `GetMapObject`'s tables, nearest first, at most 256 (a prefab unit and each of its objects - those with `part_of` set)
 function GetMapObjectsNear(x, y, z, radius) end
 
 ---Hangs one of the map's pictures on the level - a poster, a banner, a painting, a shop's sign.
@@ -7583,15 +8413,34 @@ function CreateMapMarker(tag, x, y, z, opts) end
 
 ---Places one of the game's doors on the level - it opens, closes and locks for everyone.
 ---
----The game's own door with one of its door models: players open and close it with the use key, a lock is picked or opened with its key
----as the level's own, and the server keeps its state like a level door's - the same functions take it by its key
----(`SetDoorState`, `GetDoorState`, `SetDoorCheck`, `OnPlayerUseDoor`). It is a map object like a placed mesh (moved and deleted
----with `SetMapObject` / `DeleteMapObject`, `persist` as theirs); its `params` are `"model [locked]"`.
+---The game's own door with one of its door models: players open and close it with the use key, and the server keeps its state like a
+---level door's - the same functions take it by its key (`SetDoorState`, `GetDoorState`, `SetDoorCheck`, `SetDoorKey`,
+---`OnPlayerUseDoor`), and it is a door to `GetNearestDoor`, `GetDoorPosition`, `GetLevelDoors` and `/objectinfo`. Locked, it
+---has a keyhole on both sides, whichever way it faces: the mode's key (`SetDoorKey`), a lockpick or the mode's word opens it. It is
+---a map object like a placed mesh (moved and deleted with `SetMapObject` / `DeleteMapObject`, `persist` as theirs); its `params`
+---are `"model [locked]"`.
 ---@param x number metres - the door's hinge
 ---@param y number metres
 ---@param z number metres; below `0` = on the ground
 ---@param opts? table `model` (one of the game's doors, `"objects/characters/assets/doors/lvl3_door_f_left.cdf"`), `locked` (it starts locked; `false`), and `CreateMapObject`'s `yaw`, `layer`, `group`, `persist`
 function CreateMapDoor(x, y, z, opts) end
+
+---A place to sit or a bed to sleep in, on any object - players use it with the game's own Sit and Sleep.
+---
+---The game's own seat: a player's use key shows "Sit" (a bed: "Sit", and held, "Sleep") and their game sits, lies down or sleeps
+---there as on the level's own benches and beds - the other players see it like any sitting. **The game's furniture needs none**: a
+---chair, bench or bed of the game's own meshes placed with `CreateMapObject` or the editor gets its seats by itself (while it
+---stands upright at its own size; a chair sits the player on their own unless its `params` are `"table"` - the game's
+---sitting-at-a-table pose); a seat is for anything else - a log, a crate, a wagon's bed, a mode's own furniture. Put it on
+---the floor where the sitter's feet are, at the seat's front edge; `yaw` is where the sitter looks (a bed's: the way the bed lies).
+---It is a map object (moved and deleted with `SetMapObject` / `DeleteMapObject`, `persist` as theirs); its `params` are the pose.
+---@param pose string `"bench_low"` (a stool, a low bench; the default), `"bench_high"` (a bench or chair with a back), `"table_left"` / `"table_right"` (a bench at a table), `"chair_table"` / `"chair_table_low"` (a chair at a table: the arms on it), `"ground"`, `"bed_high"`, `"bed_low"`, `"bed_ground"` (a bedroll), `"bed_bench"` (sleeping on a bench), `"bed_left"` / `"bed_right"` (a double bed's halves)
+---@param x number metres - where the sitter's feet are
+---@param y number metres
+---@param z number metres; below `0` = on the ground
+---@param opts? table `CreateMapObject`'s `yaw` (where the sitter looks), `layer`, `group`, `persist`
+---@return number the seat's id; `nil` and the reason
+function CreateMapSeat(pose, x, y, z, opts) end
 
 ---The map's markers of a tag.
 ---@param tag? string the tag (`nil` or `""` = every marker)
@@ -7712,9 +8561,10 @@ function GetMapPrefabs() end
 
 ---Saves map objects as a prefab, to place again anywhere.
 ---
----The objects' places are kept relative to the ground under the first one; the same name overwrites. Prefabs live in the map's
----`prefabs/` folder and go with an export. In the editor, select the objects and use "Save as prefab"; admins: `/map prefab save
----<name> <id...>`.
+---The objects' places are kept relative to the ground under the first one; the same name overwrites - and every unit of that
+---prefab on the map (`CreateMapPrefab`) changes with it, on every player's game. A unit among the ids is saved as its objects.
+---Prefabs live in the map's `prefabs/` folder and go with an export. In the editor, select the objects and use "Save as prefab";
+---admins: `/map prefab save <name> <id...>`.
 ---@param name string letters, digits, `_` and `-`, at most 48
 ---@param ids table a list of map object ids (at most 256)
 function SaveMapPrefab(name, ids) end
@@ -7728,7 +8578,44 @@ function SaveMapPrefab(name, ids) end
 ---@return table the new objects' ids in the prefab's order; `nil` and the reason
 function PlaceMapPrefab(name, x, y, z, opts) end
 
+---Places a prefab as one unit - one map object drawn as the prefab's objects, that follows the prefab.
+---
+---`PlaceMapPrefab` copies a prefab's objects into new map objects, each sent, saved and tracked on its own. A **unit** is one map
+---object (`mesh` `"prefab:<name>"`): one record on the network, in the map's files and in an undo, that every player's game and the
+---server draw as the prefab's objects at its place, turn and scale - a village of eighty houses is eighty records, not two thousand.
+---It **follows its prefab**: saving the prefab again (`SaveMapPrefab`, the editor's "Save as prefab") changes every unit of it at
+---once. Its objects are solid, have their doors, seats, lights and use prompts, and stand in the server's collision and navmesh as
+---if placed one by one; each has an id of its own, the same in every game and after a restart (`GetMapPrefabParts`) - a door's key,
+---the id `OnPlayerUseMapObject` names. They are changed through the unit: move, turn, scale (one number), `solid`, `view`, `lod`,
+---`layer` with `SetMapObject` on the unit's id; to change one of them, `UnpackMapPrefab` first.
+---
+---A prefab used by a unit cannot be deleted; a unit holds no web surface board. Every object of a unit counts toward the map's
+---10,000. `SetMapObject` and `CreateMapObject` with `"prefab:<name>"` as the mesh make and change units too. Admins: `/map prefab
+---unit <name>`; the map editor's prefab list places units with "As one unit".
+---@param name string the prefab
+---@param x number metres - where its pivot goes
+---@param y number metres
+---@param z number metres; below `0` = on the ground
+---@param opts? table as `CreateMapObject`'s: `yaw`, `pitch`, `roll`, `scale` (one number), `solid` (`false`: none of its objects is), `view`, `lod` (over its objects' own; `0` = theirs), `layer`, `group`, `persist`, `attach`
+---@return number the unit's id; `nil` and the reason
+function CreateMapPrefab(name, x, y, z, opts) end
+
+---A prefab unit's objects as they stand on the level.
+---@param id number the unit
+---@return table a list of `GetMapObject`'s tables in the prefab's order (each with `part_of` = the unit; a door's `key`); empty for no unit
+function GetMapPrefabParts(id) end
+
+---Turns a prefab unit into the prefab's objects, each a map object of its own.
+---
+---One edit: the unit goes, its objects stay where they stood as ordinary map objects (they no longer follow the prefab), and what
+---sat on the unit stays where it is. The map editor's inspector has "Unpack" for a selected unit; admins: `/map prefab unpack <id>`.
+---@param id number the unit
+---@return table the new objects' ids in the prefab's order; `nil` and the reason
+function UnpackMapPrefab(id) end
+
 ---Takes a prefab off the list (its placed objects stay).
+---
+---Refused while a unit of it stands on the map (`CreateMapPrefab`) - delete or unpack those first.
 ---@param name string the prefab
 function DeleteMapPrefab(name) end
 
@@ -8126,15 +9013,17 @@ function OnPlayerSell(pid, shop, class, amount, price, id) end
 ---Asked last: every line was checked - the stock, what the player carries, the purse that changes hands - and passed
 ---`OnPlayerSell` / `OnPlayerBuy`; the items and the money move right after this returns anything but `false`, so it is
 ---the place for what must happen only when a deal is really done. `deal.lines` lists the sales first, then the purchases,
----one line per item class: `{class=, amount=, price=, buy=}` (`price` in Groschen a piece, `buy` `true` for a purchase; a line
----of one of the mode's tagged items - a tagged row bought, the player's own sold - also has its `id`).
+---one line per item class: `{class=, amount=, price=, buy=, health=}` (`price` in Groschen a piece, `buy` `true` for a purchase;
+---`health` the pieces' condition from 0 to 100 - 100 for a purchase, for a sale the average of the pieces it takes, the very
+---items the trade screen named first; a line of one of the mode's tagged items - a tagged row bought, the player's own sold -
+---also has its `id`).
 ---`deal.cost` is what the purchases cost and `deal.proceeds` what the sales bring; the player pays the difference, or is
 ---paid it. A deal on the shop panel is one line; the trade screen's "Close deal" sends the whole basket.
 ---
 ---Return value: `false` calls the deal off - nothing moves; anything else (or nothing) lets it through
 ---@param pid number the player
 ---@param shop number the shop
----@param deal table `{lines = {{class=, amount=, price=, buy=, id=}, ...}, cost=, proceeds=}`
+---@param deal table `{lines = {{class=, amount=, price=, buy=, health=, id=}, ...}, cost=, proceeds=}`
 function OnPlayerShopDeal(pid, shop, deal) end
 
 ---**Called by the server** - A shop screen is about to open on a player - return `false` to keep it closed.
@@ -8404,7 +9293,10 @@ function GetPlayerDialogue(pid) end
 -- hit or dies; a player who comes into view later still sees a dance, or a point held.
 -- 
 -- The built-in emotes: `wave`, `bow`, `cheer`, `clap`, `dance` (loops), `point` (the upper body alone: it plays while the
--- player walks or crouches; T holds it), `salute`, `come`, `nod`. The wheel shows
+-- player walks or crouches; T holds it), `salute`, `come`, `nod`, `sit` (on the ground: the player sits down, stays seated
+-- and stands up again when it ends), `armscrossed` (the arms folded until the player moves), `drink` (a gulp from a tankard, the
+-- upper body alone - the one a sip from a tankard in the hands plays, `SetCarryItemDrink`, and the others see when a player
+-- drinks from the bag). The wheel shows
 -- `wave, bow, cheer, clap, dance, come` unless the `[emotes]` section of
 -- server.toml names others - or `SetEmoteWheel` does; the owner's own emotes go
 -- in `[emotes.custom]`, a mode's through `AddEmote`. `OnPlayerEmote` can refuse a pick, `PlayPlayerEmote` makes a
@@ -8453,14 +9345,40 @@ function SetEmoteWheel(names) end
 ---`GreetingsUpperBody`, `ApplauseHappy` ...; the tags pick a variant, `+`-joined). `loop` `true` plays it until the
 ---player moves or it is stopped, else once. `false` when a part will not do (the server's log says which). It is not on
 ---the wheel until `SetEmoteWheel` puts it there; `PlayPlayerEmote` (a mode's command) takes it at once.
+---
+---`opts` gives it more:
+---
+---- **an in and an out** - `inClip` / `inFragment` / `inTags` play once before the loop and `outClip` / `outFragment` /
+---  `outTags` once when it ends, on every screen: sitting down and standing up, lying down and getting up. A player who
+---  comes into view while it loops sees the loop at once.
+---- **`upper = true`** - an upper-body gesture: `clip` plays on the upper body for everyone (the player's own game too),
+---  and walking, running or crouching do not end it. With `loop` it loops there until stopped - hands tied behind the back
+---  while the player walks; a whole-body clip works too (the legs keep walking under it). It needs no fragment and has no in
+---  or out.
+---- **`locked = true`** - only the mode ends it (`StopPlayerEmote`, another `PlayPlayerEmote`): the player's own keys,
+---  a step away, a crouch, a drawn weapon, a fight or a hit no longer end it, and the player cannot pick another emote
+---  meanwhile. A death, a respawn, a horse, a knock-out and being carried still end it - play it again after them if it
+---  should last (`GetPlayerEmote` says whether it still plays). Pair a locked full-body one with
+---  `TogglePlayerControllable` so the player cannot walk off in it.
+---
+---A whole-body emote with an in or an out, or a locked one, seats the player from the in to the end of the out: their view
+---turns at most 60 degrees either way and the body keeps its heading (in third person the camera turns around it), and the
+---walk, jump and crouch keys stand the player up instead of moving them - a locked one waits for the mode.
+---
+---The fragment's state must hold while the loop plays: a fragment that plays once and stops (a lie-down, a fall) as the
+---loop shows it over and over on the player's own screen - give the loop a looping fragment (`WoundedLying_1`,
+---`LyingInjured`, `SittingIdle` with its tags ...) and the one-shot as the in. A lying player's own first-person view
+---lies with the head (hair across the view, or inside it): `SetPlayerThirdPerson` `"force"` while they lie shows them
+---from beside the body.
 ---@param name string 1-24 of a-z, 0-9, `_` and `-`
 ---@param label string what the wheel shows (the name, capitalised, when empty)
 ---@param clip string the body's clip
 ---@param fragment string the player's own fragment
 ---@param tags? string its fragment tags (`""`)
 ---@param loop? boolean until stopped (`false` = once)
+---@param opts? table any of `upper` (an upper-body gesture that walks along; `false`), `locked` (only the mode ends it; `false`), `inClip`, `inFragment`, `inTags` (played once before the loop), `outClip`, `outFragment`, `outTags` (played once when it ends)
 ---@return boolean
-function AddEmote(name, label, clip, fragment, tags, loop) end
+function AddEmote(name, label, clip, fragment, tags, loop, opts) end
 
 ---Makes a player perform an emote - the heart of an emote command.
 ---
@@ -8468,7 +9386,8 @@ function AddEmote(name, label, clip, fragment, tags, loop) end
 ---foot, no weapon out, not fighting, not knocked out, carried or carrying) but `OnPlayerEmote` is not asked. A new emote
 ---replaces the one playing. When it cannot play, the second value says why in words the player can read ("Stand still
 ---first.", "Put your weapon away first.", "Not while knocked out.", "Not while carrying.", "There is no emote 'juggle'
----here." ...), ready for the chat.
+---here." ...), ready for the chat. A locked emote (`AddEmote`'s `opts.locked`) asks only that the player is in the world,
+---alive, on foot, not knocked out and not carried or carrying.
 ---@param pid number the player
 ---@param name string the emote (any case)
 ---@return boolean ok `true`, or `false, reason` - the reason as the player reads it (`"Stand still first."`, `"There is no emote 'juggle' here."` ...)
@@ -8740,13 +9659,14 @@ function GetDiceMatchInfo(id) end
 -- One item per player, one player per item. Sacks, baskets, buckets and jugs are carried with the game's own carry: he walks (no
 -- running or sprinting with a sack or a basket), his hands are busy - no weapon, no doors, no horse - and the game's put-down key
 -- (the use key) lays the item down in front of him, or greys out where there is no room. Everything else - a crate, a tool, a
--- lantern, the torch tool, a tankard - goes straight into his hands the way the game's people hold it (a lantern in the left): no
--- pickup animation, and **holding the use key a moment** puts the item down in front of him.
+-- lantern, the torch tool, a tankard or a stein - goes straight into his hands the way the game's people hold it (a lantern in the
+-- left; a tankard or a stein with the game's own reach for it and set it down, the rest with no pickup animation), and **holding the
+-- use key a moment** puts the item down in front of him.
 -- A carry item can be any item of the game, but the ones made to be carried or held look right: the sacks
 -- (`mlynaruvUcen_sackcarryable`, `kejkliri_sackcarryable`, `sack_miller` ...), the baskets (`basket_b_apples`, `basket_b_bread`,
 -- `laundryBasket`, `basket_full_wood` ...), the buckets (`waterBucket`, `milkBucket`), the `crate_with_silver`, the tools
--- (`shovel`, `lumberjack_axe`, `normalHammer`, `fishing_rod`), the jugs and tankards (`jug_pewter_small_copper`,
--- `wooden_tankard`) and the lanterns (`lamp_tool`, `lamp_toolFancy`, `torch_tool`). A `barrel`, a `pitchfork` or a `broom` does not: no
+-- (`shovel`, `lumberjack_axe`, `normalHammer`, `fishing_rod`), the jugs, tankards and steins (`jug_pewter_small_copper`,
+-- `wooden_tankard`, `wooden_stein`) and the lanterns (`lamp_tool`, `lamp_toolFancy`, `torch_tool`). A `barrel`, a `pitchfork` or a `broom` does not: no
 -- animation of the game's holds one well while walking.
 -- 
 -- The carry ends when the carrier puts the item down, when the game knocks it out of his hands, when the mode says so
@@ -8884,6 +9804,27 @@ function GetPlayerCarryItem(pid) end
 ---@param entityId number the carry item
 ---@return number|nil the player holding it (or reaching for it); `nil` when it lies in the world
 function GetCarryItemHolder(entityId) end
+
+---Fills a tankard or a stein - what a sip from it gives and how many sips are left.
+---
+---A player holding a tankard or a stein drinks from it with the left mouse button: the game's drinking animation plays
+---on every screen and the sip is a use of `item` as the inventory's would be - `OnPlayerUseItem` decides (`false` refuses
+---it), its alcohol and health apply, so a few sips of beer get the drinker drunk. One sip at a time - about five and a half
+---seconds apart, the drinking animation's length; a press sooner does nothing. By default a tankard or a stein holds
+---4 sips of beer; any other carry item holds nothing and cannot be filled. `sips` `-1` never empties, `0` is empty (the
+---player is told "It is empty."); `item` `""` takes the drink away. `false` for an entity that is no tankard or stein (a carry item
+---of the `wooden_tankard` or `wooden_stein` classes) or an item the catalogue does not know.
+---@param entityId number the carry item
+---@param item string the drink - an item of the catalogue (`"beer"`, `"wine"`, `"mead"`, a GUID); `""` none
+---@param sips number the sips in it; `-1` endless
+---@return boolean
+function SetCarryItemDrink(entityId, item, sips) end
+
+---What a carry item holds to drink.
+---@param entityId number the carry item
+---@return string the drink's item class (`""` none) and the sips left (`-1` endless)
+---@return number
+function GetCarryItemDrink(entityId) end
 
 -- ======== Carrying ==============================================================
 -- The game's own grab, carry and put-down: a player - or an NPC actor the mode makes - takes a body that lies down over the
@@ -9500,7 +10441,10 @@ function SetInterfaceForAll(component, drawer) end
 ---| `nameplates` | `text` | `name`, `id`, `name_id`: what a plate says when the mode gave the player no label - their name, their player id, or `Henry (3)` | `name` |
 ---| `nameplates` | `peek_key` | the name of a keyboard key (`lalt`, `lctrl`, `n`, `f4` ...): the names show only while it is held; empty = they always show | empty |
 ---| `nameplates` | `peek_scope` | `all`, `players`: whose names wait for the `peek_key` - every plate's, or the players' alone (the NPC actors' labels always show) | `all` |
+---| `nameplates` | `npc_range` | a whole number, 0 to 255: the metres an NPC actor's name shows up to (it fades over the last third); `0` = as far as the players' names | `0` |
 ---| `compass` | `span` | 30 to 180: the degrees of the horizon the compass strip covers | `90` |
+---| `dialog` | `side` | `left`, `right`: where a dialogue page's choices (`ShowPlayerDialogue`) stand - the right is where the game's own conversations put them | `left` |
+---| `dialog` | `bars` | `off`, `dialog` (while a dialogue page is open), `on` (from now until set back): the game's own black cinema bars, with the subtitles moved into the lower one | `off` |
 ---| `hud` | `compass`, `stats`, `subtitles`, `hints`, `cursor`, `buffs`, `info_text`, `game_log`, `common_event`, `fancy_event`, `tutorial_message` | `1` shows the game's own HUD piece of that name, `0` hides it (`true`, `false`, `on`, `off`, `yes` and `no` are read as the same); `SetPlayerHudVisible` says what each piece is | `1` |
 ---
 ---The other components have no options. The call is all or nothing: one bad key or value and nothing changes. The second
@@ -10503,6 +11447,206 @@ function GetPlayerQuests(pid) end
 ---@param pid number the player
 ---@return boolean
 function CanPlayerShowQuests(pid) end
+
+-- ======== The game's texts ======================================================
+-- Every text the game shows from its own tables has a **key**: a place on the world map (`location_opatovice` is
+-- "Opatowitz"), the fast travel's question (`ui_fasttravel_kut_opatovice_question`), a Codex entry's title
+-- (`ui_codex_name_opatovice`) and its page (`ui_codex_cont_opatovice`), the map legend's lines, an item's name, a quest's
+-- line. A mode gives a key **its own text** and every player sees that text wherever the game shows the key, while they are
+-- on the server - nobody installs anything, and leaving the server gives the game its own texts back.
+-- 
+-- A text is for **every language** or for **one** - a code (`"en"`, `"de"`, `"cs"`, `"ru"`, `"zh-cn"`, `"zh-tw"` ...) or the
+-- game's own name for it (`"english"`, `"german"`, `"chineses"`). A player sees their own text first (`SetPlayerTextOverride`),
+-- then the one for their game's language (`GetPlayerLanguage`), then the one for every language, then the game's own.
+-- 
+-- A whole file goes in at once with `LoadTextOverrides`: a translation's own table - the game's `text_ui_*.xml` format, so the
+-- rows of a localisation mod can be used as they are - or a small JSON file of key to text. Changes reach the players at once;
+-- a screen that is open shows them the next time it opens (the world map names only the places the player has discovered, as the
+-- game always does). The texts are the mode's: a reload clears them,
+-- so set them in `OnGameModeInit`.
+-- 
+-- The keys are the game's: the world map's place names, its legend and the fast travel are listed in
+-- the map texts and each Codex entry's two keys in the Codex entries. A text may use the game's own markup, as its texts do
+-- (`<h>` for a highlighted word, `<paragraph>` in a Codex page). A text that starts with `@` names another key of the game's.
+
+---Shows the mode's own text for one of the game's texts, for every language or one.
+---
+---`key` is the key without its `@`, in any case. The text replaces the game's own on every player's screen whose game runs
+---in `language` - or every player's when it is left out (a language's own text wins over it). `nil` or `""` takes the
+---override away: the game's own text again.
+---
+---Refused for a key that is not one (letters, digits, `_ - .`, at most 128), a language that is none, a text over 16 KB, or
+---when the server holds 8 MB of texts already.
+---@param key string the game's key (`"location_opatovice"`)
+---@param text string|nil the text shown for it; `nil` or `""` = the game's own again
+---@param language? string `"de"`, `"german"` ... - only for players whose game runs in it; left out = every language
+---@return boolean `false` when refused
+function SetTextOverride(key, text, language) end
+
+---The mode's text for a key and a language, if it gave one.
+---
+---Only what `SetTextOverride` or `LoadTextOverrides` gave - never the game's own text.
+---@param key string the game's key
+---@param language? string a language; left out = the text for every language
+---@return string the text; `nil` when the mode gave none
+function GetTextOverride(key, language) end
+
+---Takes away every text the mode gave, or every text of one language.
+---@param language? string only this language's texts; left out = all of them
+---@return number how many texts were taken away
+function ClearTextOverrides(language) end
+
+---Reads a file of texts - the game's own table format or a JSON object - for every language or one.
+---
+---`file` is a path in the game mode's folder (the folder its `.lua` file is in). Two formats:
+---
+---- the game's own localisation table, as a translation keeps it (`.xml`): every `<Row>`'s first `<Cell>` is the key and
+---  its last `<Cell>` the text - the files of a localisation mod (`text_ui_quest.xml` ...) work as they are;
+---- a JSON object of key to text (`.json`): `{"location_opatovice": "Kingsbridge"}`.
+---
+---Each text is set as `SetTextOverride` would; a key or text it refuses is counted in the server's log.
+---@param file string the file, in the mode's folder
+---@param language? string the language its texts are for; left out = every language
+---@return number the texts taken; `nil` and the reason when the file cannot be read
+function LoadTextOverrides(file, language) end
+
+---One player's own text for a key - theirs alone, over the server's.
+---
+---For a text that differs from player to player: a place their character named, a Codex page written for them. It holds
+---whatever their language and lasts their visit. `nil` or `""` takes it away (the server's text, or the game's, again).
+---@param pid number the player
+---@param key string the game's key
+---@param text string|nil the text; `nil` or `""` = no text of their own
+---@return boolean `false` for an unknown player, a bad key, a text over 16 KB or past their 256 KB
+function SetPlayerTextOverride(pid, key, text) end
+
+---The player's own text for a key, if the mode gave one.
+---@param pid number the player
+---@param key string the game's key
+---@return string their own text; `nil` when none
+function GetPlayerTextOverride(pid, key) end
+
+---The language the player's game shows its texts in.
+---
+---A code - `"en"`, `"cs"`, `"de"`, `"fr"`, `"es"`, `"it"`, `"pl"`, `"ru"`, `"pt"`, `"tr"`, `"uk"`, `"ja"`, `"ko"`,
+---`"zh-cn"`, `"zh-tw"`, `"vi"`. Known once their level has loaded: from `OnPlayerRequestSpawn` on, `nil` in
+---`OnPlayerConnect`.
+---@param pid number the player
+---@return string the language's code; `nil` before it is known
+function GetPlayerLanguage(pid) end
+
+-- ======== The Codex =============================================================
+-- The game's **Codex** - its book of people, places, crafts and history - shows the entries a character has unlocked. Each
+-- entry is one of the game's perks: the Codex entries lists all of them with the perk's GUID and name, the
+-- page it is on, and the keys of its title and its page.
+-- 
+-- A mode decides **which entries each player has**: `SetPlayerCodexEntry` unlocks one (with the game's "new Codex entry"
+-- notice, or silently) or locks it again - a reveal in the middle of a roleplay scene. An unlocked entry is part of the
+-- player's progress: `GetPlayerProgress` and `GetPlayerPerks` list it with their other perks, so a mode that saves those
+-- saves the Codex too.
+-- 
+-- A mode also decides **what the game unlocks by itself**: the game gives every character sixteen entries at the start and
+-- unlocks more as places are discovered or the story moves. `SetCodexEntryHidden` stops that for an entry - a player who
+-- has it loses it, unless the mode gave it to them.
+-- 
+-- **Your own words in an entry**: its title and its page are texts of the game, worded with `SetTextOverride` - give an
+-- entry you do not need a title and a page of your own and unlock it when the story calls for it.
+
+---Unlocks a Codex entry for a player, or locks it again.
+---
+---`silent` unlocks it without the game's "new Codex entry" notice. A player who is not in the world yet gets it when they
+---spawn. An entry `SetCodexEntryHidden` hides is unlocked all the same - the hiding stops the game, not the mode.
+---@param pid number the player
+---@param entry string the entry's perk - its GUID or the game's perk name (the Codex entries)
+---@param unlocked? boolean `true` (the default) unlocks it, `false` locks it again
+---@param silent? boolean `true` = no "new Codex entry" notice
+---@return boolean `false` for an unknown player or an entry name the server's tables do not know
+function SetPlayerCodexEntry(pid, entry, unlocked, silent) end
+
+---Whether a player has a Codex entry unlocked.
+---
+---As their game last reported it, or as the mode set it since.
+---@param pid number the player
+---@param entry string the entry's perk GUID or name
+---@return boolean
+function HasPlayerCodexEntry(pid, entry) end
+
+---Stops the game from unlocking a Codex entry by itself - or lets it again.
+---
+---A hidden entry is never unlocked by the game itself: not at a character's start, not by a discovered place, not by a
+---story event. A player who has it loses it at once (or when they join), unless the mode gave it to them with
+---`SetPlayerCodexEntry` - which still unlocks it. The list is the mode's: a reload clears it, so set
+---it in `OnGameModeInit`. At most 1024 entries.
+---@param entry string the entry's perk GUID or name
+---@param hidden? boolean `true` (the default) hides it, `false` lets the game unlock it again
+---@return boolean `false` for an entry name the server's tables do not know
+function SetCodexEntryHidden(entry, hidden) end
+
+---Whether the mode hides a Codex entry from the game.
+---@param entry string the entry's perk GUID or name
+---@return boolean
+function IsCodexEntryHidden(entry) end
+
+---Every Codex entry the mode hides from the game.
+---@return table `{guid, ...}`
+function GetHiddenCodexEntries() end
+
+-- ======== The game's screens ====================================================
+-- The game's own player screens - the **inventory**, the **character** screen, the world **map**, the **Codex** and the
+-- **journal** - are one screen with tabs, each opened by its own key. A mode opens one of them on a player's screen
+-- (`OpenPlayerScreen`), closes them (`ClosePlayerScreens` - the loot and trade screens with them), and refuses some to a
+-- player for a while (`SetPlayerScreenBlocked`): no inventory for a player in shackles, no map in a blindfold. A refused
+-- screen does not open by the player's key or its tab, and closes when it is open.
+-- 
+-- `OnPlayerScreenChange` says which of them a player opened, switched to or closed. The screens are named `"inventory"`,
+-- `"character"`, `"map"`, `"codex"` and `"journal"`; `"other"` is another of the game's screens of that kind (crafting, a
+-- horse's saddlebags). The refusals last the player's visit and a reload clears them.
+
+---**Called by the server** - A player opened one of the game's player screens, switched to another or closed them.
+---
+---Their own key or tab, the mode's `OpenPlayerScreen` or `ClosePlayerScreens`, the screen's own close. A screen the
+---mode refuses them never opens, so it never comes here. The answer is not read.
+---@param pid number the player
+---@param screen string|nil `"inventory"`, `"character"`, `"map"`, `"codex"`, `"journal"` or `"other"`; `nil` = closed
+---@param previous string|nil the one before (`nil` = none was open)
+function OnPlayerScreenChange(pid, screen, previous) end
+
+---Opens one of the game's player screens on a player's screen.
+---
+---Switches to it when one of them is open already. The game itself may still say no - while another screen of its own is
+---up (a dialogue, a minigame, the Esc menu) nothing opens.
+---@param pid number the player
+---@param screen string `"inventory"`, `"character"`, `"map"`, `"codex"` or `"journal"`
+---@return boolean `false` before the player is in the world, for another name, a screen refused to them, or a game that cannot
+function OpenPlayerScreen(pid, screen) end
+
+---Closes the game's player screens on a player's screen - and the loot and trade screens.
+---@param pid number the player
+---@return boolean `false` before the player is in the world or for a game that cannot
+function ClosePlayerScreens(pid) end
+
+---Refuses one of the game's player screens to a player - or allows it again.
+---
+---Their key and the screens' tab do not open a refused screen, and one open now closes. Set before the player's level has
+---loaded (in `OnPlayerConnect`) it holds from their first step. For their visit; a reload clears it.
+---@param pid number the player
+---@param screen string `"inventory"`, `"character"`, `"map"`, `"codex"` or `"journal"`
+---@param blocked? boolean `true` (the default) refuses it, `false` allows it again
+---@return boolean `false` for an unknown player or another name
+function SetPlayerScreenBlocked(pid, screen, blocked) end
+
+---Whether a screen is refused to a player.
+---@param pid number the player
+---@param screen string the screen's name
+---@return boolean
+function IsPlayerScreenBlocked(pid, screen) end
+
+---Which of the game's player screens a player has open.
+---
+---As their game last reported it (`OnPlayerScreenChange`).
+---@param pid number the player
+---@return string `"inventory"`, `"character"`, `"map"`, `"codex"`, `"journal"` or `"other"`; `nil` = none
+function GetPlayerScreen(pid) end
 
 -- ======== Constants =============================================================
 

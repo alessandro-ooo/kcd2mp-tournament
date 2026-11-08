@@ -395,9 +395,21 @@
     }));
   }
 
+  // openInBrowser's questions waiting for the player's answer: id -> resolve
+  let browserNext = 1;
+  const browserWaits = new Map();
+
   // what the engine itself says, as {__kcdmp: {t, ...}} (never what a mode or a script sent: that arrives as it is, in onMessage)
   function engineMessage(m) {
     switch (m.t) {
+      case "browser": {   // the player answered an openInBrowser
+        const resolve = browserWaits.get(m.id);
+        if (resolve) {
+          browserWaits.delete(m.id);
+          resolve(m.opened === true);
+        }
+        break;
+      }
       case "ping":
         if (Number.isInteger(m.n)) {
           call("sys", "pong", { n: m.n }).catch(() => {});   // the watchdog: this frame's renderer lives
@@ -568,6 +580,7 @@
   // @api handler onComponent
   // @api handler onError
   // @api function itemIcon
+  // @api function openInBrowser
   // @api property surface
   // @api handler onSurfaceUse
   const KcdMp = {
@@ -645,6 +658,16 @@
     onError: (f) => add(handlers.error, f),
     log,
     itemIcon,
+    // 2026-10-16: a site in the player's own web browser (a sign-in with Discord or Google that finishes on the server's website) - from
+    // the player's own click or key in this page, an https address at a host ui.toml's [permissions] links lists; the game asks the player
+    // first. Resolves true when they said yes (the browser opens), false when no; rejects when the game would not ask (the reason)
+    openInBrowser: async (url) => {
+      if (!inGame) return true;
+      const id = browserNext++;
+      const reply = await call("open", "browser", { url: String(url), id });
+      if (!reply || reply.asked !== true) throw new Error("the game did not ask the player");
+      return new Promise((resolve) => browserWaits.set(id, resolve));
+    },
     // v83: on a surface's page, {name, id, width, height} - the surface's page name (ui.toml), the entity id of the surface this copy
     // draws (0 until the engine's hello) and the page's pixels; null in a frame
     get surface() { return surface === null ? null : Object.freeze({ ...surface }); },
