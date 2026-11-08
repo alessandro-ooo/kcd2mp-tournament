@@ -17,37 +17,6 @@ function OnPlayerCommandText(pid, cmd, args)
     return true
   end
 
-  if cmd == "airbreak" then
-    SetPlayerFlying(pid, not IsPlayerFlying(pid), 50)
-  end
-
-  if cmd == "test" then
-    --- 2876.9 799.2 66 325 p1
-    --- 2884.6 810 66 144 p2
-    local x, y, z = GetPlayerPos(pid);
-    local yaw = GetPlayerYaw(pid)
-    SendClientMessageToAll(COLOR_RED, "" .. x ..", " .. y ..", " .. z .. ", " .. yaw)
-  end
-
-  if cmd == "getduelstatus" then
-    local duelData = duel.findByPlayer(pid)
-    if duelData then
-      SendClientMessage(
-        pid,
-        COLOR_SERVER,
-        "(DEBUG) Current duel: " .. GetPlayerName(duelData.playerOne)
-          .. " vs " .. GetPlayerName(duelData.playerTwo)
-          .. " (" .. duelData.status .. ")"
-      )
-    else
-      SendClientMessage(pid, COLOR_RED, "You are not currently in a duel.")
-    end
-  end
-
-  if cmd == "reload" then
-    ReloadGameMode();
-  end
-
   return true
 end
 
